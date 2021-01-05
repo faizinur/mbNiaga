@@ -33,6 +33,7 @@ class Login extends React.Component {
 	render() {
 		return (
 			<Page name="login">
+				<p>Hayo Login Dulu</p>
 				<List noHairlinesMd>
 					<ListInput
 						label="Name"
