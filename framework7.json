@@ -1,0 +1,45 @@
+{
+  "cwd": "E:\\mobCollNiaga",
+  "type": [
+    "cordova"
+  ],
+  "name": "mobCollNiaga",
+  "framework": "react",
+  "template": "tabs",
+  "bundler": "webpack",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": false,
+    "color": "#007aff",
+    "darkTheme": false,
+    "iconFonts": true,
+    "fillBars": false
+  },
+  "customBuild": false,
+  "webpack": {
+    "developmentSourceMap": true,
+    "productionSourceMap": true,
+    "hashAssets": false,
+    "preserveAssetsPaths": false,
+    "inlineAssets": true,
+    "fs": "empty"
+  },
+  "pkg": "io.framework7.myapp",
+  "cordova": {
+    "folder": "cordova",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": [
+      "cordova-plugin-statusbar",
+      "cordova-plugin-keyboard",
+      "cordova-plugin-splashscreen",
+      "cordova-plugin-device",
+      "cordova-plugin-inappbrowser",
+      "cordova-plugin-file",
+      "cordova-plugin-media",
+      "cordova-plugin-safariviewcontroller"
+    ]
+  }
+}
