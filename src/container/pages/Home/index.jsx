@@ -108,11 +108,13 @@ class Home extends React.Component {
 					</form>
 				</Block>
 				<Block style={{ margin: 0, padding: 0 }}>
-					<Card
-						title="Card header"
-						content="Card with header and footer. Card headers are used to display card titles and footers for additional information or just for custom actions."
-						footer="Card footer"
-					></Card>
+					<a href="">
+						<Card
+							title="Card header"
+							content="Card with header and footer. Card headers are used to display card titles and footers for additional information or just for custom actions."
+							footer="Card footer"
+						></Card>
+					</a>
 				</Block>
 
 
