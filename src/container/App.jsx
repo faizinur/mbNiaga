@@ -143,7 +143,7 @@ class Root extends React.Component {
 					</Views>
 				}
 			</App >
-		)
+		) 
 	}
 }
 

@@ -15,7 +15,8 @@ import {
 	ListInput,
 	Row,
 	Col,
-	Button
+	Button,
+	Card,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -65,30 +66,53 @@ class Home extends React.Component {
 				<BlockTitle>HELLO... {this.props.profile.username}</BlockTitle>
 
 				<Block style={{ margin: 0, padding: 0 }}>
-					<Row noGap>
-						<Col width="30" medium="30">
-							<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
-								<ListInput
-									label="Name"
-									type="text"
-									placeholder="Your name"
-									clearButton
-									outline
-								/>
-							</List>
-						</Col>
-						<Col width="70" medium="70">
-							<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
-								<ListInput
-									label="Name"
-									type="text"
-									placeholder="Your name"
-									clearButton
-									outline
-								/>
-							</List>
-						</Col>
-					</Row>
+					<form id="myForm">
+						<Row noGap>
+							<Col width="100" medium="100">
+								<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
+									<ListInput
+										label="Validation"
+										type="text"
+										clearButton
+										outline
+										placeholder="Input Text"
+										required
+										pattern="[A-Za-z]{4}"
+										validate
+										onValidate={(isValid) => log('Validation', isValid)}
+										errorMessageForce={false}
+										errorMessage="errorMessage"
+										ignoreStoreData={true}
+									/>
+								</List>
+							</Col>
+							<Col width="100" medium="100">
+								<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
+									<ListInput
+										label="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+										type="password"
+										clearButton
+										outline
+										placeholder="Input Password"
+										required
+										validate
+										pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+										validate
+										onValidate={(isValid) => log('password', isValid)}
+										errorMessageForce={false}
+										errorMessage="errorMessage"
+									/>
+								</List>
+							</Col>
+						</Row>
+					</form>
+				</Block>
+				<Block style={{ margin: 0, padding: 0 }}>
+					<Card
+						title="Card header"
+						content="Card with header and footer. Card headers are used to display card titles and footers for additional information or just for custom actions."
+						footer="Card footer"
+					></Card>
 				</Block>
 
 
