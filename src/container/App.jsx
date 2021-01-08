@@ -28,9 +28,9 @@ import region from '../data/region.json';
 
 import Datastores from '../database/';
 import { log } from '../utils/consoles/';
-import { updateUser } from '../config/redux/actions/mainActions';
-
+import { updateUser, setUser } from '../config/redux/actions/';
 import { POST } from '../utils/API';
+import { object } from 'prop-types';
 
 
 class Root extends React.Component {
@@ -79,7 +79,7 @@ class Root extends React.Component {
 	}
 
 	_initDB = async () => {
-		log('export : ',Datastores.exportData());
+		log('export : ', Datastores.exportData());
 		// try {
 		// const insertResult = await Datastores.insert('collections', { name: 'Ceres', type: 'asteroid' });
 		// log('INSERT RESULT : ', insertResult == null ? 'INSERT!': 'UDAH ADA!');
@@ -117,32 +117,30 @@ class Root extends React.Component {
 		this.props.updateUser({
 			username: 'Jhon Doe',
 			password: '1234',
-		})
+		});
 	}
 	render() {
 		const { username, password } = this.props.user;
 		const { number } = this.state;
 		return (
 			<App params={this.state.f7params} >
-				{/* Views/Tabs container */}
-				<View main url="/" />
-				{/* {
-					(number == 0) && (<p>0</p>)
-					|| (number == 1) && (<p>1</p>)
-					|| (<p>default</p>)
-				} */}
-				{/* <Views tabs className="safe-areas">
-					<Toolbar tabbar labels bottom>
-						<Link tabLink="#view-home" tabLinkActive iconIos="f7:house_fill" iconAurora="f7:house_fill" iconMd="material:home" text="Home" />
-						<Link tabLink="#view-select" iconIos="f7:square_list_fill" iconAurora="f7:square_list_fill" iconMd="material:view_list" text="Select" />
-						<Link tabLink="#view-setting" iconIos="f7:gear" iconAurora="f7:gear" iconMd="material:settings" text="Setting" />
-					</Toolbar>
+				{
+					(Object.keys(this.props.profile).length == 0) &&
+						<View main url="/" />
+						||
+						<Views tabs className="safe-areas">
+							<Toolbar tabbar labels bottom>
+								<Link tabLink="#view-home" tabLinkActive iconIos="f7:house_fill" iconAurora="f7:house_fill" iconMd="material:home" text="Home" />
+								<Link tabLink="#view-select" iconIos="f7:square_list_fill" iconAurora="f7:square_list_fill" iconMd="material:view_list" text="Select" />
+								<Link tabLink="#view-setting" iconIos="f7:gear" iconAurora="f7:gear" iconMd="material:settings" text="Setting" />
+							</Toolbar>
 
-					<View id="view-home" main tab tabActive url="/" />
-					<View id="view-select" name="select" tab url="/select/" />
+							<View id="view-home" main tab tabActive url="/home/" />
+							<View id="view-select" name="select" tab url="/select/" />
 
-					<View id="view-setting" name="setting" tab url="/setting/" />
-				</Views> */}
+							<View id="view-setting" name="setting" tab url="/setting/" />
+						</Views>
+				}
 			</App >
 		)
 	}
@@ -155,6 +153,7 @@ const mapStateToProps = (state) => {
 		district: state.region.district,
 		subDistrict: state.region.subDistrict,
 		user: state.main.user,
+		profile: state.user.profile,
 	};
 };
 
@@ -164,7 +163,8 @@ const mapDispatchToProps = (dispatch) => {
 		setRegency: (data) => dispatch(setRegency(data)),
 		setDistrict: (data) => dispatch(setDistrict(data)),
 		setSubDistrict: (data) => dispatch(setSubDistrict(data)),
-		updateUser: (data) => dispatch(updateUser(data))
+		updateUser: (data) => dispatch(updateUser(data)),
+		setUser: (data) => dispatch(setUser(data)),
 	};
 };
 

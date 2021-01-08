@@ -20,7 +20,7 @@ import {
 
 import { connect } from 'react-redux';
 // import { useDispatch, useSelector } from 'react-redux'
-import { login, updateUser } from '../../../config/redux/actions/mainActions';
+import { login, updateUser , setUser } from '../../../config/redux/actions/';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { log } from '../../../utils/consoles';
 
@@ -45,6 +45,9 @@ class Home extends React.Component {
 		);
 		this.props.navigate('JHABJBASJDBASBD');
 	}
+	_onLogout = () => {
+		this.props.setUser({})
+	}
 	render() {
 		return (
 			<Page name="home">
@@ -62,7 +65,7 @@ class Home extends React.Component {
 
 				<BlockTitle>Navigation</BlockTitle>
 
-				<List noHairlinesMd>
+				{/* <List noHairlinesMd>
 					<ListInput
 						label="Name"
 						type="text"
@@ -79,11 +82,11 @@ class Home extends React.Component {
 						clearButton
 						onChange={({ target }) => this.setState({ username: target.value })}
 					/>
-				</List>
+				</List> */}
 				<Block>
 					<Row>
 						<Col>
-							<Button onClick={() => this._onLogin()} round>Login</Button>
+							<Button onClick={() => this._onLogout()} round>Logout</Button>
 						</Col>
 					</Row>
 				</Block>
@@ -95,6 +98,7 @@ class Home extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		user: state.main.user,
+		profile: state.user.profile,
 	};
 };
 
@@ -102,6 +106,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		onUpdateUser: (data) => dispatch(updateUser(data)),
 		navigate: (pageName) => dispatch(navigate(pageName)),
+		setUser: (data) => dispatch(setUser(data)),
 	};
 };
 

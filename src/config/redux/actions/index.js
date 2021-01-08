@@ -1,7 +1,7 @@
 import {
     increment,
     decrement
-} from './counterAction';
+} from './counterActions';
 
 import {
     updateUser,
@@ -10,7 +10,11 @@ import {
 
 import {
     navigate
-} from './regionActions';
+} from './routerActions';
+
+import {
+    setUser    
+} from './userActions';
 
 export {
     increment,
@@ -18,4 +22,5 @@ export {
     updateUser,
     login,
     navigate,
+    setUser,
 }

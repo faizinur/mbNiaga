@@ -19,6 +19,10 @@ var router = [
 		component: Login,
 	},
 	{
+		path: '/home/',
+		component: Home,
+	},
+	{
 		path: '/request-and-load/user/:userId/',
 		async: function (routeTo, routeFrom, resolve, reject) { mwRequestAndLoad(routeTo, routeFrom, resolve, reject, RequestAndLoad, this) },
 	},

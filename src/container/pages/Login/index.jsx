@@ -10,10 +10,9 @@ import {
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
-import { login, updateUser } from '../../../config/redux/actions/mainActions';
+import { login, updateUser, setUser } from '../../../config/redux/actions/';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { log } from '../../../utils/consoles';
-
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,30 +23,32 @@ class Login extends React.Component {
 	}
 
 	componentDidMount() {
-		// console.log("componentDidMount Login", this.props);
+		// console.log("componentDidMount Login", this.props.profile);
 	};
 	_onLogin = () => {
-        this.props.navigate('/select/');
+		const { username, password } = this.state;
+		// this.props.navigate('/select/');
+		this.props.setUser({
+			username: username,
+			password: password,
+		})
 	}
 
 	render() {
 		return (
 			<Page name="login">
-				<p>Hayo Login Dulu</p>
 				<List noHairlinesMd>
 					<ListInput
 						label="Name"
 						type="text"
 						placeholder="Your name"
 						clearButton
-						value={""}
 						onChange={({ target }) => this.setState({ password: target.value })}
 					/>
 					<ListInput
 						label="Password"
 						type="text"
 						placeholder="Your password"
-						value={""}
 						clearButton
 						onChange={({ target }) => this.setState({ username: target.value })}
 					/>
@@ -64,12 +65,15 @@ class Login extends React.Component {
 	}
 }
 const mapStateToProps = (state) => {
-	return state;
+	return {
+		profile: state.user.profile,
+	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		navigate: (pageName) => dispatch(navigate(pageName)),
+		setUser: (data) => dispatch(setUser(data)),
 	};
 };
 
