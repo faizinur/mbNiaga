@@ -20,7 +20,7 @@ import {
 
 import { connect } from 'react-redux';
 // import { useDispatch, useSelector } from 'react-redux'
-import { login, updateUser , setUser } from '../../../config/redux/actions/';
+import { login, updateUser, setUser } from '../../../config/redux/actions/';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { log } from '../../../utils/consoles';
 
@@ -52,18 +52,46 @@ class Home extends React.Component {
 		return (
 			<Page name="home">
 				{/* Top Navbar */}
-				<Navbar large sliding={false}>
+				<Navbar sliding={false}>
 					<NavLeft>
-						{/* <Link iconIos="f7:menu" iconAurora="f7:menu" iconMd="material:menu" panelOpen="left" /> */}
+						<Link iconIos="f7:menu" iconAurora="f7:menu" iconMd="material:menu" panelOpen="left" />
 					</NavLeft>
 					<NavTitle sliding>mobCollNiaga</NavTitle>
 					<NavRight>
-						{/* <Link iconIos="f7:menu" iconAurora="f7:menu" iconMd="material:menu" panelOpen="right" /> */}
+						<Link iconIos="f7:menu" iconAurora="f7:menu" iconMd="material:menu" panelOpen="right" />
 					</NavRight>
-					<NavTitleLarge>mobCollNiaga</NavTitleLarge>
 				</Navbar>
 
 				<BlockTitle>HELLO... {this.props.profile.username}</BlockTitle>
+
+				<Block style={{ margin: 0, padding: 0 }}>
+					<Row noGap>
+						<Col width="30" medium="30">
+							<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
+								<ListInput
+									label="Name"
+									type="text"
+									placeholder="Your name"
+									clearButton
+									outline
+								/>
+							</List>
+						</Col>
+						<Col width="70" medium="70">
+							<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
+								<ListInput
+									label="Name"
+									type="text"
+									placeholder="Your name"
+									clearButton
+									outline
+								/>
+							</List>
+						</Col>
+					</Row>
+				</Block>
+
+
 				<Block>
 					<Row>
 						<Col>
