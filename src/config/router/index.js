@@ -24,7 +24,7 @@ var router = [
 	},
 	{
 		path: '/request-and-load/user/:userId/',
-		async: function (routeTo, routeFrom, resolve, reject) { mwRequestAndLoad(routeTo, routeFrom, resolve, reject, RequestAndLoad, this) },
+		async: function (routeTo, routeFrom, resolve, reject) { mwRequestAndLoad(routeTo, routeFrom, resolve, reject, RequestAndLoad) },
 	},
 	{
 		path : '/setting/',

@@ -63,26 +63,7 @@ class Home extends React.Component {
 					<NavTitleLarge>mobCollNiaga</NavTitleLarge>
 				</Navbar>
 
-				<BlockTitle>Navigation</BlockTitle>
-
-				{/* <List noHairlinesMd>
-					<ListInput
-						label="Name"
-						type="text"
-						placeholder="Your name"
-						clearButton
-						value={this.props.user.username}
-						onChange={({ target }) => this.setState({ password: target.value })}
-					/>
-					<ListInput
-						label="Password"
-						type="text"
-						placeholder="Your password"
-						value={this.props.user.password}
-						clearButton
-						onChange={({ target }) => this.setState({ username: target.value })}
-					/>
-				</List> */}
+				<BlockTitle>HELLO...</BlockTitle>
 				<Block>
 					<Row>
 						<Col>

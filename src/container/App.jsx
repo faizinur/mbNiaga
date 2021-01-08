@@ -126,20 +126,22 @@ class Root extends React.Component {
 			<App params={this.state.f7params} >
 				{
 					(Object.keys(this.props.profile).length == 0) &&
+					<Views className="safe-areas">
 						<View main url="/" />
-						||
-						<Views tabs className="safe-areas">
-							<Toolbar tabbar labels bottom>
-								<Link tabLink="#view-home" tabLinkActive iconIos="f7:house_fill" iconAurora="f7:house_fill" iconMd="material:home" text="Home" />
-								<Link tabLink="#view-select" iconIos="f7:square_list_fill" iconAurora="f7:square_list_fill" iconMd="material:view_list" text="Select" />
-								<Link tabLink="#view-setting" iconIos="f7:gear" iconAurora="f7:gear" iconMd="material:settings" text="Setting" />
-							</Toolbar>
+					</Views>
+					||
+					<Views tabs className="safe-areas">
+						<Toolbar tabbar labels bottom>
+							<Link tabLink="#view-home" tabLinkActive iconIos="f7:house_fill" iconAurora="f7:house_fill" iconMd="material:home" text="Home" />
+							<Link tabLink="#view-select" iconIos="f7:square_list_fill" iconAurora="f7:square_list_fill" iconMd="material:view_list" text="Select" />
+							<Link tabLink="#view-setting" iconIos="f7:gear" iconAurora="f7:gear" iconMd="material:settings" text="Setting" />
+						</Toolbar>
 
-							<View id="view-home" main tab tabActive url="/home/" />
-							<View id="view-select" name="select" tab url="/select/" />
+						<View id="view-home" main tab tabActive url="/home/" />
+						<View id="view-select" name="select" tab url="/select/" />
 
-							<View id="view-setting" name="setting" tab url="/setting/" />
-						</Views>
+						<View id="view-setting" name="setting" tab url="/setting/" />
+					</Views>
 				}
 			</App >
 		)

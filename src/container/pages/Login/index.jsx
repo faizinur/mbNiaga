@@ -10,8 +10,7 @@ import {
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
-import { login, updateUser, setUser } from '../../../config/redux/actions/';
-import { navigate } from '../../../config/redux/actions/routerActions';
+import { login, updateUser, setUser, navigate } from '../../../config/redux/actions/';
 import { log } from '../../../utils/consoles';
 class Login extends React.Component {
 	constructor(props) {

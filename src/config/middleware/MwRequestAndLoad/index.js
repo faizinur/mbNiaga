@@ -1,16 +1,9 @@
+import React, { Component } from 'react';
+import { f7 } from 'framework7-react';
 
-// import { Encrypt, Decrypt } from '../../../utils/Encryption/';
-// import API from '../../../utils/API';
-
-const mwRequestAndLoad = (routeTo, routeFrom, resolve, reject, component, context) => {
-    // Middleware instance
-    var middleware = context;
-
-    // App instance
-    var app = middleware.app;
-
+const mwRequestAndLoad = (routeTo, routeFrom, resolve, reject, component) => {
     // Show Preloader
-    app.preloader.show();
+    f7.preloader.show();
 
     // User ID from request
     var userId = routeTo.params.userId;
@@ -40,7 +33,7 @@ const mwRequestAndLoad = (routeTo, routeFrom, resolve, reject, component, contex
         // API.post(`users`, Encrypt(user)).then(res => console.log(res))
 
         // hide Preloader
-        app.preloader.hide();
+        f7.preloader.hide();
         // reject();
 
         // Resolve route to load page
