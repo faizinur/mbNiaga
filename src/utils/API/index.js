@@ -2,8 +2,8 @@ import axios from 'axios';
 import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
 import { log } from '../consoles/';
-const API = axios.create({ baseURL: `http://jsonplaceholder.typicode.com/` });
-// const API = axios.create({ baseURL: `https://rnd.ecentrix.net/onboarding/mega_auto/api/` });
+// const API = axios.create({ baseURL: `http://jsonplaceholder.typicode.com/` });
+const API = axios.create({ baseURL: `https://rnd.ecentrix.net/onboarding/mega_auto/api/` });
 
 const POST = (url, data, encryptMode = true) => {
 	f7.preloader.show();
@@ -36,6 +36,7 @@ export {
 
 //PENGGUNAAN
 /*
+import { POST } from '../utils/API';
 var user = {
 	nip : 'nip2',
 	password : '1234',

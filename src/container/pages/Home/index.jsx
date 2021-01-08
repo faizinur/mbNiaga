@@ -63,7 +63,7 @@ class Home extends React.Component {
 					<NavTitleLarge>mobCollNiaga</NavTitleLarge>
 				</Navbar>
 
-				<BlockTitle>HELLO...</BlockTitle>
+				<BlockTitle>HELLO... {this.props.profile.username}</BlockTitle>
 				<Block>
 					<Row>
 						<Col>

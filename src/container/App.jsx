@@ -30,7 +30,6 @@ import Datastores from '../database/';
 import { log } from '../utils/consoles/';
 import { updateUser, setUser } from '../config/redux/actions/';
 import { POST } from '../utils/API';
-import { object } from 'prop-types';
 
 
 class Root extends React.Component {

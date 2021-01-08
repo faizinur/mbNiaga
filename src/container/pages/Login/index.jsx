@@ -12,6 +12,7 @@ import {
 import { connect } from 'react-redux';
 import { login, updateUser, setUser, navigate } from '../../../config/redux/actions/';
 import { log } from '../../../utils/consoles';
+import { POST } from '../../../utils/API/';
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,10 +28,20 @@ class Login extends React.Component {
 	_onLogin = () => {
 		const { username, password } = this.state;
 		// this.props.navigate('/select/');
-		this.props.setUser({
-			username: username,
+		// if(username == '' || password == ''){return false;}
+		var user = {
+			nip: username,
 			password: password,
-		})
+		}
+		POST(`Login`, user)
+			.then(res => {
+				// log(res)
+				this.props.setUser({
+					username: username,
+					password: password,
+				});
+			})
+			.catch(err => log(err));
 	}
 
 	render() {
