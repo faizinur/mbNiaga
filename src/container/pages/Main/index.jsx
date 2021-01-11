@@ -21,10 +21,8 @@ class Main extends React.Component {
         super(props);
     }
     componentDidMount = () => {
-      
-    };
-    
 
+    };
     render() {
         return (
             <Page>
@@ -92,7 +90,11 @@ class Main extends React.Component {
                 <Block>
                     <CardContent padding={false}>
                         <List medial-list style={{ marginRight: 5, marginLeft: 5, fontSize: 12 }}>
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Daftar Debitur" />
+                            <ListItem
+                                style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }}
+                                link="/ListDebitur/"
+                                title="Daftar Debitur"
+                            />
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rencana Kunjungan" />
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Daftar Dikunjungi" />
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rekap Terkirim" />

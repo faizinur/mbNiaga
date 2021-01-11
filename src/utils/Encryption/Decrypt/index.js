@@ -3,7 +3,7 @@ import KEY from '../key';
 // module.exports = function(ciphertext) {    
 const Decrypt = (ciphertext) => {
     var obj_json = JSON.parse(ciphertext);
-    //console.log("obj_json",obj_json);
+    // console.log("obj_json",obj_json);
     var passphrase = KEY;
     var encrypted = obj_json.ciphertext;
     var salt = CryptoJS.enc.Hex.parse(obj_json.salt);

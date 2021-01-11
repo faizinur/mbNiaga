@@ -14,7 +14,8 @@ import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
 import { goBack, navigateTo, showAlert } from 'framework7-redux';
 import { log } from '../../../utils/';
-import { navigate } from '../../../config/redux/actions/routerActions';
+import { navigate, setUser } from '../../../config/redux/actions/';
+import { POST } from '../../../utils/';
 
 class Login extends React.Component {
     constructor(props) {
@@ -26,9 +27,24 @@ class Login extends React.Component {
         };
     }
     componentDidMount() {
-        // log('HOHOHOHO')
+        log('componentDidMount LOGIN : ')
     }
-    
+
+    _onClickLogin = () => {
+        var data = {
+            username: '00140515',
+            password: '1234',
+            imei: '101010101',
+            iccd: '010101010',
+        }
+        POST(`Login`, data)
+            .then(res => {
+                log("LOGIN", res)
+                this.props.setUser(res.data)
+            })
+            .catch(err => log("LOGIN", err));
+    }
+
     render() {
         return (
             <Page noToolbar noNavbar noSwipeback loginScreen>
@@ -57,7 +73,11 @@ class Login extends React.Component {
                     <Block strong>
                         <Row>
                             <Col width="100">
-                                <Button onClick={() => this.signIn()} round style={{backgroundColor: '#c0392b', color:'white'}}>Login</Button>
+                                <Button
+                                    onClick={() => this._onClickLogin()}
+                                    round
+                                    style={{ backgroundColor: '#c0392b', color: 'white' }}
+                                >Login</Button>
                             </Col>
                         </Row>
                     </Block>
@@ -66,22 +86,22 @@ class Login extends React.Component {
         );
     }
     signIn() {
-        this.props.navigate('/Check/');
+        // this.props.navigate('/Check/');
+        this.props.navigate('/HomeTemplates/');
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        user: state.main.user,
+        profile: state.user.profile,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        //onUpdateUser: (data) => dispatch(updateUser(data)),
-        //onLogin: () => dispatch(login()),
-        navigate: (fs) => dispatch(navigate(fs))
+        setUser: (data) => dispatch(setUser(data)),
+        navigate: (fs) => dispatch(navigate(fs)),
     };
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -1,3 +1,4 @@
+import { POST } from './API';
 import uuid from './uuid';
 import { log, info, warn } from './Consoles';
 import Camera from './Camera';
@@ -7,6 +8,7 @@ import Fingerprint from './Fingerprint';
 import Geolocation from './Geolocation';
 
 export {
+    POST,
     uuid,
     log, 
     info, 

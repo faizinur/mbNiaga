@@ -8,11 +8,12 @@ const initialState = {
         password : '',
     },
 };
+import { log } from '../../../../utils/';
 
 const mainReducers = (state = initialState, action) => {
     switch (action.type) {
         case UPDATE_USER : 
-        console.log('UPDATE USER : ', action.payload)
+        log('UPDATE USER : ', action.payload)
         return {
             ...state,
             user : action.payload,

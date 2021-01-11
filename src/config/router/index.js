@@ -24,7 +24,6 @@ import {
 var router = [
 	{
 		path: '/',
-		// component: Home,
 		component: Login,
 	},
 	{

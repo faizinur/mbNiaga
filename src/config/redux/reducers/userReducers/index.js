@@ -7,11 +7,12 @@ const initialState = {
 
     },
 };
+import { log } from '../../../../utils/';
 
 const userReducers = (state = initialState, action) => {
     switch (action.type) {
         case SET_USER:
-            console.log('SET USER : ')
+            log('SET USER : ', action.payload)
             return {
                 ...state,
                 profile: action.payload,
