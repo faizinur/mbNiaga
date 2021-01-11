@@ -1,5 +1,5 @@
-import uuid from './Uuid';
-import * as log from './Consoles';
+import uuid from './uuid';
+import { log, info, warn } from './Consoles';
 import Camera from './Camera';
 import Connection from './Connection';
 import Device from './Device';
@@ -8,7 +8,9 @@ import Geolocation from './Geolocation';
 
 export {
     uuid,
-    log,
+    log, 
+    info, 
+    warn,
     Camera,
     Connection,
     Device,

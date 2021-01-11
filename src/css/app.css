@@ -2,5 +2,10 @@
 .device-cordova.device-ios {
   height: 100vh;
 }
-
+:root {
+  --f7-theme-color: #c0392b;
+  --f7-theme-color-shade: #890001;
+  --f7-theme-color-tint: #f96b55;
+  --f7-theme-color-rgb: 255, 0, 0;
+}
 /* Your app custom styles here */

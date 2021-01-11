@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
-import { log } from '../consoles/';
+import { log } from '../Consoles/';
 // const API = axios.create({ baseURL: `http://jsonplaceholder.typicode.com/` });
 const API = axios.create({ baseURL: `https://rnd.ecentrix.net/onboarding/mega_auto/api/` });
 
@@ -10,7 +10,7 @@ const POST = (url, data, encryptMode = true) => {
 	//decrypt
 	let formdata = new FormData();
 	formdata.append('msg', Encrypt(data));
-	console.log('formdata: ', formdata);
+	log('formdata: ', formdata);
 	return new Promise((resolve, reject) => {
 		API.post(url, !encryptMode ? data : Encrypt(data))
 			.then(res => {

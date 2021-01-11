@@ -1,7 +1,8 @@
 import CryptoJS from 'crypto-js';
+import KEY from '../key';
 // module.exports = function (props) {
 const Encrypt = (props) => {
-	var key = 'idonotknowit';
+	var key = KEY;
 	var encryptMethod = 'AES-256-CBC';
 	// get only number from string.
 	// @link https://stackoverflow.com/a/10003709/128761 Reference.

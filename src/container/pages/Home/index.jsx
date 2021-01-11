@@ -23,7 +23,7 @@ import { connect } from 'react-redux';
 // import { useDispatch, useSelector } from 'react-redux'
 import { login, updateUser, setUser } from '../../../config/redux/actions/';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log } from '../../../utils/consoles';
+
 
 class Home extends React.Component {
 	constructor(props) {
@@ -79,7 +79,7 @@ class Home extends React.Component {
 										required
 										pattern="[A-Za-z]{4}"
 										validate
-										onValidate={(isValid) => log('Validation', isValid)}
+										onValidate={(isValid) => console.log('Validation', isValid)}
 										errorMessageForce={false}
 										errorMessage="Harap isi Input"
 										ignoreStoreData={true}
@@ -98,7 +98,7 @@ class Home extends React.Component {
 										validate
 										pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
 										validate
-										onValidate={(isValid) => log('password', isValid)}
+										onValidate={(isValid) => console.log('password', isValid)}
 										errorMessageForce={false}
 										errorMessage="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
 									/>

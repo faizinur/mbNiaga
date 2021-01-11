@@ -1,19 +1,25 @@
 import {
 	NotFound,
 	Home,
-	RequestAndLoad,
-	Setting,
-	Select,
 	Login,
+	Check,
+	DeviceInfo,
+	DaftarPin,
+	Main,
+	ListDebitur,
+	// RequestAndLoad,
+	// Setting,
+	// Select,
 } from '../../container/pages';
+
 
 import {
 	HomeTemplates
 } from '../../container/templates';
 
-import {
-	mwRequestAndLoad
-} from '../middleware/'
+// import {
+// 	mwRequestAndLoad
+// } from '../middleware/'
 
 var router = [
 	{
@@ -22,29 +28,49 @@ var router = [
 		component: Login,
 	},
 	{
-		path: '/home/',
+		path: '/Home/',
 		component: Home,
 	},
 	{
-		path: '/request-and-load/user/:userId/',
-		async: function (routeTo, routeFrom, resolve, reject) { mwRequestAndLoad(routeTo, routeFrom, resolve, reject, RequestAndLoad) },
+		path: '/HomeTemplates/',
+		component: HomeTemplates,
 	},
 	{
-		path : '/setting/',
-		component : Setting,
+		path: '/Check/',
+		component: Check,
 	},
 	{
-		path : '/select/',
-		component : Select,
+		path: '/DeviceInfo/',
+		component: DeviceInfo,
 	},
 	{
-		path : '/HomeTemplates/',
-		component : HomeTemplates,
+		path: '/DaftarPin/',
+		component: DaftarPin,
+	},
+	{
+		path: '/Main/',
+		component: Main,
+	},
+	{
+		path: '/ListDebitur/',
+		component: ListDebitur,
 	},
 	{
 		path: '(.*)',
 		component: NotFound,
 	},
+	// {
+	// 	path: '/request-and-load/user/:userId/',
+	// 	async: function (routeTo, routeFrom, resolve, reject) { mwRequestAndLoad(routeTo, routeFrom, resolve, reject, RequestAndLoad) },
+	// },
+	// {
+	// 	path : '/setting/',
+	// 	component : Setting,
+	// },
+	// {
+	// 	path : '/select/',
+	// 	component : Select,
+	// },
 ];
 
 export default router;

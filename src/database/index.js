@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { f7 } from 'framework7-react';
 import Datastore from 'nedb';
-import { log } from '../utils/consoles/';
+import { log } from '../utils/';
 import uuid from '../utils/uuid/';
 
 class Datastores extends Component {

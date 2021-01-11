@@ -8,7 +8,7 @@ import {
 } from 'framework7-react';
 import router from '../../../config/router';
 
-import { log } from '../../../utils/consoles/';
+import { log } from '../../../utils/';
 import { POST } from '../../../utils/API';
 
 

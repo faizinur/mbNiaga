@@ -1,9 +1,10 @@
 import CryptoJS from 'crypto-js';
+import KEY from '../key';
 // module.exports = function(ciphertext) {    
 const Decrypt = (ciphertext) => {
     var obj_json = JSON.parse(ciphertext);
     //console.log("obj_json",obj_json);
-    var passphrase = 'idonotknowit';
+    var passphrase = KEY;
     var encrypted = obj_json.ciphertext;
     var salt = CryptoJS.enc.Hex.parse(obj_json.salt);
     var iv = CryptoJS.enc.Hex.parse(obj_json.iv);

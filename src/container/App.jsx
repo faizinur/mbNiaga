@@ -4,13 +4,6 @@ import {
 	App,
 	Views,
 	View,
-	Toolbar,
-	Link,
-	Button,
-	Page,
-	Block,
-	Row,
-	Col,
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -27,7 +20,7 @@ import {
 import region from '../data/region.json';
 
 import Datastores from '../database/';
-import { log } from '../utils/consoles/';
+import { log } from '../utils/';
 import { updateUser, setUser } from '../config/redux/actions/';
 import { POST } from '../utils/API';
 
@@ -61,7 +54,7 @@ class Root extends React.Component {
 		}
 	}
 	componentDidMount() {
-		// console.log(this.$f7);
+		// log(this.$f7);
 		this.$f7ready((f7) => {
 			// Init cordova APIs (see cordova-app.js)
 			if (Device.cordova) {
@@ -77,7 +70,7 @@ class Root extends React.Component {
 	}
 
 	_initDB = async () => {
-		log('export : ', Datastores.exportData());
+		// log('export : ', Datastores.exportData());
 		// try {
 		// const insertResult = await Datastores.insert('collections', { name: 'Ceres', type: 'asteroid' });
 		// log('INSERT RESULT : ', insertResult == null ? 'INSERT!': 'UDAH ADA!');

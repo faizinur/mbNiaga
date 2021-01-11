@@ -1,9 +1,10 @@
-import { getDevice }  from 'framework7/lite-bundle';
+// import { getDevice }  from 'framework7/lite-bundle';
+import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 var Connection = {
     checkConnection: () => {
         return new Promise((resolve, reject) => {
-            var device = getDevice();
-            if (!device.android && !device.ios) reject("Device not support");
+            // var device = getDevice();
+            if (!Device.android && !Device.ios) reject("Device not support");
             var networkState = navigator.connection.type;
             switch(networkState){
                 case 'wifi':

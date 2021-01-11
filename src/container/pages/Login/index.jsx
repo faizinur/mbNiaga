@@ -1,91 +1,87 @@
 import React, { Component } from 'react';
 import {
-	Page,
-	Block,
-	List,
-	ListInput,
-	Row,
-	Col,
-	Button,
+    Block,
+    Col,
+    Page,
+    LoginScreenTitle,
+    List,
+    Button,
+    ListInput,
+    Row
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
-import { login, updateUser, setUser, navigate } from '../../../config/redux/actions/';
-import { log } from '../../../utils/consoles';
-import { POST } from '../../../utils/API/';
+import stylesheet from './stylesheet';
+import { goBack, navigateTo, showAlert } from 'framework7-redux';
+import { log } from '../../../utils/';
+import { navigate } from '../../../config/redux/actions/routerActions';
+
 class Login extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			username: 'Jhon Doe',
-			password: '1234',
-		};
-	}
+    constructor(props) {
+        super(props);
 
-	componentDidMount() {
-		// console.log("componentDidMount Login", this.props.profile);
-	};
-	_onLogin = () => {
-		const { username, password } = this.state;
-		// this.props.navigate('/select/');
-		// if(username == '' || password == ''){return false;}
-		var user = {
-			nip: username,
-			password: password,
-		}
-		POST(`Login`, user)
-			.then(res => {
-				// log(res)
-				this.props.setUser({
-					username: username,
-					password: password,
-				});
-				this.props.navigate('/HomeTemplates/')
-			})
-			.catch(err => log(err));
-	}
-
-	render() {
-		return (
-			<Page name="login">
-				<List noHairlinesMd>
-					<ListInput
-						label="Name"
-						type="text"
-						placeholder="Your name"
-						clearButton
-						onChange={({ target }) => this.setState({ password: target.value })}
-					/>
-					<ListInput
-						label="Password"
-						type="text"
-						placeholder="Your password"
-						clearButton
-						onChange={({ target }) => this.setState({ username: target.value })}
-					/>
-				</List>
-				<Block>
-					<Row>
-						<Col>
-							<Button onClick={() => this._onLogin()} round>Login</Button>
-						</Col>
-					</Row>
-				</Block>
-			</Page>
-		);
-	}
+        this.state = {
+            username: '',
+            password: '',
+        };
+    }
+    componentDidMount() {
+        // log('HOHOHOHO')
+    }
+    
+    render() {
+        return (
+            <Page noToolbar noNavbar noSwipeback loginScreen>
+                <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
+                <List inlineLabels noHairlinesMd>
+                    <ListInput
+                        outline
+                        label="Username :"
+                        type="text"
+                        value={this.state.username}
+                        onInput={(e) => {
+                            this.setState({ username: e.target.value });
+                        }}
+                    />
+                    <ListInput
+                        outline
+                        label="Password :"
+                        type="password"
+                        value={this.state.password}
+                        onInput={(e) => {
+                            this.setState({ password: e.target.value });
+                        }}
+                    />
+                </List>
+                <List noHairlinesMd>
+                    <Block strong>
+                        <Row>
+                            <Col width="100">
+                                <Button onClick={() => this.signIn()} round style={{backgroundColor: '#c0392b', color:'white'}}>Login</Button>
+                            </Col>
+                        </Row>
+                    </Block>
+                </List>
+            </Page>
+        );
+    }
+    signIn() {
+        this.props.navigate('/Check/');
+    }
 }
+
 const mapStateToProps = (state) => {
-	return {
-		profile: state.user.profile,
-	};
+    return {
+        user: state.main.user,
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
-	return {
-		navigate: (pageName) => dispatch(navigate(pageName)),
-		setUser: (data) => dispatch(setUser(data)),
-	};
+    return {
+        //onUpdateUser: (data) => dispatch(updateUser(data)),
+        //onLogin: () => dispatch(login()),
+        navigate: (fs) => dispatch(navigate(fs))
+    };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);
