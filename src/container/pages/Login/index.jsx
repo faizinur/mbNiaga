@@ -39,7 +39,7 @@ class Login extends React.Component {
         }
         POST(`Login`, data)
             .then(res => {
-                log("LOGIN", res)
+                // log("LOGIN", res)
                 this.props.setUser(res.data);
                 this.props.navigate('/HomeTemplates/');
             })

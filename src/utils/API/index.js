@@ -7,47 +7,31 @@ const API = axios.create({
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 	},
-	transformRequest: [function (data, headers) {
+	transformRequest: [(data, headers) => {
 		// Do whatever you want to transform the data
-		// log('transformRequest : ', data)
-		return data;
+		f7.preloader.show();
+		const params = new URLSearchParams();
+		params.append('msg', Encrypt(data));
+		return params;
 	}],
-	transformResponse: [function (data) {
+	transformResponse: [data => {
 		// Do whatever you want to transform the data
-		// log('transformResponse : ', JSON.parse(Decrypt(JSON.parse(data))))
-		return JSON.parse(Decrypt(JSON.parse(data)));
+		f7.preloader.hide();
+		return Decrypt(data);
 	}],
 });
 
 const POST = (url, data) => {
-	f7.preloader.show();
 	return new Promise((resolve, reject) => {
-		const params = new URLSearchParams();
-		params.append('msg', Encrypt(data));
-		API.post(url, params)
-			.then(res => {
-				f7.preloader.hide();
-				if(res.data == "error" || res.status != 200) {
-					f7.dialog.alert(res.message)
-					reject(res);
-					return false;
-				}
-				resolve(res.data)
-				// resolve({
-				// 	...res,
-				// 	...{
-				// 		data: res.data
-				// 	}
-				// });
-			}).catch(err => {
-				f7.preloader.hide();
-				reject(err);
-			});
+		API.post(url, data)
+			.then(res =>
+				(res.data == "error" || res.status != 200) ?
+					f7.dialog.alert(res.message) && reject(res) : resolve(JSON.parse(res.data))
+			).catch(err => reject(err));
 	});
 }
 
 export {
-	API,
 	POST,
 }
 
