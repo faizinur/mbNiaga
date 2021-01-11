@@ -40,6 +40,7 @@ class Login extends React.Component {
 					username: username,
 					password: password,
 				});
+				this.props.navigate('/HomeTemplates/')
 			})
 			.catch(err => log(err));
 	}

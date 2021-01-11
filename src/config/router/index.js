@@ -7,6 +7,9 @@ import {
 	Login,
 } from '../../container/pages';
 
+import {
+	HomeTemplates
+} from '../../container/templates';
 
 import {
 	mwRequestAndLoad
@@ -33,6 +36,10 @@ var router = [
 	{
 		path : '/select/',
 		component : Select,
+	},
+	{
+		path : '/HomeTemplates/',
+		component : HomeTemplates,
 	},
 	{
 		path: '(.*)',

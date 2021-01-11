@@ -31,7 +31,6 @@ import { log } from '../utils/consoles/';
 import { updateUser, setUser } from '../config/redux/actions/';
 import { POST } from '../utils/API';
 
-
 class Root extends React.Component {
 	constructor(props) {
 		super(props);
@@ -112,23 +111,23 @@ class Root extends React.Component {
 			this.props.setSubDistrict(region.filter(item => { return item.level == 3 })),
 		]);
 	}
-	_onLogin = () => {
-		this.props.updateUser({
-			username: 'Jhon Doe',
-			password: '1234',
-		});
-	}
+	// _onLogin = () => {
+	// 	this.props.updateUser({
+	// 		username: 'Jhon Doe',
+	// 		password: '1234',
+	// 	});
+	// }
 	render() {
 		const { username, password } = this.props.user;
 		const { number } = this.state;
 		return (
 			<App params={this.state.f7params} >
-				{
-					(Object.keys(this.props.profile).length == 0) &&
+				{/* {
+					(Object.keys(this.props.profile).length == 0) && */}
 					<Views className="safe-areas">
 						<View main url="/" />
 					</Views>
-					||
+					{ /* ||
 					<Views tabs className="safe-areas">
 						<Toolbar tabbar labels bottom>
 							<Link tabLink="#view-home" tabLinkActive iconIos="f7:house_fill" iconAurora="f7:house_fill" iconMd="material:home" text="Home" />
@@ -141,7 +140,7 @@ class Root extends React.Component {
 
 						<View id="view-setting" name="setting" tab url="/setting/" />
 					</Views>
-				}
+				} */}
 			</App >
 		) 
 	}
