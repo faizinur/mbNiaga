@@ -81,7 +81,7 @@ class Home extends React.Component {
 										validate
 										onValidate={(isValid) => log('Validation', isValid)}
 										errorMessageForce={false}
-										errorMessage="errorMessage"
+										errorMessage="Harap isi Input"
 										ignoreStoreData={true}
 									/>
 								</List>
@@ -89,7 +89,7 @@ class Home extends React.Component {
 							<Col width="100" medium="100">
 								<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
 									<ListInput
-										label="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+										label="Password"
 										type="password"
 										clearButton
 										outline
@@ -100,7 +100,7 @@ class Home extends React.Component {
 										validate
 										onValidate={(isValid) => log('password', isValid)}
 										errorMessageForce={false}
-										errorMessage="errorMessage"
+										errorMessage="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
 									/>
 								</List>
 							</Col>
