@@ -12,7 +12,6 @@ import {
 
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
-import { goBack, navigateTo, showAlert } from 'framework7-redux';
 import { log } from '../../../utils/';
 import { navigate, setUser } from '../../../config/redux/actions/';
 import { POST } from '../../../utils/';
@@ -22,8 +21,8 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: '',
-            password: '',
+            username: '00140515',
+            password: '1234',
         };
     }
     componentDidMount() {
@@ -31,16 +30,18 @@ class Login extends React.Component {
     }
 
     _onClickLogin = () => {
+        const { username, password } = this.state;
         var data = {
-            username: '00140515',
-            password: '1234',
+            username: username,//'00140515',
+            password: password,//'1234',
             imei: '101010101',
             iccd: '010101010',
         }
         POST(`Login`, data)
             .then(res => {
                 log("LOGIN", res)
-                this.props.setUser(res.data)
+                this.props.setUser(res.data);
+                this.props.navigate('/HomeTemplates/');
             })
             .catch(err => log("LOGIN", err));
     }
@@ -84,10 +85,6 @@ class Login extends React.Component {
                 </List>
             </Page>
         );
-    }
-    signIn() {
-        // this.props.navigate('/Check/');
-        this.props.navigate('/HomeTemplates/');
     }
 }
 
