@@ -23,7 +23,7 @@ const API = axios.create({
 
 const POST = (...params) => {
 	if (typeof params[0] === "string") {
-		const [url, data ] = params;
+		const [url, data] = params;
 		return new Promise((resolve, reject) => {
 			API.post(url, data)
 				.then(res =>
@@ -36,12 +36,12 @@ const POST = (...params) => {
 		params.map(item =>
 			reqList.push(
 				new Promise((resolve, reject) => {
-				API.post(...item)
-					.then(res =>
-						(res.data == "error" || res.status != 200) ?
-							f7.dialog.alert(res.message) && reject(res) : resolve(JSON.parse(res.data))
-					).catch(err => reject(err));
-			})
+					API.post(...item)
+						.then(res =>
+							(res.data == "error" || res.status != 200) ?
+								f7.dialog.alert(res.message) && reject(res) : resolve(JSON.parse(res.data))
+						).catch(err => reject(err));
+				})
 			));
 		return Promise.all(reqList);
 	}
