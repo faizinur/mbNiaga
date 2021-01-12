@@ -37,9 +37,10 @@ class Login extends React.Component {
             imei: '101010101',
             iccd: '010101010',
         }
-        POST(`Login`, data)
+        // POST([`Login`,data], [`Login`,data])
+        POST(`Login`,data)
             .then(res => {
-                // log("LOGIN", res)
+                log(res)
                 this.props.setUser(res.data);
                 this.props.navigate('/HomeTemplates/');
             })
