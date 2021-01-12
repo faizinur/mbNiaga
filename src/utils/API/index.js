@@ -34,7 +34,8 @@ const POST = (...params) => {
 	} else {
 		let reqList = [];
 		params.map(item =>
-			reqList.push(new Promise((resolve, reject) => {
+			reqList.push(
+				new Promise((resolve, reject) => {
 				API.post(...item)
 					.then(res =>
 						(res.data == "error" || res.status != 200) ?
@@ -53,7 +54,8 @@ export {
 //PENGGUNAAN
 /*
 import { POST } from '../utils/API';
-POST(`Login`, {}, false)
+POST([`Login`,data], [`Login`,data]) // kalau mau banyak sekaligus.
+POST(`Login`, {}, false) // satu satu aja.
 	.then(res => log(res))
 	.catch(err => log(err));
 */
