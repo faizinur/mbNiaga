@@ -31,14 +31,24 @@ class Login extends React.Component {
 
     _onClickLogin = () => {
         const { username, password } = this.state;
+
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+
         var data = {
-            username: username,//'00140515',
-            password: password,//'1234',
+            username: username,
+            password: password,
             imei: '101010101',
             iccd: '010101010',
+            jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
         }
         // POST([`Login`,data], [`Login`,data])
-        POST(`Login`,data)
+        POST(`Login`, data)
             .then(res => {
                 log(res)
                 this.props.setUser(res.data);
