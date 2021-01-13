@@ -7,14 +7,15 @@ import {
     List,
     Button,
     ListInput,
-    Row
+    Row,
+    f7
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
 import { log } from '../../../utils/';
 import { navigate, setUser } from '../../../config/redux/actions/';
-import { POST } from '../../../utils/';
+import { POST, Device } from '../../../utils/';
 
 class Login extends React.Component {
     constructor(props) {
@@ -29,9 +30,8 @@ class Login extends React.Component {
         log('componentDidMount LOGIN : ')
     }
 
-    _onClickLogin = () => {
+    _onClickLogin = async () => {
         const { username, password } = this.state;
-
         var date = new Date();
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -39,22 +39,26 @@ class Login extends React.Component {
         var hours = date.getHours();
         var minutes = date.getMinutes();
         var seconds = date.getSeconds();
-
-        var data = {
-            username: username,
-            password: password,
-            imei: '101010101',
-            iccd: '010101010',
-            jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
-        }
-        // POST([`Login`,data], [`Login`,data])
-        POST(`Login`, data)
-            .then(res => {
-                log(res)
-                this.props.setUser(res.data);
-                this.props.navigate('/HomeTemplates/');
-            })
-            .catch(err => log("LOGIN", err));
+        // try {
+        //     const perangkat = await Device.getInformation();
+            var data = {
+                username: username,
+                password: password,
+                imei: '0',//JSON.stringify(perangkat.uuid),
+                iccd: '0',//JSON.stringify(perangkat.serial),
+                jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
+            }
+            // POST([`Login`,data], [`Login`,data])
+            POST(`Login`, data)
+                .then(res => {
+                    // log(res)
+                    this.props.setUser(res.data);
+                    this.props.navigate('/HomeTemplates/');
+                })
+                .catch(err => log("LOGIN", err));
+        // } catch (err) {
+        //     f7.dialog.alert(err);
+        // }
     }
 
     render() {
@@ -82,7 +86,7 @@ class Login extends React.Component {
                     />
                 </List>
                 <List noHairlinesMd>
-                    <Block strong>
+                    <Block>
                         <Row>
                             <Col width="100">
                                 <Button
