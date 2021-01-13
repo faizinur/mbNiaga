@@ -13,7 +13,7 @@ import{
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log } from '../../../utils/';
+//import { log } from '../../../utils/consoles';
 
 class DaftarPin extends React.Component {
     constructor(props){
@@ -28,15 +28,15 @@ class DaftarPin extends React.Component {
             title="Daftar PIN" style={{alignItems:'center'}}
         />
         <ListInput
+            outline
             label="Masukan PIN Baru"
             type="text"
-            placeholder="Masukan PIN Baru"
         >
         </ListInput>
         <ListInput
+            outline
             label="Konfirmasi PIN Baru"
             type="text"
-            placeholder="Ketik Ulang PIN Baru"
         >
         </ListInput>
         </List>
@@ -44,7 +44,7 @@ class DaftarPin extends React.Component {
         <Block strong>
           <Row>
             <Col width="100">
-              <Button fill raised onClick={() => this._next()} round style={{backgroundColor: '#c0392b'}}>Simpan</Button>
+              <Button fill raised onClick={() => this._next()} style={{backgroundColor: '#c0392b'}}>Next</Button>
             </Col>
           </Row>
         </Block>

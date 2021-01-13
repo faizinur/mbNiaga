@@ -8,7 +8,11 @@ import {
     Button,
     ListInput,
     Row,
-    f7
+    f7,
+    View,
+    Views,
+    Toolbar,
+    Link
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -28,8 +32,8 @@ class Login extends React.Component {
     }
     componentDidMount() {
         log('componentDidMount LOGIN : ')
+        // this._onClickLogin();
     }
-
     _onClickLogin = async () => {
         const { username, password } = this.state;
         var date = new Date();
@@ -41,26 +45,26 @@ class Login extends React.Component {
         var seconds = date.getSeconds();
         // try {
         //     const perangkat = await Device.getInformation();
-            var data = {
-                username: username,
-                password: password,
-                imei: '0',//JSON.stringify(perangkat.uuid),
-                iccd: '0',//JSON.stringify(perangkat.serial),
-                jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
-            }
-            // POST([`Login`,data], [`Login`,data])
-            POST(`Login`, data)
-                .then(res => {
-                    // log(res)
-                    this.props.setUser(res.data);
-                    this.props.navigate('/HomeTemplates/');
-                })
-                .catch(err => log("LOGIN", err));
+        var data = {
+            username: username,
+            password: password,
+            imei: JSON.stringify(perangkat.uuid),
+            iccd: JSON.stringify(perangkat.serial),
+            jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
+        }
+        // POST([`Login`,data], [`Login`,data])
+        POST(`Login`, data)
+            .then(res => {
+                // log(res)
+                this.props.setUser(res.data);
+                this.props.navigate('/HomeTemplates/');
+                // this.props.navigate('/Main/');
+            })
+            .catch(err => log("LOGIN", err));
         // } catch (err) {
         //     f7.dialog.alert(err);
         // }
     }
-
     render() {
         return (
             <Page noToolbar noNavbar noSwipeback loginScreen>

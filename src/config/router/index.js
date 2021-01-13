@@ -7,19 +7,22 @@ import {
 	DaftarPin,
 	Main,
 	ListDebitur,
-	// RequestAndLoad,
-	// Setting,
-	// Select,
+	InfoDebitur,
+	AddKunjungan,
+	UpdateDebitur,
+	RekapTerkirim,
+	UpdatePin,
+	DetailHasilKunjungan,
+	MonitoringDebitur,
+	MonitoringPetugas,
+	ApplicationLog,
+	UserManagement,
 } from '../../container/pages';
 
 
 import {
 	HomeTemplates
 } from '../../container/templates';
-
-// import {
-// 	mwRequestAndLoad
-// } from '../middleware/'
 
 var router = [
 	{
@@ -29,10 +32,6 @@ var router = [
 	{
 		path: '/Home/',
 		component: Home,
-	},
-	{
-		path: '/HomeTemplates/',
-		component: HomeTemplates,
 	},
 	{
 		path: '/Check/',
@@ -55,21 +54,53 @@ var router = [
 		component: ListDebitur,
 	},
 	{
+		path: '/InfoDebitur/',
+		component: InfoDebitur,
+	},
+	{
+		path: '/AddKunjungan/',
+		component: AddKunjungan,
+	},
+	{
+		path: '/UpdateDebitur/',
+		component: UpdateDebitur,
+	},
+	{
+		path: '/RekapTerkirim/',
+		component: RekapTerkirim,
+	},
+	{
+		path: '/UpdatePin/',
+		component: UpdatePin,
+	},
+	{
+		path: '/DetailHasilKunjungan/',
+		component: DetailHasilKunjungan,
+	},
+	{
+		path: '/MonitoringDebitur/',
+		component: MonitoringDebitur,
+	},
+	{
+		path: '/MonitoringPetugas/',
+		component: MonitoringPetugas,
+	},
+	{
+		path: '/ApplicationLog/',
+		component: ApplicationLog,
+	},
+	{
+		path: '/UserManagement/',
+		component: UserManagement,
+	},
+	{
+		path: '/HomeTemplates/',
+		component: HomeTemplates,
+	},
+	{
 		path: '(.*)',
 		component: NotFound,
 	},
-	// {
-	// 	path: '/request-and-load/user/:userId/',
-	// 	async: function (routeTo, routeFrom, resolve, reject) { mwRequestAndLoad(routeTo, routeFrom, resolve, reject, RequestAndLoad) },
-	// },
-	// {
-	// 	path : '/setting/',
-	// 	component : Setting,
-	// },
-	// {
-	// 	path : '/select/',
-	// 	component : Select,
-	// },
 ];
 
 export default router;

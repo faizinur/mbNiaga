@@ -15,7 +15,7 @@ import{
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log } from '../../../utils/';
+//import { log } from '../../../utils/consoles';
 
 class Check extends React.Component {
     constructor(props){
@@ -54,7 +54,7 @@ class Check extends React.Component {
         <Block strong>
           <Row>
             <Col width="100">
-              <Button fill raised onClick={() => this._deviceInfo()} round style={{backgroundColor: '#c0392b'}}>Next</Button>
+              <Button fill raised onClick={() => this._deviceInfo()} style={{backgroundColor: '#c0392b'}}>Next</Button>
             </Col>
           </Row>
         </Block>

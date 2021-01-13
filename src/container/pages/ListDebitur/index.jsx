@@ -14,7 +14,7 @@ import{
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log } from '../../../utils/';
+//import { log } from '../../../utils/consoles';
 
 class ListDebitur extends React.Component {
     constructor(props){
@@ -82,49 +82,56 @@ class ListDebitur extends React.Component {
                 </List>
                 </Col>
             </Row>
-            </Block>
-        </List>
-
-        <List noHairlinesMd>
-        <Block>
             <Row noGap>
-                <Col tag="span">
-                    <ListItem title="Parameter" smartSelect noHairlinesMd style={{margin: 0, padding:0}}>
-                    <select name="superhero" defaultValue={['Batman']}>
-                        <option value="Batman">Batman</option>
-                        <option value="Superman">Superman</option>
-                    </select>
-                    </ListItem>
-                </Col>
-                <Col tag="span">
-                <List style={{margin: 0, padding:0}}>    
+                <Col width="40" tag="span" style={{margin: 0, padding:0}}>
+                    <List noHairlinesMd>
                     <ListInput
                         outline
-                        label="Waktu Server"
+                        label="Hasil Kunjungan"
+                        type="select"
+                        defaultValue=""
+                    >
+                        <option value="" disabled>--pilih--</option>
+                        <option value="">-----</option>
+                    </ListInput>
+                    </List>
+                </Col>
+                <Col width="30" tag="span" style={{margin: 0, padding:0}}>
+                <List>    
+                    <ListInput
+                        outline
+                        label="Kondisi"
                         type="text"
                     >
                     </ListInput>
                 </List>
                 </Col>
-                <Col tag="span">
-                <List style={{margin: 0, padding:0}}>    
+                <Col width="30" tag="span" style={{margin: 0, padding:0}}>
+                <List>    
                     <ListInput
                         outline
-                        label="Waktu Server"
+                        label="Value"
                         type="text"
                     >
                     </ListInput>
                 </List>
                 </Col>
             </Row>
-            </Block>
+                <Block strong style={{marginTop:-30}}>
+                    <Row noGap>
+                        <Col width="100">
+                        <Button fill raised onClick={() => this._next()} style={{backgroundColor: '#c0392b', fontSize:12}}>Search</Button>
+                        </Col>
+                    </Row>
+                </Block>
+        </Block>
         </List>
         
         <List>
         <Block strong>
           <Row>
             <Col width="100">
-              <Button fill raised onClick={() => this._next()} round style={{backgroundColor: '#c0392b'}}>Simpan</Button>
+              <Button fill raised onClick={() => this._next()} style={{backgroundColor: '#c0392b'}}>Next</Button>
             </Col>
           </Row>
         </Block>
@@ -133,7 +140,7 @@ class ListDebitur extends React.Component {
     );
   }
      _next() {
-        this.props.navigate('/');
+        this.props.navigate('/InfoDebitur/');
     }
 }
 

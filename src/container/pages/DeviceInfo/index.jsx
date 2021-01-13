@@ -12,7 +12,7 @@ import{
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log } from '../../../utils/';
+//import { log } from '../../../utils/consoles';
 
 class DeviceInfo extends React.Component {
     constructor(props){
@@ -22,7 +22,7 @@ class DeviceInfo extends React.Component {
     render() {
     return (
         <Page noToolbar noNavbar>   
-        <List inlineLabels noHairlinesMd style={{fontSize:1}}>
+        <List noHairlinesMd style={{fontSize:1}}>
         <ListInput
             outline
             label="Manufacture"
@@ -63,7 +63,7 @@ class DeviceInfo extends React.Component {
         <Block strong>
           <Row>
             <Col width="100">
-              <Button fill raised onClick={() => this._next()} round style={{backgroundColor: '#c0392b'}}>Next</Button>
+              <Button fill raised onClick={() => this._next()} style={{backgroundColor: '#c0392b'}}>Next</Button>
             </Col>
           </Row>
         </Block>

@@ -32,7 +32,7 @@ class Root extends React.Component {
 			// Framework7 Parameters
 			f7params: {
 				id: 'io.framework7.myapp', // App bundle ID
-				name: 'mobCollNiaga', // App name
+				name: 'Mobile Collection Niaga', // App name
 				theme: 'auto', // Automatic theme detection
 				// App root data
 				data: function () { return {} },

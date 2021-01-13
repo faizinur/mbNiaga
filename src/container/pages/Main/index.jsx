@@ -13,16 +13,16 @@ import {
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
-import { navigate } from '../../../config/redux/actions/routerActions';
-import { log } from '../../../utils/';
+import { navigate } from '../../../config/redux/actions/';
+import { log } from '../../../utils';
 
 class Main extends React.Component {
     constructor(props) {
         super(props);
     }
-    componentDidMount = () => {
-
-    };
+    componentDidMount(){
+        log('componentDidMount MAIN', this.props)
+    }
     render() {
         return (
             <Page>
@@ -108,7 +108,7 @@ class Main extends React.Component {
                     <Block strong>
                         <Row>
                             <Col width="100">
-                                <Button fill raised onClick={() => this._next()} round style={{ backgroundColor: '#c0392b' }}>Simpan</Button>
+                                <Button fill raised onClick={() => this._next()} style={{ backgroundColor: '#c0392b' }}>Next</Button>
                             </Col>
                         </Row>
                     </Block>
@@ -116,7 +116,7 @@ class Main extends React.Component {
             </Page>
         );
     }
-    _next() {
+    _next = () => {
         this.props.navigate('/ListDebitur/');
     }
 }
@@ -127,7 +127,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        navigate: (fs) => dispatch(navigate(fs))
+        navigate: (nav) => dispatch(navigate(nav))
     };
 };
 
