@@ -125,18 +125,21 @@ class Root extends React.Component {
 				this.setState({ tablinkActive: index });
 				break;
 			case 2:
+				let prevState = this.state.tablinkActive;
+				this.setState({ tablinkActive: index });
 				f7.dialog.confirm(
 					'text',
 					'title',
 					() => {
-						this.setState({ tablinkActive: 2 }, () => {
-							this.props.setUser({});
-							this.props.navigate('/');
-						});
+						this.props.setUser({});
+						this.props.navigate('/');
 					},
-					() => log('Cancel')
+					() =>
+						this.setState({ tablinkActive: prevState })
 				)
 				break;
+			default: this.setState({ tablinkActive: 0 })
+
 		}
 
 	}
@@ -154,12 +157,12 @@ class Root extends React.Component {
 						bottom: 0,
 						left: 0,
 						zIndex: 9999,
-						display: Object.keys(this.props.profile).length === 0 ? 'none' : 'block'
+						display: Object.keys(this.props.profile).length === 0 ? 'none' : 'block' || 'none',
 					}}>
 					<Toolbar tabbar bottom labels>
 						<Link onClick={(e) => this._setTabLink(0)}
 							href="/Main/"
-							tabLink=''
+							tabLink={true}
 							text="MENU"
 							iconIos="f7:menu"
 							iconAurora="f7:menu"
@@ -167,14 +170,14 @@ class Root extends React.Component {
 							tabLinkActive={tablinkActive == 0} />
 						<Link onClick={(e) => this._setTabLink(1)}
 							href="/UpdatePin/"
-							tabLink=''
+							tabLink={true}
 							text="UBAH PIN"
 							iconIos="f7:lock"
 							iconAurora="f7:lock"
 							iconMd="material:lock"
 							tabLinkActive={tablinkActive == 1} />
 						<Link onClick={(e) => this._setTabLink(2)}
-							tabLink=''
+							tabLink={true}
 							text="KELUAR"
 							iconIos="f7:arrow_right_to_line_alt"
 							iconAurora="f7:arrow_right_to_line_alt"

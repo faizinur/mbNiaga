@@ -8,4 +8,11 @@
   --f7-theme-color-tint: #f96b55;
   --f7-theme-color-rgb: 255, 0, 0;
 }
+
 /* Your app custom styles here */
+
+.custom-modal-backdrop.backdrop-in, .actions-backdrop.backdrop-in, .dialog-backdrop.backdrop-in, .popover-backdrop.backdrop-in, .popup-backdrop.backdrop-in, .preloader-backdrop.backdrop-in, .sheet-backdrop.backdrop-in, .fab-backdrop.backdrop-in {
+  visibility: visible;
+  opacity: 1;
+  background-color: rgb(192, 57, 43);
+}
