@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import{
+import {
     Page,
     Navbar,
     List,
@@ -16,43 +16,43 @@ import { navigate } from '../../../config/redux/actions/routerActions';
 //import { log } from '../../../utils/consoles';
 
 class DaftarPin extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-      }
-  
+    }
+
     render() {
-    return (
-        <Page noToolbar noNavbar style={{fontSize: 10}}>
-        <List noHairlinesMd>
-        <ListItem
-            title="Daftar PIN" style={{alignItems:'center'}}
-        />
-        <ListInput
-            outline
-            label="Masukan PIN Baru"
-            type="text"
-        >
-        </ListInput>
-        <ListInput
-            outline
-            label="Konfirmasi PIN Baru"
-            type="text"
-        >
-        </ListInput>
-        </List>
-        <List>
-        <Block strong>
-          <Row>
-            <Col width="100">
-              <Button fill raised onClick={() => this._next()} style={{backgroundColor: '#c0392b'}}>Next</Button>
-            </Col>
-          </Row>
-        </Block>
-        </List>
-        </Page>                
-    );
-  }
-     _next() {
+        return (
+            <Page noToolbar noNavbar style={{ fontSize: 10 }}>
+                <List noHairlinesMd>
+                    <ListItem
+                        title="Daftar PIN" style={{ alignItems: 'center' }}
+                    />
+                    <ListInput
+                        outline
+                        label="Masukan PIN Baru"
+                        type="text"
+                    >
+                    </ListInput>
+                    <ListInput
+                        outline
+                        label="Konfirmasi PIN Baru"
+                        type="text"
+                    >
+                    </ListInput>
+                </List>
+                <List>
+                    <Block strong>
+                        <Row>
+                            <Col width="100">
+                                <Button fill raised onClick={() => this._next()} style={{ backgroundColor: '#c0392b' }}>Next</Button>
+                            </Col>
+                        </Row>
+                    </Block>
+                </List>
+            </Page>
+        );
+    }
+    _next() {
         this.props.navigate('/Main/');
     }
 }
@@ -65,9 +65,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        //onUpdateUser: (data) => dispatch(updateUser(data)),
-        //onLogin: () => dispatch(login()),
-        navigate: (fs) => dispatch(navigate(fs))
+        navigate: (nav) => dispatch(navigate(nav))
     };
 };
 

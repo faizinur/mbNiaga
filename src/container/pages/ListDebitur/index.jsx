@@ -154,7 +154,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         //onUpdateUser: (data) => dispatch(updateUser(data)),
         //onLogin: () => dispatch(login()),
-        navigate: (fs) => dispatch(navigate(fs))
+        navigate: (nav) => dispatch(navigate(nav))
     };
 };
 

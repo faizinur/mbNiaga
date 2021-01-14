@@ -4,6 +4,9 @@ import {
 	App,
 	Views,
 	View,
+	Toolbar,
+	Link,
+	f7
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -21,7 +24,7 @@ import region from '../data/region.json';
 
 import Datastores from '../database/';
 import { log } from '../utils/';
-import { updateUser, setUser } from '../config/redux/actions/';
+import { updateUser, setUser, navigate } from '../config/redux/actions/';
 import { POST } from '../utils/API';
 
 class Root extends React.Component {
@@ -51,6 +54,7 @@ class Root extends React.Component {
 					androidOverlaysWebView: false,
 				},
 			},
+			tablinkActive: 0,
 		}
 	}
 	componentDidMount() {
@@ -110,11 +114,74 @@ class Root extends React.Component {
 	// 		password: '1234',
 	// 	});
 	// }
+	_setTabLink = (index) => {
+		switch (index) {
+			case 0:
+				log('CLEAR HISTORY');
+				this.setState({ tablinkActive: index });
+				break;
+			case 1:
+				log('CLEAR HISTORY');
+				this.setState({ tablinkActive: index });
+				break;
+			case 2:
+				f7.dialog.confirm(
+					'text',
+					'title',
+					() => {
+						this.setState({ tablinkActive: 2 }, () => {
+							this.props.setUser({});
+							this.props.navigate('/');
+						});
+					},
+					() => log('Cancel')
+				)
+				break;
+		}
+
+	}
 	render() {
 		const { username, password } = this.props.user;
-		const { number } = this.state;
+		const { number, tablinkActive } = this.state;
 		return (
 			<App params={this.state.f7params} >
+				<div
+					// onClick={(e) => log(e)}
+					style={{
+						width: '100%',
+						height: 56,
+						position: 'absolute',
+						bottom: 0,
+						left: 0,
+						zIndex: 9999,
+						display: Object.keys(this.props.profile).length === 0 ? 'none' : 'block'
+					}}>
+					<Toolbar tabbar bottom labels>
+						<Link onClick={(e) => this._setTabLink(0)}
+							href="/Main/"
+							tabLink=''
+							text="MENU"
+							iconIos="f7:menu"
+							iconAurora="f7:menu"
+							iconMd="material:menu"
+							tabLinkActive={tablinkActive == 0} />
+						<Link onClick={(e) => this._setTabLink(1)}
+							href="/UpdatePin/"
+							tabLink=''
+							text="UBAH PIN"
+							iconIos="f7:lock"
+							iconAurora="f7:lock"
+							iconMd="material:lock"
+							tabLinkActive={tablinkActive == 1} />
+						<Link onClick={(e) => this._setTabLink(2)}
+							tabLink=''
+							text="KELUAR"
+							iconIos="f7:arrow_right_to_line_alt"
+							iconAurora="f7:arrow_right_to_line_alt"
+							iconMd="material:exit_to_app"
+							tabLinkActive={tablinkActive == 2} />
+					</Toolbar>
+				</div>
 				<Views className="safe-areas">
 					<View main url="/" />
 				</Views>
@@ -142,6 +209,7 @@ const mapDispatchToProps = (dispatch) => {
 		setSubDistrict: (data) => dispatch(setSubDistrict(data)),
 		updateUser: (data) => dispatch(updateUser(data)),
 		setUser: (data) => dispatch(setUser(data)),
+		navigate: (nav) => dispatch(navigate(nav)),
 	};
 };
 

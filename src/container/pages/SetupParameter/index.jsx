@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
 //import { log } from '../../../utils/consoles';
 
-class MonitoringPetugas extends React.Component {
+class SetupParameter extends React.Component {
     constructor(props){
         super(props);
       }
@@ -24,30 +24,64 @@ class MonitoringPetugas extends React.Component {
     render() {
     return (
         <Page noToolbar noNavbar>   
-        <BlockTitle>Monitoring Petugas</BlockTitle>
+        <BlockTitle>Setup Parameter</BlockTitle>
+        <List>
+        <List style={{marginLeft:20}}>
+                <BlockTitle>Parameter</BlockTitle>
+                <List>
+                    <ListItem checkbox title="Parameter 1" name="demo-checkbox" />
+                    <ListItem checkbox title="Parameter 2" name="demo-checkbox" />
+                    <ListItem checkbox title="Parameter 3" name="demo-checkbox" />
+                    <ListItem checkbox title="Parameter 4" name="demo-checkbox" />
+                </List>
+            </List>
+        <Block>
+        <Row noGap>
+            <Col width="40">
+                <Button fill raised onClick={() => this._nextx()} style={{backgroundColor: '#c0392b', fontSize:12}}>Add</Button>
+            </Col>
+            <Col width="40">
+                <Button fill raised onClick={() => this._nextx()} style={{backgroundColor: '#c0392b', fontSize:12}}>Edit</Button>
+            </Col>
+        </Row>
+        </Block>
+        </List>
+
         <div className="card data-table" style={{height:200}}>
                 <table>
                     <thead>
                         <tr>
                             <th className="input-cell">
-                                <span className="table-head-label">Nama Petugas</span>
+                                <span className="table-head-label">Kode</span>
                             </th>
                             <th className="input-cell">
-                                <span className="table-head-label">Leader</span>
+                                <span className="table-head-label">Deskripsi</span>
                             </th>
                             <th className="input-cell">
-                                <span className="table-head-label">Tracking</span>
+                                <span className="table-head-label">Parent</span>
                             </th>
                             <th className="input-cell">
-                                <span className="table-head-label">Jumlah Assignment</span>
+                                <span className="table-head-label">Status</span>
                             </th>
                             <th className="input-cell">
-                                <span className="table-head-label">Jumlah Janji Bayar</span>
+                                <span className="table-head-label">Created by</span>
+                            </th>
+                            <th className="input-cell">
+                                <span className="table-head-label">Created Time</span>
+                            </th>
+                            <th className="input-cell">
+                                <span className="table-head-label">Updated by</span>
+                            </th>
+                            <th className="input-cell">
+                                <span className="table-head-label">Updated Time</span>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -58,38 +92,6 @@ class MonitoringPetugas extends React.Component {
                 </table>
             </div>
 
-            <div className="card data-table" style={{height:200}}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th className="input-cell">
-                                <span className="table-head-label">Nominal Janji Bayar</span>
-                            </th>
-                            <th className="input-cell">
-                                <span className="table-head-label">Jumlah Pembayaran</span>
-                            </th>
-                            <th className="input-cell">
-                                <span className="table-head-label">Nominal Pembayaran</span>
-                            </th>
-                            <th className="input-cell">
-                                <span className="table-head-label">First Login</span>
-                            </th>
-                            <th className="input-cell">
-                                <span className="table-head-label">Logout</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         <List>
         <Block strong>
           <Row>
@@ -103,7 +105,7 @@ class MonitoringPetugas extends React.Component {
     );
   }
      _next() {
-        this.props.navigate('/ApplicationLog/');
+        this.props.navigate('/AddParameterMetodeKontak/');
     }
 }
 
@@ -117,8 +119,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         //onUpdateUser: (data) => dispatch(updateUser(data)),
         //onLogin: () => dispatch(login()),
-        navigate: (nav) => dispatch(navigate(nav))
+        navigate: (fs) => dispatch(navigate(fs))
     };
 };
 
-export default connect(null, mapDispatchToProps)(MonitoringPetugas);
+export default connect(null, mapDispatchToProps)(SetupParameter);

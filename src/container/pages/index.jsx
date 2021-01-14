@@ -16,6 +16,18 @@ import MonitoringDebitur from './MonitoringDebitur';
 import MonitoringPetugas from './MonitoringPetugas';
 import ApplicationLog from './ApplicationLog';
 import UserManagement from './UserManagement';
+import AddUser from './AddUser';
+import ApprovalSetupArea from './ApprovalSetupArea';
+import SetupBucket from './SetupBucket';
+import AddBucket from './AddBucket';
+import ApprovalSetupBucket from './ApprovalSetupBucket';
+import SetupParameterCollection from './SetupParameterCollection';
+import ApprovalSetupParamCol from './ApprovalSetupParamCol';
+import AddParameterMetodeKontak from './AddParameterMetodeKontak';
+import ApprovalSetupParameter from './ApprovalSetupParameter';
+import UploadMasterProvinsi from './UploadMasterProvinsi';
+import ApprovalUploadDataProvinsi from './ApprovalUploadDataProvinsi';
+import SetupParameter from './SetupParameter';
 
 export {
     NotFound,
@@ -36,4 +48,16 @@ export {
     MonitoringPetugas,
     ApplicationLog,
     UserManagement,
+    AddUser,
+    ApprovalSetupArea,
+    SetupBucket,
+    AddBucket,
+    ApprovalSetupBucket,
+    SetupParameterCollection,
+    ApprovalSetupParamCol,
+    ApprovalSetupParameter,
+    UploadMasterProvinsi,
+    ApprovalUploadDataProvinsi,
+    SetupParameter,
+    AddParameterMetodeKontak,
 }

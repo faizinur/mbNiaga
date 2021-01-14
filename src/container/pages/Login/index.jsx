@@ -48,8 +48,8 @@ class Login extends React.Component {
         var data = {
             username: username,
             password: password,
-            imei: JSON.stringify(perangkat.uuid),
-            iccd: JSON.stringify(perangkat.serial),
+            imei: '0',//JSON.stringify(perangkat.uuid),
+            iccd: '0',//JSON.stringify(perangkat.serial),
             jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
         }
         // POST([`Login`,data], [`Login`,data])
@@ -57,8 +57,8 @@ class Login extends React.Component {
             .then(res => {
                 // log(res)
                 this.props.setUser(res.data);
-                this.props.navigate('/HomeTemplates/');
-                // this.props.navigate('/Main/');
+                // this.props.navigate('/HomeTemplates/');
+                this.props.navigate('/Main/');
             })
             .catch(err => log("LOGIN", err));
         // } catch (err) {
@@ -116,7 +116,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setUser: (data) => dispatch(setUser(data)),
-        navigate: (fs) => dispatch(navigate(fs)),
+        navigate: (nav) => dispatch(navigate(nav)),
     };
 };
 

@@ -20,7 +20,7 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
     }
-    componentDidMount(){
+    componentDidMount() {
         log('componentDidMount MAIN', this.props)
     }
     render() {
@@ -99,7 +99,11 @@ class Main extends React.Component {
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Daftar Dikunjungi" />
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rekap Terkirim" />
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rekap Tertunda" />
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Device Information" />
+                            <ListItem
+                                style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }}
+                                link="/DeviceInfo/"
+                                title="Device Information"
+                            />
                         </List>
                     </CardContent>
                 </Block>

@@ -156,7 +156,7 @@ class UserManagement extends React.Component {
   }
      _next() {
         // this.props.navigate('/');
-        this.props.navigate('/HomeTemplates/');
+        this.props.navigate('/AddUser/');
     }
 }
 
@@ -170,7 +170,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         //onUpdateUser: (data) => dispatch(updateUser(data)),
         //onLogin: () => dispatch(login()),
-        navigate: (fs) => dispatch(navigate(fs))
+        navigate: (nav) => dispatch(navigate(nav))
     };
 };
 

@@ -17,6 +17,18 @@ import {
 	MonitoringPetugas,
 	ApplicationLog,
 	UserManagement,
+	AddUser,
+	ApprovalSetupArea,
+	SetupBucket,
+	AddBucket,
+	ApprovalSetupBucket,
+	SetupParameterCollection,
+	ApprovalSetupParamCol,
+	ApprovalSetupParameter,
+	UploadMasterProvinsi,
+	ApprovalUploadDataProvinsi,
+	SetupParameter,
+	AddParameterMetodeKontak,
 } from '../../container/pages';
 
 
@@ -92,6 +104,58 @@ var router = [
 	{
 		path: '/UserManagement/',
 		component: UserManagement,
+	},
+	{
+		path: '/UserManagement/',
+		component: UserManagement,
+	},
+	{
+		path: '/AddUser/',
+		component: AddUser,
+	},
+	{
+		path: '/ApprovalSetupArea/',
+		component: ApprovalSetupArea,
+	},
+	{
+		path: '/SetupBucket/',
+		component: SetupBucket,
+	},
+	{
+		path: '/AddBucket/',
+		component: AddBucket,
+	},
+	{
+		path: '/ApprovalSetupBucket/',
+		component: ApprovalSetupBucket,
+	},
+	{
+		path: '/SetupParameterCollection/',
+		component: SetupParameterCollection,
+	},
+	{
+		path: '/ApprovalSetupParamCol/',
+		component: ApprovalSetupParamCol,
+	},
+	{
+		path: '/ApprovalSetupParameter/',
+		component: ApprovalSetupParameter,
+	},
+	{
+		path: '/UploadMasterProvinsi/',
+		component: UploadMasterProvinsi,
+	},
+	{
+		path: '/ApprovalUploadDataProvinsi/',
+		component: ApprovalUploadDataProvinsi,
+	},
+	{
+		path: '/SetupParameter/',
+		component: SetupParameter,
+	},
+	{
+		path: '/AddParameterMetodeKontak/',
+		component: AddParameterMetodeKontak,
 	},
 	{
 		path: '/HomeTemplates/',
