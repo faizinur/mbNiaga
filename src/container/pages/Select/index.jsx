@@ -6,7 +6,7 @@ import {
     Button,
 } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
-import { GenerateDropDown } from '../../../components/molecules';
+// import { GenerateDropDown } from '../../../components/molecules';
 import uuid from '../../../utils/uuid/';
 
 const Select = (props) => {

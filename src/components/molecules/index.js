@@ -1,5 +1,5 @@
-import GenerateDropDown from './GenerateDropDown';
+import SystemInfo from './SystemInfo';
 
 export {
-    GenerateDropDown
+    SystemInfo
 }

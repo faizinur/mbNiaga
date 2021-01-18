@@ -22,7 +22,7 @@ class DaftarPin extends React.Component {
 
     render() {
         return (
-            <Page noToolbar noNavbar style={{ fontSize: 10 }}>
+            <Page noToolbar noNavbar style={{ fontSize: 10, paddingBottom: 60 }}>
                 <List noHairlinesMd>
                     <ListItem
                         title="Daftar PIN" style={{ alignItems: 'center' }}

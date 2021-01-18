@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "npm run dev",
+    "emulator": "C: && ( CD C:/Users/firma/AppData/Local/Android/Sdk/emulator/ && emulator -avd Pixel_2_API_29 )",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.config.js",
     "build-dev": "cross-env NODE_ENV=development node ./build/build.js",
     "build-prod": "cross-env NODE_ENV=production node ./build/build.js",

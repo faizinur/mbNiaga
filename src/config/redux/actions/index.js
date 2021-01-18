@@ -6,6 +6,7 @@ import {
 import {
     updateUser,
     login,
+    setDevice,
 } from './mainActions';
 
 import {
@@ -23,4 +24,5 @@ export {
     login,
     navigate,
     setUser,
+    setDevice,
 }

@@ -10,123 +10,68 @@ import {
     Button,
     Card,
     CardContent,
+    Link,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/';
 import { log } from '../../../utils';
+import { DefaultNavbar, ListMenu } from '../../../components/atoms'
+import { SystemInfo } from '../../../components/molecules'
 
 class Main extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+        }
     }
     componentDidMount() {
-        log('componentDidMount MAIN', this.props)
+        log('componentDidMount MAIN')
+    }
+    _randomNetwork = () => {
+        return ['WIFI', 'MOBILE DATA', 'OFFLINE'][Math.floor(Math.random() * (2 - 0)) + 0]
     }
     render() {
         return (
-            <Page>
-                <List noHairlinesMd>
-                    <Block style={{ margin: 0, padding: 0 }}>
-                        <Row noGap>
-                            <Col tag="span">
-                                <List style={{ margin: 0, padding: 0 }}>
-                                    <ListInput
-                                        outline
-                                        label="Nama"
-                                        type="text"
-                                    >
-                                    </ListInput>
-                                </List>
-                            </Col>
-                            <Col tag="span">
-                                <List style={{ margin: 0, padding: 0 }}>
-                                    <ListInput
-                                        outline
-                                        label="Waktu Server"
-                                        type="text"
-                                    >
-                                    </ListInput>
-                                </List>
-                            </Col>
-                        </Row>
-                        <Row noGap>
-                            <Col tag="span">
-                                <List style={{ margin: 0, padding: 0 }}>
-                                    <ListInput
-                                        outline
-                                        label="Device ID"
-                                        type="text"
-                                    >
-                                    </ListInput>
-                                </List>
-                            </Col>
-                            <Col tag="span">
-                                <List style={{ margin: 0, padding: 0 }}>
-                                    <ListInput
-                                        outline
-                                        label="Waktu HP"
-                                        type="text"
-                                    >
-                                    </ListInput>
-                                </List>
-                            </Col>
-                        </Row>
-                        <Row noGap>
-                            <Col width="50" tag="span">
-                                <List style={{ margin: 0, padding: 0 }}>
-                                    <ListInput
-                                        outline
-                                        label="ICCID"
-                                        type="text"
-                                    >
-                                    </ListInput>
-                                </List>
-                            </Col>
-                        </Row>
-                    </Block>
-                </List>
-
-                <Block>
+            <Page style={{ paddingBottom: 60 }}>
+                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={this._randomNetwork()} />
+                <SystemInfo />
+                <Block style={{ marginTop: 0 }}>
                     <CardContent padding={false}>
                         <List medial-list style={{ marginRight: 5, marginLeft: 5, fontSize: 12 }}>
-                            <ListItem
-                                style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }}
-                                link="/ListDebitur/"
-                                title="Daftar Debitur"
+                            <ListMenu
+                                onClick={(e) => this.props.navigate('/ListDebitur/')}
+                                label="Daftar Debitur"
                             />
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rencana Kunjungan" />
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Daftar Dikunjungi" />
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rekap Terkirim" />
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }} title="Rekap Tertunda" />
-                            <ListItem
-                                style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5, borderRadius: 6 }}
-                                link="/DeviceInfo/"
-                                title="Device Information"
+                            <ListMenu
+                                label="Rencana Kunjungan"
+                            />
+                            <ListMenu
+                                label="Daftar Dikunjungi"
+                            />
+                            <ListMenu
+                                onClick={(e) => this.props.navigate('/RekapTerkirim/')}
+                                label="Rekap Terkirim"
+                            />
+                            <ListMenu
+                                label="Rekap Tertunda"
+                            />
+                            <ListMenu
+                                onClick={(e) => this.props.navigate('/DeviceInfo/')}
+                                label="Device Information"
                             />
                         </List>
                     </CardContent>
                 </Block>
-
-                <List>
-                    <Block strong>
-                        <Row>
-                            <Col width="100">
-                                <Button fill raised onClick={() => this._next()} style={{ backgroundColor: '#c0392b' }}>Next</Button>
-                            </Col>
-                        </Row>
-                    </Block>
-                </List>
             </Page>
         );
-    }
-    _next = () => {
-        this.props.navigate('/ListDebitur/');
     }
 }
 
 const mapStateToProps = (state) => {
-    return {};
+    return {
+        profile: state.user.profile,
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {

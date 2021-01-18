@@ -18,7 +18,7 @@ import {
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
 import { log } from '../../../utils/';
-import { navigate, setUser } from '../../../config/redux/actions/';
+import { navigate, setDevice, setUser } from '../../../config/redux/actions/';
 import { POST, Device } from '../../../utils/';
 
 class Login extends React.Component {
@@ -31,8 +31,8 @@ class Login extends React.Component {
         };
     }
     componentDidMount() {
-        log('componentDidMount LOGIN : ')
-        // this._onClickLogin();
+        log('componentDidMount LOGIN : ', f7.views.main.router.history)
+        this._onClickLogin();
     }
     _onClickLogin = async () => {
         const { username, password } = this.state;
@@ -45,19 +45,27 @@ class Login extends React.Component {
         var seconds = date.getSeconds();
         // try {
         //     const perangkat = await Device.getInformation();
+        // this.props.setDevice(perangkat);
         var data = {
             username: username,
             password: password,
-            imei: '0',//JSON.stringify(perangkat.uuid),
-            iccd: '0',//JSON.stringify(perangkat.serial),
+            imei: JSON.stringify(this.props.device.uuid),
+            iccd: JSON.stringify(this.props.device.serial),
             jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
         }
         // POST([`Login`,data], [`Login`,data])
         POST(`Login`, data)
             .then(res => {
-                // log(res)
+                let [date, time] = res.data.last_login.split(' ');
+                res.data = {
+                    ...res.data , 
+                    ...{
+                        serverDate : date,
+                        serverTime : time.substring(0,5),
+                    }
+                }
+                // log(res.data)
                 this.props.setUser(res.data);
-                // this.props.navigate('/HomeTemplates/');
                 this.props.navigate('/Main/');
             })
             .catch(err => log("LOGIN", err));
@@ -67,7 +75,7 @@ class Login extends React.Component {
     }
     render() {
         return (
-            <Page noToolbar noNavbar noSwipeback loginScreen>
+            <Page noToolbar noNavbar noSwipeback loginScreen name="Login">
                 <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
                 <List inlineLabels noHairlinesMd>
                     <ListInput
@@ -110,6 +118,7 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
     return {
         profile: state.user.profile,
+        device: state.main.device,
     };
 };
 
@@ -117,6 +126,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setUser: (data) => dispatch(setUser(data)),
         navigate: (nav) => dispatch(navigate(nav)),
+        setDevice: (device) => dispatch(setDevice(device))
     };
 };
 

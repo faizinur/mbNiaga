@@ -29,6 +29,20 @@ Framework7.use(framework7ReduxPlugin);
 
 // Mount React App
 ReactDOM.render(
-  React.createElement(App),
-  document.getElementById('app'),
+	React.createElement(App),
+	document.getElementById('app'),
 );
+
+
+import { f7 } from 'framework7-react';
+
+const handlerBackPress = () => {
+	const canGoBack = f7.views.main.router.history.length > 1;
+	if (canGoBack) {
+		// f7.views.main.router.back();
+	} else {
+		// handlerExitApp; 
+	}
+	alert(canGoBack)
+}
+document.addEventListener('backbutton', handlerBackPress, false);

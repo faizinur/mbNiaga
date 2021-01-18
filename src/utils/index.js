@@ -6,6 +6,8 @@ import Connection from './Connection';
 import Device from './Device';
 import Fingerprint from './Fingerprint';
 import Geolocation from './Geolocation';
+import SQLite from './SQLite';
+import QueryBuilder from './QueryBuilder';
 
 export {
     POST,
@@ -18,4 +20,6 @@ export {
     Device,
     Fingerprint,
     Geolocation,
+    SQLite,
+    QueryBuilder,
 }

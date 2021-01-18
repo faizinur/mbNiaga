@@ -6,6 +6,7 @@ const SET_REGENCY = 'SET_REGENCY';
 const SET_DISTRICT = 'SET_DISTRICT';
 const SET_SUBDISTRICT = 'SET_SUBDISTRICT';
 const SET_USER = 'SET_USER';
+const SET_DEVICE = 'SET_DEVICE';
 
 export {
     UPDATE_USER,
@@ -16,4 +17,5 @@ export {
     SET_DISTRICT,
     SET_SUBDISTRICT,
     SET_USER,
+    SET_DEVICE,
 }

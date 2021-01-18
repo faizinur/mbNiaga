@@ -24,7 +24,7 @@ class RekapTerkirim extends React.Component {
     render() {
     return (
         <Page noToolbar noNavbar>   
-        <BlockTitle>Info Debitur</BlockTitle>
+        <BlockTitle>Rekap Terkirim</BlockTitle>
         <List noHairlinesMd style={{fontSize:1}}>
         <ListInput
             outline

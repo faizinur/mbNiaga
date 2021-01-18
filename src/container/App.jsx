@@ -6,7 +6,7 @@ import {
 	View,
 	Toolbar,
 	Link,
-	f7
+	f7,
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -108,40 +108,45 @@ class Root extends React.Component {
 			this.props.setSubDistrict(region.filter(item => { return item.level == 3 })),
 		]);
 	}
-	// _onLogin = () => {
-	// 	this.props.updateUser({
-	// 		username: 'Jhon Doe',
-	// 		password: '1234',
-	// 	});
-	// }
+
 	_setTabLink = (index) => {
+		// if(f7.views.main.router.history[f7.views.main.router.history.length - 1] == "")
 		switch (index) {
 			case 0:
-				log('CLEAR HISTORY');
+				this.props.navigate('/Main/');
 				this.setState({ tablinkActive: index });
 				break;
 			case 1:
-				log('CLEAR HISTORY');
+				this.props.navigate('/UpdatePin/');
 				this.setState({ tablinkActive: index });
 				break;
 			case 2:
 				let prevState = this.state.tablinkActive;
 				this.setState({ tablinkActive: index });
 				f7.dialog.confirm(
-					'text',
-					'title',
+					'Apakah anda yakin ingin keluar?',
 					() => {
-						this.props.setUser({});
-						this.props.navigate('/');
+						f7.dialog.prompt(
+							'Harap masukkan username anda.',
+							(data) =>
+								POST(`Logout`, { username: data })
+									.then(res => {
+										log(res)
+										this.props.setUser({});
+										this.props.navigate('/');
+										this.setState({ tablinkActive: 0 });
+									})
+									.catch(err => log("LOGOUT", err))
+							,
+							() =>
+								this.setState({ tablinkActive: prevState }))
 					},
 					() =>
 						this.setState({ tablinkActive: prevState })
 				)
 				break;
 			default: this.setState({ tablinkActive: 0 })
-
 		}
-
 	}
 	render() {
 		const { username, password } = this.props.user;
@@ -149,7 +154,6 @@ class Root extends React.Component {
 		return (
 			<App params={this.state.f7params} >
 				<div
-					// onClick={(e) => log(e)}
 					style={{
 						width: '100%',
 						height: 56,
@@ -157,26 +161,27 @@ class Root extends React.Component {
 						bottom: 0,
 						left: 0,
 						zIndex: 9999,
-						display: Object.keys(this.props.profile).length === 0 ? 'none' : 'block' || 'none',
+						display: (Object.keys(this.props.profile).length > 0) ? 'block' : 'none' || 'none',
 					}}>
 					<Toolbar tabbar bottom labels>
-						<Link onClick={(e) => this._setTabLink(0)}
-							href="/Main/"
+						<Link
+							onClick={(e) => this._setTabLink(0)}
 							tabLink={true}
 							text="MENU"
 							iconIos="f7:menu"
 							iconAurora="f7:menu"
 							iconMd="material:menu"
 							tabLinkActive={tablinkActive == 0} />
-						<Link onClick={(e) => this._setTabLink(1)}
-							href="/UpdatePin/"
+						<Link
+							onClick={(e) => this._setTabLink(1)}
 							tabLink={true}
 							text="UBAH PIN"
 							iconIos="f7:lock"
 							iconAurora="f7:lock"
 							iconMd="material:lock"
 							tabLinkActive={tablinkActive == 1} />
-						<Link onClick={(e) => this._setTabLink(2)}
+						<Link
+							onClick={(e) => this._setTabLink(2)}
 							tabLink={true}
 							text="KELUAR"
 							iconIos="f7:arrow_right_to_line_alt"

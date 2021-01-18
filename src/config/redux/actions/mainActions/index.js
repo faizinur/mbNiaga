@@ -1,12 +1,17 @@
 import { goBack, navigateTo, showAlert } from 'framework7-redux';
 
 import {
+	SET_DEVICE,
 	UPDATE_USER,
 } from '../types'
 
 
 const updateUser = (data) => ({
 	type: UPDATE_USER,
+	payload: data
+});
+const setDevice = (data) => ({
+	type: SET_DEVICE,
 	payload: data
 });
 
@@ -25,4 +30,5 @@ const login = (pageName) => {
 export {
 	updateUser,
 	login,
+	setDevice,
 }

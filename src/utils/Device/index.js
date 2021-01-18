@@ -4,9 +4,7 @@ var Device = {
     getInformation: () => {
         return new Promise((resolve, reject) => {
             // var deviceType = getDevice();
-            if (!Perangkat.android && !Perangkat.ios) reject("Device not support");
-            resolve(device);
-
+            (!Perangkat.android && !Perangkat.ios) ? reject("Device not support") : resolve(device);
         });
     },
 }
