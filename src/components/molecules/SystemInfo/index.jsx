@@ -65,7 +65,7 @@ const SystemInfo = (props) => {
                             label="Nama"
                             type="text"
                             inputStyle={{ fontSize: 13 }}
-                            value={systemInfo.name.replaceAll('A', 'I')}
+                            value={systemInfo.name}
                             disabled={true}
                         />
                     </List>

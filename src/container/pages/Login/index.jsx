@@ -31,8 +31,8 @@ class Login extends React.Component {
         };
     }
     componentDidMount() {
-        log('componentDidMount LOGIN : ', f7.views.main.router.history)
-        this._onClickLogin();
+        log('componentDidMount LOGIN : ')
+        // this._onClickLogin();
     }
     _onClickLogin = async () => {
         const { username, password } = this.state;
@@ -105,7 +105,8 @@ class Login extends React.Component {
                                     onClick={() => this._onClickLogin()}
                                     round
                                     style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                >Login</Button>
+                                    text="Login"
+                                />
                             </Col>
                         </Row>
                     </Block>
