@@ -26,12 +26,10 @@ const CustomToolbar = (props) => {
         setTablinkActive(index)
         switch (index) {
             case 0:
-                // this.props.navigate('/Main/');
                 dispatch(navigate('/Main/'));
                 setTablinkActive(index)
                 break;
             case 1:
-                // this.props.navigate('/UpdatePin/');
                 dispatch(navigate('/UpdatePin/'));
                 setTablinkActive(index)
                 break;
