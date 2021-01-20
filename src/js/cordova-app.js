@@ -6,9 +6,9 @@ var cordovaApp = {
 	handleSplashscreen: function () {
 		var f7 = cordovaApp.f7;
 		if (!window.navigator.splashscreen || f7.device.electron) return;
-		setTimeout(() => {
+		// setTimeout(() => {
 			window.navigator.splashscreen.hide();
-		}, 2000);
+		// }, 2000);
 	},
 	/*
 	This method prevents back button tap to exit from app on android.
@@ -20,6 +20,9 @@ var cordovaApp = {
 		const $ = f7.$;
 		if (f7.device.electron) return;
 		document.addEventListener('backbutton', function (e) {
+			e.preventDefault();
+			return false;
+
 			if ($('.actions-modal.modal-in').length) {
 				f7.actions.close('.actions-modal.modal-in');
 				e.preventDefault();

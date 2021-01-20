@@ -15,10 +15,9 @@ import {
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/';
-import { log } from '../../../utils';
+import { log, Camera } from '../../../utils';
 import { DefaultNavbar, ListMenu } from '../../../components/atoms'
 import { SystemInfo } from '../../../components/molecules'
-
 class Main extends React.Component {
     constructor(props) {
         super(props);
@@ -28,13 +27,11 @@ class Main extends React.Component {
     componentDidMount() {
         log('componentDidMount MAIN')
     }
-    _randomNetwork = () => {
-        return ['WIFI', 'MOBILE DATA', 'OFFLINE'][Math.floor(Math.random() * (2 - 0)) + 0]
-    }
+
     render() {
         return (
             <Page style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={this._randomNetwork()} />
+                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={['WIFI', 'MOBILE DATA', 'OFFLINE'][Math.floor(Math.random() * (2 - 0)) + 0]} />
                 <SystemInfo />
                 <Block style={{ marginTop: 0 }}>
                     <CardContent padding={false}>

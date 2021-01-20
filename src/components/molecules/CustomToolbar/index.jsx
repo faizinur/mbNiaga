@@ -19,6 +19,7 @@ const CustomToolbar = (props) => {
     const [tablinkActive, setTablinkActive] = useState(0);
     const profile = useSelector(state => state.user.profile)
     const _setTablink = (index) => {
+        if(props.shown == true) return false;
         let currentRoute = f7.views.main.router.history[f7.views.main.router.history.length - 1];
         if (currentRoute == '/Main/' && index == 0) return false;
         if (currentRoute == '/UpdatePin/' && index == 1) return false;
@@ -47,7 +48,7 @@ const CustomToolbar = (props) => {
                                         log(res.status);
                                         if (res.status == 'success') {
                                             dispatch(setUser({}));
-                                            dispatch(navigate('/'));
+                                            dispatch(navigate('/', true));
                                             setTablinkActive(index);
                                         } else {
                                             setTablinkActive(prevState);

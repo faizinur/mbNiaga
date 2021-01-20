@@ -8,6 +8,7 @@ import Fingerprint from './Fingerprint';
 import Geolocation from './Geolocation';
 import SQLite from './SQLite';
 import QueryBuilder from './QueryBuilder';
+import ClockTick from './ClockTick';
 
 export {
     POST,
@@ -22,4 +23,5 @@ export {
     Geolocation,
     SQLite,
     QueryBuilder,
+    ClockTick,
 }

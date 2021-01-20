@@ -10,19 +10,13 @@ import router from '../config/router';
 import { Provider } from 'react-redux'
 import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
-import {
-	setProvince,
-	setRegency,
-	setDistrict,
-	setSubDistrict,
-} from '../config/redux/actions/regionActions';
 
-import region from '../data/region.json';
+import { log, ClockTick } from '../utils/';
+import { navigate, setUser } from '../config/redux/actions/';
+import { CustomToolbar, SplashScreen } from '../components/molecules/';
 
-import { log } from '../utils/';
-import { updateUser, setUser, navigate } from '../config/redux/actions/';
-import { CustomToolbar } from '../components/molecules/';
-
+let INTERVAL_LENGTH = 2000;
+let INTERVAL_ID = 0;
 class Root extends React.Component {
 	constructor(props) {
 		super(props);
@@ -49,10 +43,10 @@ class Root extends React.Component {
 					androidOverlaysWebView: false,
 				},
 			},
+			realApp: false,
 		}
 	}
 	componentDidMount() {
-		log(this);
 		this.$f7ready((f7) => {
 			// Init cordova APIs (see cordova-app.js)
 			if (Device.cordova) {
@@ -60,50 +54,51 @@ class Root extends React.Component {
 			}
 			// Call F7 APIs here
 		});
-		Promise.all([
-			this._getRegion()
-		]);
+
+		INTERVAL_ID = setInterval(() => {
+			if (JSON.stringify(this.props.profile) !== '{}') {
+				this.props.setUser({
+					...this.props.profile,
+					...{
+						mobileTime: ClockTick(this.props.profile.mobileTime),
+						serverTime: ClockTick(this.props.profile.serverTime),
+					}
+				});
+			}
+		}, INTERVAL_LENGTH);
 	}
-	_getRegion = () => {
-		Promise.all([
-			this.props.setProvince(region.filter(item => { return item.level == 0 })),
-			this.props.setRegency(region.filter(item => { return item.level == 1 })),
-			this.props.setDistrict(region.filter(item => { return item.level == 2 })),
-			this.props.setSubDistrict(region.filter(item => { return item.level == 3 })),
-		]);
+
+	componentWillUnmount() {
+		log('CLEAR INTERVAL')
+		clearInterval(INTERVAL_ID);
 	}
 	render() {
-		return (
-			<App params={this.state.f7params} >
-				<CustomToolbar
-					shown={JSON.stringify(this.props.profile) === '{}'}
-				/>
-				<Views className="safe-areas">
-					<View main url="/" />
-				</Views>
-			</App >
-		)
+		const { realApp } = this.state;
+		if (!realApp) {
+			return (<SplashScreen onFinish={(e) => this.setState({ realApp: !realApp })} />)
+		} else {
+			return (
+				<App params={this.state.f7params} >
+					<CustomToolbar
+						shown={JSON.stringify(this.props.profile) === '{}'}
+					/>
+					<Views className="safe-areas">
+						<View main url="/" />
+					</Views>
+				</App >
+			)
+		}
 	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-		province: state.region.province,
-		regency: state.region.regency,
-		district: state.region.district,
-		subDistrict: state.region.subDistrict,
-		user: state.main.user,
 		profile: state.user.profile,
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		setProvince: (data) => dispatch(setProvince(data)),
-		setRegency: (data) => dispatch(setRegency(data)),
-		setDistrict: (data) => dispatch(setDistrict(data)),
-		setSubDistrict: (data) => dispatch(setSubDistrict(data)),
-		updateUser: (data) => dispatch(updateUser(data)),
 		setUser: (data) => dispatch(setUser(data)),
 		navigate: (nav) => dispatch(navigate(nav)),
 	};

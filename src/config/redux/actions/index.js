@@ -14,8 +14,15 @@ import {
 } from './routerActions';
 
 import {
-    setUser    
+    setUser
 } from './userActions';
+
+import {
+    setProvince,
+    setRegency,
+    setDistrict,
+    setSubDistrict,
+} from './regionActions';
 
 export {
     increment,
@@ -25,4 +32,8 @@ export {
     navigate,
     setUser,
     setDevice,
+    setProvince,
+    setRegency,
+    setDistrict,
+    setSubDistrict,
 }

@@ -27,21 +27,8 @@ Framework7.use(Framework7React)
 // Init Framework7-Redux plugin
 Framework7.use(framework7ReduxPlugin);
 
-const startApp = () => {
-	// Mount React App
-	ReactDOM.render(
-		React.createElement(App),
-		document.getElementById('app'),
-	);
-	document.addEventListener('backbutton', function (e) {
-		var selector = document.getElementsByClassName("page-previous");
-		// selector[0].dataset['name'] == "Login" ? alert('goto login') : alert('BACK BUTTON PRESSED!');
-		// alert(JSON.stringify(e))
-		// e.preventDefault();
-		// return false;
-	}, false);
-}
-
-document.addEventListener('deviceready', startApp, false);
-
-document.addEventListener("DOMContentLoaded", startApp, false);
+// Mount React App
+ReactDOM.render(
+	React.createElement(App),
+	document.getElementById('app'),
+);

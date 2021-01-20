@@ -29,9 +29,10 @@ class Login extends React.Component {
             username: '00140515',
             password: '1234',
         };
+        props.setUser({});
     }
     componentDidMount() {
-        log('componentDidMount LOGIN : ')
+        log('componentDidMount LOGIN : ');
         // this._onClickLogin();
     }
     _onClickLogin = async () => {
@@ -51,22 +52,21 @@ class Login extends React.Component {
             password: password,
             imei: JSON.stringify(this.props.device.uuid),
             iccd: JSON.stringify(this.props.device.serial),
-            jam_mobile: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
+            jam_mobile: `${year}-${month < 9 ? '0'+month : month}-${day} ${hours}:${minutes}:${seconds}`,
         }
         // POST([`Login`,data], [`Login`,data])
         POST(`Login`, data)
             .then(res => {
                 let [date, time] = res.data.last_login.split(' ');
                 res.data = {
-                    ...res.data , 
+                    ...res.data,
                     ...{
-                        serverDate : date,
-                        serverTime : time.substring(0,5),
+                        mobileTime : data.jam_mobile,
+                        serverTime : res.data.last_login,
                     }
                 }
-                // log(res.data)
                 this.props.setUser(res.data);
-                this.props.navigate('/Main/');
+                this.props.navigate('/Main/', true);
             })
             .catch(err => log("LOGIN", err));
         // } catch (err) {
