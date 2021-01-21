@@ -11,7 +11,7 @@ import { Provider } from 'react-redux'
 import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
 
-import { log, ClockTick } from '../utils/';
+import { log, ClockTick,  } from '../utils/';
 import { navigate, setUser } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
 
@@ -54,7 +54,6 @@ class Root extends React.Component {
 			}
 			// Call F7 APIs here
 		});
-
 		INTERVAL_ID = setInterval(() => {
 			if (JSON.stringify(this.props.profile) !== '{}') {
 				this.props.setUser({
@@ -85,7 +84,7 @@ class Root extends React.Component {
 					<Views className="safe-areas">
 						<View main url="/" />
 					</Views>
-				</App >
+				</ App >
 			)
 		}
 	}

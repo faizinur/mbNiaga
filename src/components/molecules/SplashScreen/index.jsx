@@ -11,14 +11,16 @@ import {
 } from '../../../config/redux/actions';
 import { useDispatch, useSelector } from "react-redux";
 import region from '../../../data/region.json';
-import { log } from '../../../utils/';
+import { log, SQLite } from '../../../utils/';
 import PropTypes from 'prop-types'
 
+let sqlite = new SQLite();
 const SplashScreen = (props) => {
     useEffect(() => {
         console.log('MOUNT OR UPDATE SplashScreen');
         Promise.all([
-            _getRegion()
+            _getRegion(),
+            sqlite.initDB(),
             //.... another promise
         ])
             .then(res => {

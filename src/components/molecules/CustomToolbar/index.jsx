@@ -14,10 +14,9 @@ const CustomToolbar = (props) => {
         return () => {
             log('UNMOUNT CustomToolbar');
         }
-    }, [profile]);
+    }, []);
     const dispatch = useDispatch();
     const [tablinkActive, setTablinkActive] = useState(0);
-    const profile = useSelector(state => state.user.profile)
     const _setTablink = (index) => {
         if (props.shown) return false;
         log('clicked index', index, JSON.stringify(!props.shown))

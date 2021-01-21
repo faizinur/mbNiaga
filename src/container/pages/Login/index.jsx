@@ -57,6 +57,7 @@ class Login extends React.Component {
         // POST([`Login`,data], [`Login`,data])
         POST(`Login`, data)
             .then(res => {
+                log(res.data)
                 let [date, time] = res.data.last_login.split(' ');
                 res.data = {
                     ...res.data,
