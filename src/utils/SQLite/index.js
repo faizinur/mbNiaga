@@ -2,14 +2,16 @@
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import React, { Component } from 'react';
 import { log } from '../Consoles';
-import { DB_NAME, TABLES } from './tables'; 
+import { DB_NAME, TABLES } from './tables';
 
 class SQLite extends Component {
     initDB = (populateDB = true) => {
         let db;
         return new Promise(resolve => {
-            console.log("%cPlugin integrity check ...",'background: #FF0; color: #F00');
-            db = (!Device.android && !Device.ios) ? window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) : window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default' });
+            console.log(populateDB ? "%cPlugin integrity check ..." : '', 'background: #FF0; color: #F00');
+            db = (!Device.android && !Device.ios) ?
+                window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) :
+                window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default' });
             populateDB ? this.populateTable(db) : resolve(db);
             resolve(db);
         });
@@ -19,9 +21,9 @@ class SQLite extends Component {
             tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
             //....
         }, err => {
-            log(`%cTransaction ERROR: ${error.message}`,'background: #F00; color: #000');
+            log(`%cTransaction ERROR: ${error.message}`, 'background: #F00; color: #000');
         }, () => {
-            log(`%cPopulated database OK`,'background: #0F0; color: #F00');
+            log(`%cPopulated database OK`, 'background: #0F0; color: #F00');
         })
     };
     isset = (accessor) => {
