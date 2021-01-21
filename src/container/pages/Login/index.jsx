@@ -33,7 +33,7 @@ class Login extends React.Component {
     }
     componentDidMount() {
         log('componentDidMount LOGIN : ');
-        // this._onClickLogin();
+        this._onClickLogin();
     }
     _onClickLogin = async () => {
         const { username, password } = this.state;

@@ -19,11 +19,11 @@ const CustomToolbar = (props) => {
     const [tablinkActive, setTablinkActive] = useState(0);
     const profile = useSelector(state => state.user.profile)
     const _setTablink = (index) => {
-        if(props.shown == true) return false;
+        if (props.shown) return false;
+        log('clicked index', index, JSON.stringify(!props.shown))
         let currentRoute = f7.views.main.router.history[f7.views.main.router.history.length - 1];
         if (currentRoute == '/Main/' && index == 0) return false;
         if (currentRoute == '/UpdatePin/' && index == 1) return false;
-        log('clicked index', index)
         setTablinkActive(index)
         switch (index) {
             case 0:
@@ -75,7 +75,7 @@ const CustomToolbar = (props) => {
                 bottom: 0,
                 left: 0,
                 zIndex: 9999,
-                display: props.shown == true ? 'none' : 'block'
+                display: props.shown ? 'none' : 'block'
             }}>
             <Toolbar tabbar bottom labels>
                 <Link
