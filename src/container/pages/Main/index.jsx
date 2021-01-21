@@ -31,7 +31,7 @@ class Main extends React.Component {
     render() {
         return (
             <Page style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={['WIFI', 'MOBILE DATA', 'OFFLINE'][Math.floor(Math.random() * (2 - 0)) + 0]} />
+                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={['WIFI', 'MOBILE DATA', 'OFFLINE'][Math.floor(Math.random() * (0 - 0)) + 0]} />
                 <SystemInfo />
                 <Block style={{ marginTop: 0 }}>
                     <CardContent padding={false}>
