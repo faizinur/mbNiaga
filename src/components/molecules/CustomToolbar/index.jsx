@@ -48,7 +48,7 @@ const CustomToolbar = (props) => {
                                         if (res.status == 'success') {
                                             dispatch(setUser({}));
                                             dispatch(navigate('/', true));
-                                            setTablinkActive(index);
+                                            setTablinkActive(0);
                                         } else {
                                             setTablinkActive(prevState);
                                         }
