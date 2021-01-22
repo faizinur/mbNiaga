@@ -44,7 +44,6 @@ const CustomToolbar = (props) => {
                             (data) =>
                                 POST(`Logout`, { username: data })
                                     .then(res => {
-                                        log(res.status);
                                         if (res.status == 'success') {
                                             dispatch(setUser({}));
                                             dispatch(navigate('/', true));
