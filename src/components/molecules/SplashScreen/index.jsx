@@ -14,18 +14,20 @@ import region from '../../../data/region.json';
 import { log, SQLite } from '../../../utils/';
 import PropTypes from 'prop-types'
 
-let sqlite = new SQLite();
+
 const SplashScreen = (props) => {
     useEffect(() => {
         console.log('MOUNT OR UPDATE SplashScreen');
         Promise.all([
             _getRegion(),
-            sqlite.initDB(),
+            SQLite.initDB(),
             //.... another promise
         ])
-            .then(res => {
-                props.onFinish({});
-            });
+        .then(res => props.onFinish({}));
+
+        // let enc = SQLite.enc({name : 'nama'});
+        // let dec = SQLite.dec(enc);
+        // log(dec);
         return () => {
             console.log('UNMOUNT SplashScreen');
         }

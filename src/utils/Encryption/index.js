@@ -1,4 +1,9 @@
-import Decrypt from './Decrypt';
+import { Decrypt, selfDecrypt } from './Decrypt';
 import Encrypt from './Encrypt';
 
-export {Decrypt, Encrypt};
+
+export {
+    Decrypt,
+    selfDecrypt,
+    Encrypt
+};

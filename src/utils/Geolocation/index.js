@@ -1,3 +1,5 @@
+import APIKEY from './GoogleMapsAPIKey';
+
 var Geolocation = {
     currentLocation: () => {
         return new Promise((resolve, reject) => {
@@ -23,34 +25,35 @@ var Geolocation = {
         return new Promise((resolve, reject) => {
             var gmaps = document.createElement("script");
             gmaps.type = "text/javascript";
-            gmaps.src = "https://maps.googleapis.com/maps/api/js?key=DKASHDJASJDA";
+            gmaps.src = `https://maps.googleapis.com/maps/api/js?key=${APIKEY}`;
             document.head.appendChild(gmaps);
             gmaps.onload = () => { resolve("Success") }
         });
     },
     loadMap: (elem) => {
         return new Promise((resolve, reject) => {
-            Geolocation.currentLocation().then((res) => {
-                var mapOptions = {
-                    center: new google.maps.LatLng(0, 0),
-                    zoom: 1,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(elem, mapOptions);
-                var latLong = new google.maps.LatLng(res.latitude, res.longitude);
-                var marker = new google.maps.Marker({
-                    position: latLong
+            Geolocation.currentLocation()
+                .then((res) => {
+                    var mapOptions = {
+                        center: new google.maps.LatLng(0, 0),
+                        zoom: 1,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    var map = new google.maps.Map(elem, mapOptions);
+                    var latLong = new google.maps.LatLng(res.latitude, res.longitude);
+                    var marker = new google.maps.Marker({
+                        position: latLong
+                    });
+                    marker.setMap(map);
+                    map.setZoom(15);
+                    map.setCenter(marker.getPosition());
+                    resolve("OK");
+                }).catch((err) => {
+                    reject(err);
                 });
-                marker.setMap(map);
-                map.setZoom(15);
-                map.setCenter(marker.getPosition());
-                resolve("OK");
-            }).catch((err) => {
-                reject(err);
-            });
         });
     },
-    getMapLocaton: async (elem) => {
+    getMapLocation: async (elem) => {
         if (!window["google"] || !google.maps) await Geolocation.loadJavascript();
         return new Promise((resolve, reject) => {
             Geolocation.loadMap(elem).then((res) => { resolve("OK") }).catch((err) => { reject(err) });

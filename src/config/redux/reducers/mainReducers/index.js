@@ -9,15 +9,15 @@ const initialState = {
         password: '',
     },
     device: {
-        available: true,
-        platform: 'Android',
-        version: 10,
-        uuid : '1bb9c549939b1b1e',
-        cordova:'9.0.0',
-        model:'Android SDK built for x86',
-        manufacturer:'Google',
-        isVirtual: true,
-        serial : 'unknown'
+        available: null,
+        platform: '',
+        version: 0,
+        uuid : '',
+        cordova:'',
+        model:'',
+        manufacturer:'',
+        isVirtual: null,
+        serial : '',
     }
 };
 import { log } from '../../../../utils/';

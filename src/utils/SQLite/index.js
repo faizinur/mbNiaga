@@ -1,14 +1,14 @@
 // import { getDevice } from 'framework7/lite-bundle';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import React, { Component } from 'react';
-import { log } from '../Consoles';
+import { log, uuid } from '../../utils';
 import { DB_NAME, TABLES } from './tables';
-
-class SQLite extends Component {
+import { Encrypt, selfDecrypt } from '../Encryption'
+class SQLModules extends Component {
     initDB = (populateDB = true) => {
         let db;
         return new Promise(resolve => {
-            console.log(populateDB ? "%cPlugin integrity check ..." : '', 'background: #FF0; color: #F00');
+            populateDB ? log("%cPlugin integrity check ...", 'background: #FF0; color: #F00') : log('');
             db = (!Device.android && !Device.ios) ?
                 window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) :
                 window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default' });
@@ -19,9 +19,10 @@ class SQLite extends Component {
     populateTable = (db) => {
         db.transaction(tx => {
             tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
+            // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
-            log(`%cTransaction ERROR: ${error.message}`, 'background: #F00; color: #000');
+            log(`%cTransaction ERROR: ${err.message}`, 'background: #F00; color: #000');
         }, () => {
             log(`%cPopulated database OK`, 'background: #0F0; color: #F00');
         })
@@ -34,6 +35,11 @@ class SQLite extends Component {
         }
     };
     query = (sqlQuery, param = []) => {
+        let [dmlCommand] = sqlQuery.split(' ')
+        if (param.length > 0 && dmlCommand === 'INSERT') {
+            param = [uuid(), ...param];
+            param[2] = Encrypt(param[2])
+        }
         return new Promise((resolve, reject) => {
             this.initDB(false)
                 .then(db => {
@@ -42,7 +48,7 @@ class SQLite extends Component {
                             var ress_arr = [];
                             if (!this.isset(() => rs.insertId)) {
                                 for (var i = 0; i < rs.rows.length; i++) {
-                                    ress_arr.push(rs.rows.item(i));
+                                    ress_arr.push(selfDecrypt(rs.rows.item(i).value))
                                 }
                             } else {
                                 ress_arr = { 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected };
@@ -56,8 +62,8 @@ class SQLite extends Component {
                 .catch(err => reject(err))
         })
     };
-
 }
+let SQLite = new SQLModules();
 export default SQLite;
 
 // [4:49 PM, 1/15/2021] egi: framework7 cordova plugin add cordova-sqlite-storage

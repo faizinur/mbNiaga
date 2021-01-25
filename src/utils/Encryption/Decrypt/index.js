@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import KEY from '../key';
+
 // module.exports = function(ciphertext) {    
 const Decrypt = (ciphertext) => {
     var obj_json = ciphertext;
@@ -23,4 +24,11 @@ const Decrypt = (ciphertext) => {
 
 };
 
-export default Decrypt;
+const selfDecrypt = (ciphertext) => {
+    var encryptedString = CryptoJS.enc.Utf8.stringify(
+        CryptoJS.enc.Base64.parse(ciphertext)
+    );
+    return JSON.parse(Decrypt(encryptedString));
+}
+
+export { Decrypt, selfDecrypt };

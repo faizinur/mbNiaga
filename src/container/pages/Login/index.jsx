@@ -17,17 +17,18 @@ import {
 
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
-import { log } from '../../../utils/';
+import { log, SQLite } from '../../../utils/';
 import { navigate, setDevice, setUser } from '../../../config/redux/actions/';
-import { POST, Device } from '../../../utils/';
+import { POST } from '../../../utils/';
+import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            username: '00140515',
-            password: '1234',
+            username: 'USER_TEST_1',
+            password: '12345678',
         };
         props.setUser({});
     }
@@ -36,6 +37,7 @@ class Login extends React.Component {
         // this._onClickLogin();
     }
     _onClickLogin = async () => {
+        let dvc = (!Device.android && !Device.ios) ? false : true;
         const { username, password } = this.state;
         var date = new Date();
         var year = date.getFullYear();
@@ -44,36 +46,51 @@ class Login extends React.Component {
         var hours = date.getHours();
         var minutes = date.getMinutes();
         var seconds = date.getSeconds();
-        // try {
-        //     const perangkat = await Device.getInformation();
-        // this.props.setDevice(perangkat);
-        var data = {
-            username: username,
-            password: password,
-            imei: JSON.stringify(this.props.device.uuid),
-            iccd: JSON.stringify(this.props.device.serial),
-            jam_mobile: `${year}-${month < 9 ? '0'+month : month}-${day} ${hours}:${minutes}:${seconds}`,
-        }
-        // POST([`Login`,data], [`Login`,data])
-        POST(`Login`, data)
-            .then(res => {
-                log(res.data)
-                let [date, time] = res.data.last_login.split(' ');
-                res.data = {
-                    ...res.data,
-                    ...{
-                        mobileTime : data.jam_mobile,
-                        serverTime : res.data.last_login,
+        try {
+            dvc ?
+                this.props.setDevice(await Device.getInformation()) :
+                this.props.setDevice({ available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' });
+
+            var data = {
+                username: username,
+                password: password,
+                imei: JSON.stringify(this.props.device.uuid),
+                iccd: JSON.stringify(this.props.device.serial),
+                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+            }
+            // POST([`Login`,data], [`Login`,data])
+            POST(`Login`, data)
+                .then(res => {
+                    // log(res.data)
+                    res.data = {
+                        ...res.data,
+                        ...{
+                            mobileTime: data.jam_mobile,
+                            jam_server: res.data.jam_server,
+                        }
                     }
-                }
-                this.props.setUser(res.data);
-                this.props.navigate('/Main/', true);
-            })
-            .catch(err => log("LOGIN", err));
-        // } catch (err) {
-        //     f7.dialog.alert(err);
-        // }
+                    // SQLite.query('SELECT * FROM collection where key = ?', ['login'])
+                    //     .then(res => {
+                    //         if (res.length == 0) {
+                    //             SQLite.query('INSERT INTO collection(id,key,value) VALUES(?,?,?)', ['login', res.data])
+                    //                 .then(res => log(res))
+                    //                 .catch(err => log(err))
+                    //         }
+                    //     })
+                    //     .catch(err => log(err))
+                    SQLite.query('SELECT * FROM collection')
+                    .then(res => log(res))
+                    .catch(err => log(err))
+                    // this.props.setUser(res.data);
+                    // this.props.navigate('/Main/', true);
+                })
+                .catch(err => log("LOGIN", err));
+        } catch (err) {
+            f7.dialog.alert(err);
+        }
     }
+
+
     render() {
         return (
             <Page noToolbar noNavbar noSwipeback loginScreen name="Login">

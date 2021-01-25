@@ -32,7 +32,7 @@ const SystemInfo = (props) => {
                             label="Nama"
                             type="text"
                             inputStyle={{ fontSize: 13 }}
-                            value={systemInfo.name}
+                            value={systemInfo.full_name}
                             disabled={true}
                         />
                     </List>
@@ -44,7 +44,7 @@ const SystemInfo = (props) => {
                             label="Waktu Server"
                             type="text"
                             inputStyle={{ fontSize: 13 }}
-                            value={systemInfo.serverTime}
+                            value={systemInfo.jam_server}
                             disabled={true}
                         />
                     </List>

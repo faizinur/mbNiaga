@@ -11,7 +11,7 @@ import { Provider } from 'react-redux'
 import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
 
-import { log, ClockTick,  } from '../utils/';
+import { log, ClockTick } from '../utils/';
 import { navigate, setUser } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
 
@@ -60,7 +60,7 @@ class Root extends React.Component {
 					...this.props.profile,
 					...{
 						mobileTime: ClockTick(this.props.profile.mobileTime),
-						serverTime: ClockTick(this.props.profile.serverTime),
+						jam_server: ClockTick(this.props.profile.jam_server),
 					}
 				});
 			}
