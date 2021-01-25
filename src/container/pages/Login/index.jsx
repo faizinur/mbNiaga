@@ -69,18 +69,22 @@ class Login extends React.Component {
                             jam_server: res.data.jam_server,
                         }
                     }
-                    // SQLite.query('SELECT * FROM collection where key = ?', ['login'])
-                    //     .then(res => {
-                    //         if (res.length == 0) {
-                    //             SQLite.query('INSERT INTO collection(id,key,value) VALUES(?,?,?)', ['login', res.data])
-                    //                 .then(res => log(res))
-                    //                 .catch(err => log(err))
-                    //         }
-                    //     })
-                    //     .catch(err => log(err))
+
+                    SQLite.query('INSERT INTO collection(id,key,value) VALUES(?,?,?)', ['login', res.data])
+                        .then(res => log(res))
+                        .catch(err => log(err))
+
                     SQLite.query('SELECT * FROM collection')
-                    .then(res => log(res))
-                    .catch(err => log(err))
+                        .then(res => log(res))
+                        .catch(err => log(err))
+
+                    SQLite.query('SELECT * FROM collection WHERE key=?', ['login'])
+                        .then(res => log(res))
+                        .catch(err => log(err))
+
+                    // SQLite.query('DELETE FROM collection')
+                    //     .then(res => log(res))
+                    //     .catch(err => log(err))
                     // this.props.setUser(res.data);
                     // this.props.navigate('/Main/', true);
                 })
