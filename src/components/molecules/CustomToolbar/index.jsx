@@ -6,7 +6,7 @@ import {
 } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, navigate } from '../../../config/redux/actions/';
-import { log, POST, SQLite } from '../../../utils';
+import { log, POST, SQLite, SQLiteTypes } from '../../../utils';
 
 const CustomToolbar = (props) => {
     useEffect(() => {
@@ -45,12 +45,14 @@ const CustomToolbar = (props) => {
                                 POST(`Logout`, { username: data })
                                     .then(res => {
                                         if (res.status == 'success') {
-                                            dispatch(setUser({}));
-                                            dispatch(navigate('/', true));
-                                            setTablinkActive(0);
-                                            // SQLite.query('DELETE from Collection where key=?', ['PIN'])
-                                            // .then(res => log(res))
-                                            // .catch(err => log(err));
+                                            SQLite.query('DELETE from Collection where key!=?', [SQLiteTypes.PIN])
+                                                .then(res => {
+                                                    log(res);
+                                                    dispatch(setUser({}));
+                                                    dispatch(navigate('/', true));
+                                                    setTablinkActive(0);
+                                                })
+                                                .catch(err => log(err));
                                         } else {
                                             setTablinkActive(prevState);
                                         }

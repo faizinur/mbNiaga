@@ -63,21 +63,22 @@ class SQLModules extends Component {
                 .catch(err => reject(err))
         })
     };
-    fetchAll = (sqlQuery) => {
+    fetchAll = () => {
         return new Promise((resolve, reject) => {
             this.initDB(false)
                 .then(db => {
                     db.transaction(tx => {
-                        tx.executeSql(sqlQuery, [], (tx, rs) => {
+                        tx.executeSql('SELECT * from COLLECTION', [], (tx, rs) => {
                             var ress_arr = [];
                             if (!this.isset(() => rs.insertId)) {
-                                for (var i = 0; i < rs.rows.length; i++) {
-                                    ress_arr.push({
-                                            id : rs.rows.item(i).id,
-                                            key : rs.rows.item(i).key,
-                                            value : selfDecrypt(rs.rows.item(i).value)
-                                        })
-                                }
+                                ress_arr = Object.values(rs.rows).reduce((acc, val) => {
+                                    return [...acc,
+                                    {
+                                        id: val.id,
+                                        key: val.key,
+                                        value: selfDecrypt(val.value)
+                                    }]
+                                }, []);
                             } else {
                                 ress_arr = { 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected };
                             }

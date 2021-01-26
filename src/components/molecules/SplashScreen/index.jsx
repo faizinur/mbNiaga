@@ -42,7 +42,7 @@ const SplashScreen = (props) => {
         ]);
     }
     const _getLocalData = () => {
-        SQLite.fetchAll('SELECT * from COLLECTION')
+        SQLite.fetchAll()
             .then(res => {
                 let [PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY] = res;
                 log(PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY);
