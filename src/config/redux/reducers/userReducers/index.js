@@ -1,6 +1,6 @@
 import {
     SET_USER,
-    SET_DETAIL_CUST,
+    SET_DETAIL_CUSTOMER,
     SET_ACTIVITY_HISTORY,
     SET_PAYMENT_HISTORY,
 } from '../../actions/types'
@@ -21,7 +21,7 @@ const userReducers = (state = initialState, action) => {
                 ...state,
                 profile: action.payload,
             }
-        case SET_DETAIL_CUST:
+        case SET_DETAIL_CUSTOMER:
             // log('SET DETAIL CUST : ', action.payload)
             return {
                 ...state,

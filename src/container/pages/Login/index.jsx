@@ -14,8 +14,8 @@ import {
 
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
-import { log, Connection, SQLite } from '../../../utils/';
-import { navigate, setDevice, setUser, setDeatilCust, setActivityHistory, setPaymetHistory, } from '../../../config/redux/actions/';
+import { log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
+import { navigate, setDevice, setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, } from '../../../config/redux/actions/';
 import { POST } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin } from '../../pages/'
@@ -35,7 +35,6 @@ class Login extends React.Component {
     componentDidMount() {
         log('componentDidMount LOGIN : ');
         // this._onClickLogin();
-
     }
     _onClickLogin = async () => {
         let dvc = (!Device.android && !Device.ios) ? false : true;
@@ -97,19 +96,8 @@ class Login extends React.Component {
             ...Object.assign({}, this.state.user),
             ...{ PIN: PIN }
         }
-        log(userTmp);
-        SQLite.query('SELECT value from Collection where key=?', ['PIN'])
-            .then(select => {
-                if (select.length == 0) {
-                    SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', ['PIN', PIN])
-                        .then(insert => {
-                            this.setState({ user: userTmp, popUpState: false })
-                            this._getUserInfo(userTmp);
-                        })
-                        .catch(err => log(err));
-                }
-            })
-            .catch(err => log(err))
+        this.setState({ user: userTmp, popUpState: false })
+        this._getUserInfo(userTmp);
     }
 
     _checkDate = (mobile, server) => {
@@ -132,26 +120,65 @@ class Login extends React.Component {
         }
     }
     _getDelayedList = () => {
-        log('Daftar tertunda kosong ?')
+        log('Daftar tertunda kosong ? karna tablenya belom ada, nanti kalo login upload yang ada di lokal.')
     }
     _getUserInfo = (data) => {
         POST(['get_detail_cust', { agent: data.id }], ['get_activity_history', { agent: data.id }], ['get_payment_history', { agent: data.id }])
-        .then(res => {
+            .then(res => {
                 let failedResponse = res.filter(item => { return item.status != "success" });
                 if (failedResponse.length > 0) {
                     f7.dialog.alert(failedResponse[0].message);
                     return false;
                 }
                 failedResponse = [];
-                const [detailCust, activityHistory, paymentHistory] = res;
+                const [detailCustomer, activityHistory, paymentHistory] = res;
                 this.props.setUser(data);
-                this.props.setDeatilCust(detailCust);
-                this.props.setActivityHistory(activityHistory);
                 this.props.setPaymetHistory(paymentHistory);
-                this.props.navigate('/Main/', true);
+                this.props.setActivityHistory(activityHistory);
+                this.props.setDetailCustomer(detailCustomer);
+                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.PIN])
+                    .then(select => {
+                        if (select.length == 0) {
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.PIN, data.PIN])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }
+                    }).catch(err => log(err));
+                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.LIST_ACCOUNT])
+                    .then(select => {
+                        if (select.length == 0) {
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.LIST_ACCOUNT, data])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }
+                    }).catch(err => log(err));
+                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.DETAIL_COSTUMER])
+                    .then(select => {
+                        if (select.length == 0) {
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.DETAIL_COSTUMER, detailCustomer.data])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }
+                    }).catch(err => log(err));
+                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.ACTIVITY_HISTORY])
+                    .then(select => {
+                        if (select.length == 0) {
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.ACTIVITY_HISTORY, activityHistory.data])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }
+                    }).catch(err => log(err));
+                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.PAYMENT_HISTORY])
+                    .then(select => {
+                        if (select.length == 0) {
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.PAYMENT_HISTORY, paymentHistory.data])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }
+                    }).catch(err => log(err));
 
-            })
-            .catch(err => log(err))
+                this.props.navigate('/Main/', true);
+            }).catch(err => log(err))
     }
 
     render() {
@@ -222,7 +249,7 @@ const mapDispatchToProps = (dispatch) => {
         setUser: (data) => dispatch(setUser(data)),
         navigate: (nav) => dispatch(navigate(nav)),
         setDevice: (device) => dispatch(setDevice(device)),
-        setDeatilCust: (data) => dispatch(setDeatilCust(data)),
+        setDetailCustomer: (data) => dispatch(setDetailCustomer(data)),
         setActivityHistory: (data) => dispatch(setActivityHistory(data)),
         setPaymetHistory: (data) => dispatch(setPaymetHistory(data)),
     };

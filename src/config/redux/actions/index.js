@@ -15,7 +15,7 @@ import {
 
 import {
     setUser,
-    setDeatilCust,
+    setDetailCustomer,
     setActivityHistory,
     setPaymetHistory,
 } from './userActions';
@@ -39,7 +39,7 @@ export {
     setRegency,
     setDistrict,
     setSubDistrict,
-    setDeatilCust,
+    setDetailCustomer,
     setActivityHistory,
     setPaymetHistory,
 }

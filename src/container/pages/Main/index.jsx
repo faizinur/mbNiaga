@@ -25,7 +25,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        log('componentDidMount MAIN', this.props.profile);
+        log('componentDidMount MAIN');
     }
     _openCamera = async () => {
         try {

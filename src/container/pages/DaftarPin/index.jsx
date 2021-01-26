@@ -29,7 +29,10 @@ const DaftarPin = (props) => {
     const _submitPIN = () => {
         if (newPIN == '' || confirmPIN == '') {  f7.dialog.alert('PIN tidak boleh kosong'); return false; }
         if (newPIN != confirmPIN) {  f7.dialog.alert('PIN beda'); return false; }
-        props.onSubmitPin(newPIN)
+        setNewPIN('');
+        setConfirmPIN('');
+        let pin = newPIN;
+        props.onSubmitPin(pin);
     }
     return (
         <Page noToolbar noNavbar style={{ fontSize: 10, paddingBottom: 60 }}>

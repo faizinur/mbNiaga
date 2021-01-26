@@ -1,6 +1,6 @@
 import {
     SET_USER,
-    SET_DETAIL_CUST,
+    SET_DETAIL_CUSTOMER,
     SET_ACTIVITY_HISTORY,
     SET_PAYMENT_HISTORY,
 } from '../types'
@@ -10,8 +10,8 @@ const setUser = (data) => ({
     type: SET_USER,
     payload: data
 });
-const setDeatilCust = (data) => ({
-    type: SET_DETAIL_CUST,
+const setDetailCustomer = (data) => ({
+    type: SET_DETAIL_CUSTOMER,
     payload: data
 });
 const setActivityHistory = (data) => ({
@@ -25,7 +25,7 @@ const setPaymetHistory = (data) => ({
 
 export {
     setUser,
-    setDeatilCust,
+    setDetailCustomer,
     setActivityHistory,
     setPaymetHistory,
 }

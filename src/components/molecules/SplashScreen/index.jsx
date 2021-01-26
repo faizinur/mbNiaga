@@ -14,16 +14,16 @@ import region from '../../../data/region.json';
 import { log, SQLite } from '../../../utils/';
 import PropTypes from 'prop-types'
 
-
 const SplashScreen = (props) => {
     useEffect(() => {
         console.log('MOUNT OR UPDATE SplashScreen');
         Promise.all([
             _getRegion(),
             SQLite.initDB(),
+            _getLocalData(),
             //.... another promise
         ])
-        .then(res => props.onFinish({}));
+            .then(res => props.onFinish({}));
 
         // let enc = SQLite.enc({name : 'nama'});
         // let dec = SQLite.dec(enc);
@@ -40,6 +40,16 @@ const SplashScreen = (props) => {
             dispatch(setDistrict(region.filter(item => { return item.level == 2 }))),
             dispatch(setSubDistrict(region.filter(item => { return item.level == 3 }))),
         ]);
+    }
+    const _getLocalData = () => {
+        SQLite.fetchAll('SELECT * from COLLECTION')
+            .then(res => {
+                let [PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY] = res;
+                log(PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY);
+                log("KALO ADA SET KE REDUX");
+                log("KALO ADA LANGSUNG ROUTE KE /MAIN/")
+            })
+            .catch(err => log(err));
     }
     return (
         <Page noToolbar noNavbar noSwipeback name="SplashScreen">
