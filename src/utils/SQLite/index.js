@@ -64,32 +64,28 @@ class SQLModules extends Component {
         })
     };
     fetchAll = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) =>
             this.initDB(false)
-                .then(db => {
-                    db.transaction(tx => {
-                        tx.executeSql('SELECT * from COLLECTION', [], (tx, rs) => {
-                            var ress_arr = [];
-                            if (!this.isset(() => rs.insertId)) {
-                                ress_arr = Object.values(rs.rows).reduce((acc, val) => {
-                                    return [...acc,
-                                    {
-                                        id: val.id,
-                                        key: val.key,
-                                        value: selfDecrypt(val.value)
-                                    }]
-                                }, []);
-                            } else {
-                                ress_arr = { 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected };
-                            }
-                            resolve(ress_arr);
-                        }, (tx, error) => {
-                            reject(`SQL statement ERROR: ${error.message}`);
-                        });
-                    });
-                })
+                .then(db =>
+                    db.transaction(tx =>
+                        tx.executeSql('SELECT * from COLLECTION', [],
+                            (tx, rs) =>
+                                resolve(
+                                    (!this.isset(() => rs.insertId)) ?
+                                        Object.values(rs.rows)
+                                            .reduce((acc, val) => {
+                                                return [
+                                                    ...acc,
+                                                    { id: val.id, key: val.key, value: selfDecrypt(val.value) }
+                                                ]
+                                            }, [])
+                                        : { 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected }
+                                )
+                            , (tx, error) => reject(`SQL statement ERROR: ${error.message}`))
+                    )
+                )
                 .catch(err => reject(err))
-        })
+        )
     }
 }
 let SQLite = new SQLModules();
@@ -100,19 +96,3 @@ export {
 
 // [4:49 PM, 1/15/2021] egi: framework7 cordova plugin add cordova-sqlite-storage
 // [4:49 PM, 1/15/2021] egi: https://github.com/storesafe/cordova-sqlite-storage
-
-                   // SQLite.query('INSERT INTO collection(id,key,value) VALUES(?,?,?)', ['login', res.data])
-                    //     .then(res => log(res))
-                    //     .catch(err => log(err))
-
-                    // SQLite.query('SELECT * FROM collection')
-                    //     .then(res => log(res))
-                    //     .catch(err => log(err))
-
-                    // SQLite.query('SELECT * FROM collection WHERE key=?', ['login'])
-                    //     .then(res => log(res))
-                    //     .catch(err => log(err))
-
-                    // SQLite.query('DELETE FROM collection')
-                    //     .then(res => log(res))
-                    //     .catch(err => log(err))
