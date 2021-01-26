@@ -14,7 +14,10 @@ import {
 } from './routerActions';
 
 import {
-    setUser
+    setUser,
+    setDeatilCust,
+    setActivityHistory,
+    setPaymetHistory,
 } from './userActions';
 
 import {
@@ -36,4 +39,7 @@ export {
     setRegency,
     setDistrict,
     setSubDistrict,
+    setDeatilCust,
+    setActivityHistory,
+    setPaymetHistory,
 }

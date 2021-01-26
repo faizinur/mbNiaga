@@ -15,7 +15,7 @@ import {
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/';
-import { log, Camera, Geolocation } from '../../../utils';
+import { log, Camera, Geolocation, Connection } from '../../../utils';
 import { DefaultNavbar, ListMenu } from '../../../components/atoms'
 import { SystemInfo } from '../../../components/molecules'
 class Main extends React.Component {
@@ -25,8 +25,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        log('componentDidMount MAIN');
-        this._openMaps();
+        log('componentDidMount MAIN', this.props.profile);
     }
     _openCamera = async () => {
         try {
@@ -61,7 +60,7 @@ class Main extends React.Component {
     render() {
         return (
             <Page style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={['WIFI', 'MOBILE DATA', 'OFFLINE'][Math.floor(Math.random() * (0 - 0)) + 0]} />
+                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={Connection()} />
                 <SystemInfo />
                 <Block style={{ marginTop: 0 }}>
                     <div id="map_canvas"></div>

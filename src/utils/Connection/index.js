@@ -1,24 +1,24 @@
 // import { getDevice }  from 'framework7/lite-bundle';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
-var Connection = {
-    checkConnection: () => {
-        return new Promise((resolve, reject) => {
-            // var device = getDevice();
-            if (!Device.android && !Device.ios) reject("Device not support");
-            var networkState = navigator.connection.type;
-            switch(networkState){
-                case 'wifi':
-                    reject("Tidak boleh menggunakan koneksi WIFI");
-                break;
-                case 'none':
-                    reject("Koneksi tidak tersedia");
-                break;
-                default : 
-                    resolve("Koneksi tersedia(" + networkState + ")");
-            }
-            
-        });
-    },
+const Connection = () => {
+    if (!Device.android && !Device.ios) return "OFFLINE";
+    var network = "";
+    var networkState = navigator.connection.type;
+    switch (networkState) {
+        case 'wifi':
+            network = "WIFI";
+        case '2g':
+        case '3g':
+        case '4g':
+            network = "MOBILE DATA";
+            break;
+        case 'none':
+            network = "OFFLINE";
+            break;
+        default:
+            network = networkState;
+    }
+    return network;
 }
 
 export default Connection;

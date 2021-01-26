@@ -68,3 +68,19 @@ export default SQLite;
 
 // [4:49 PM, 1/15/2021] egi: framework7 cordova plugin add cordova-sqlite-storage
 // [4:49 PM, 1/15/2021] egi: https://github.com/storesafe/cordova-sqlite-storage
+
+                   // SQLite.query('INSERT INTO collection(id,key,value) VALUES(?,?,?)', ['login', res.data])
+                    //     .then(res => log(res))
+                    //     .catch(err => log(err))
+
+                    // SQLite.query('SELECT * FROM collection')
+                    //     .then(res => log(res))
+                    //     .catch(err => log(err))
+
+                    // SQLite.query('SELECT * FROM collection WHERE key=?', ['login'])
+                    //     .then(res => log(res))
+                    //     .catch(err => log(err))
+
+                    // SQLite.query('DELETE FROM collection')
+                    //     .then(res => log(res))
+                    //     .catch(err => log(err))
