@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, navigate } from '../../../config/redux/actions/';
 import { log, POST, SQLite, SQLiteTypes } from '../../../utils';
-
+const { PIN } = SQLiteTypes;
 const CustomToolbar = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE CustomToolbar');
@@ -45,7 +45,7 @@ const CustomToolbar = (props) => {
                                 POST(`Logout`, { username: data })
                                     .then(res => {
                                         if (res.status == 'success') {
-                                            SQLite.query('DELETE from Collection where key!=?', [SQLiteTypes.PIN])
+                                            SQLite.query('DELETE from Collection where key!=?', [PIN])
                                                 .then(res => {
                                                     log(res);
                                                     dispatch(setUser({}));

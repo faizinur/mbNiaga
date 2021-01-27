@@ -19,7 +19,7 @@ import { navigate, setDevice, setUser, setDetailCustomer, setActivityHistory, se
 import { POST } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin } from '../../pages/'
-
+const { PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY, } = SQLiteTypes;
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -136,42 +136,42 @@ class Login extends React.Component {
                 this.props.setPaymetHistory(paymentHistory);
                 this.props.setActivityHistory(activityHistory);
                 this.props.setDetailCustomer(detailCustomer);
-                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.PIN])
+                SQLite.query('SELECT value from Collection where key=?', [PIN])
                     .then(select => {
                         if (select.length == 0) {
-                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.PIN, data.PIN])
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [PIN, data.PIN])
                                 .then(insert => log(insert))
                                 .catch(err => log(err));
                         }
                     }).catch(err => log(err));
-                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.LIST_ACCOUNT])
+                SQLite.query('SELECT value from Collection where key=?', [LIST_ACCOUNT])
                     .then(select => {
                         if (select.length == 0) {
-                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.LIST_ACCOUNT, data])
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [LIST_ACCOUNT, data])
                                 .then(insert => log(insert))
                                 .catch(err => log(err));
                         }
                     }).catch(err => log(err));
-                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.DETAIL_COSTUMER])
+                SQLite.query('SELECT value from Collection where key=?', [DETAIL_COSTUMER])
                     .then(select => {
                         if (select.length == 0) {
-                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.DETAIL_COSTUMER, detailCustomer.data])
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [DETAIL_COSTUMER, detailCustomer.data])
                                 .then(insert => log(insert))
                                 .catch(err => log(err));
                         }
                     }).catch(err => log(err));
-                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.ACTIVITY_HISTORY])
+                SQLite.query('SELECT value from Collection where key=?', [ACTIVITY_HISTORY])
                     .then(select => {
                         if (select.length == 0) {
-                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.ACTIVITY_HISTORY, activityHistory.data])
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [ACTIVITY_HISTORY, activityHistory.data])
                                 .then(insert => log(insert))
                                 .catch(err => log(err));
                         }
                     }).catch(err => log(err));
-                SQLite.query('SELECT value from Collection where key=?', [SQLiteTypes.PAYMENT_HISTORY])
+                SQLite.query('SELECT value from Collection where key=?', [PAYMENT_HISTORY])
                     .then(select => {
                         if (select.length == 0) {
-                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [SQLiteTypes.PAYMENT_HISTORY, paymentHistory.data])
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [PAYMENT_HISTORY, paymentHistory.data])
                                 .then(insert => log(insert))
                                 .catch(err => log(err));
                         }
