@@ -7,7 +7,6 @@ import Device from './Device';
 import Fingerprint from './Fingerprint';
 import Geolocation from './Geolocation';
 import { SQLite , SQLiteTypes } from './SQLite';
-import QueryBuilder from './QueryBuilder';
 import ClockTick from './ClockTick';
 import Filter from './Filter';
 
@@ -24,7 +23,6 @@ export {
     Geolocation,
     SQLite,
     SQLiteTypes,
-    QueryBuilder,
     ClockTick,
     Filter,
 }
