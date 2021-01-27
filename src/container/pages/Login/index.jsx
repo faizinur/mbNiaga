@@ -18,16 +18,17 @@ import { log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
 import { navigate, setDevice, setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, } from '../../../config/redux/actions/';
 import { POST } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
-import { DaftarPin } from '../../pages/'
-const { PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY, } = SQLiteTypes;
+import { DaftarPin, Check } from '../../pages/';
+const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY} = SQLiteTypes;
 class Login extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            username: 'USER_TEST_1',
-            password: '12345678',
-            popUpState: false,
+            username: (!Device.android && !Device.ios) ? 'USER_TEST_1' : '',
+            password: (!Device.android && !Device.ios) ? '12345678' : '',
+            popUpStateDaftarPin: false,
+            resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
             user: {}
         };
         props.setUser({});
@@ -38,11 +39,6 @@ class Login extends React.Component {
     }
     _onClickLogin = async () => {
         let dvc = (!Device.android && !Device.ios) ? false : true;
-        // if (Connection() == 'OFFLINE') {
-        //     f7.dialog.alert('Pastikan anda tersambung jaringan internet')
-        //     return false;
-        // }
-        const { username, password } = this.state;
         var date = new Date();
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -50,42 +46,63 @@ class Login extends React.Component {
         var hours = date.getHours();
         var minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
         var seconds = date.getSeconds();
+        
+        const { username, password } = this.state;
+        var data = {
+            username: username,
+            password: password,
+            imei: JSON.stringify(this.props.device.uuid),
+            iccd: JSON.stringify(this.props.device.serial),
+            jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+        }
+        
         try {
-            dvc ?
-                this.props.setDevice(await Device.getInformation()) :
+            if (dvc) {
+                this.props.setDevice(await Device.getInformation());
+                if (Connection() == 'OFFLINE') {
+                    this._setLoginResult('MobileData');
+                    f7.dialog.alert('Pastikan anda tersambung jaringan internet')
+                    return false;
+                }
+            } else {
                 this.props.setDevice({ available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' });
-
-            const userPIN = await SQLite.query('SELECT value from Collection where key=?', ['PIN']);
-            var data = {
-                username: username,
-                password: password,
-                imei: JSON.stringify(this.props.device.uuid),
-                iccd: JSON.stringify(this.props.device.serial),
-                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
             }
+            const userPIN = await SQLite.query('SELECT value from Collection where key=?', ['PIN']);
             POST(`Login`, data)
                 .then(res => {
-                    // if(this._checkDate(data.jam_mobile, res.data.jam_server) == false) return false;
-                    this._getDelayedList();
-                    res.data = {
-                        ...res.data,
-                        ...{
-                            mobileTime: data.jam_mobile,
-                            jam_server: res.data.jam_server,
-                        }
-                    }
-                    if (userPIN.length > 0) {
-                        res.data = {
-                            ...res.data,
-                            ...{ PIN: userPIN[0] }
-                        }
-                        this._getUserInfo(res.data)
-                    } else {
-                        this.setState({ user: res.data, popUpState: true });
-                        //--> _submitPIN
-                    }
+                    this._getDelayedList()
+                        .then(e => {
+                            log('AYO LANJUT LOGIN!');
+                            res.data = {
+                                ...res.data,
+                                ...{
+                                    mobileTime: data.jam_mobile,
+                                    jam_server: res.data.jam_server,
+                                }
+                            }
+                            if (userPIN.length > 0) {
+                                this._getUserInfo({
+                                    ...res.data,
+                                    ...{ PIN: userPIN[0] }
+                                })
+                            } else {
+                                this.setState({ user: res.data, popUpStateDaftarPin: true });
+                                //--> _submitPIN
+                            }
+                        })
+                        .catch(err => log(err));
                 })
-                .catch(err => log("LOGIN", err));
+                .catch(err => {
+                    switch (err) {
+                        case 'Username/Password tidak valid': this._setLoginResult('UserAuth');
+                            break;
+                        case 'Tidak Boleh Login Sebelum Jam 8 Pagi': this._setLoginResult('LoginTime');
+                            break;
+                        case 'Jam Pada Perangkat Tidak Sesuai': this._setLoginResult('DeviceTime');
+                            break;
+                        default: log(err)
+                    }
+                });
         } catch (err) {
             f7.dialog.alert(err);
         }
@@ -96,31 +113,19 @@ class Login extends React.Component {
             ...Object.assign({}, this.state.user),
             ...{ PIN: PIN }
         }
-        this.setState({ user: userTmp, popUpState: false })
+        this.setState({ user: userTmp, popUpStateDaftarPin: false })
         this._getUserInfo(userTmp);
     }
-
-    _checkDate = (mobile, server) => {
-        const [dayMobile, timeMobile] = mobile.split(' ');
-        const [dayServer, timeServer] = server.split(' ');
-        const [hMobile, mMobile, sMobile] = timeMobile.split(':');
-        const [hServer, mServer, sServer] = timeServer.split(':');
-        const mobileInS = (parseInt(hMobile) * 60 * 60) + (parseInt(mMobile) * 60) + parseInt(sMobile);
-        const serverInS = (parseInt(hServer) * 60 * 60) + (parseInt(mServer) * 60) + parseInt(sServer);
-        if (dayMobile == dayServer) {
-            if (Math.abs(serverInS - mobileInS) <= 300) {
-                return true;
-            } else {
-                f7.dialog.alert('Tidak sesuai dengan jam server')
-                return false;
-            }
-        } else {
-            f7.dialog.alert('Tidak sesuai dengan jam server')
-            return false;
-        }
-    }
     _getDelayedList = () => {
-        log('Daftar tertunda kosong ? karna tablenya belom ada, nanti kalo login upload yang ada di lokal.')
+        return new Promise((resolve, reject) => {
+            log('_getDelayedList tunggu 3 detik')
+            f7.preloader.show();
+            setTimeout(() => {
+                log('Daftar tertunda kosong ? karna tablenya belom ada, nanti kalo login upload yang ada di lokal.');
+                f7.preloader.hide();
+                resolve(true);
+            }, 3000)
+        })
     }
     _getUserInfo = (data) => {
         POST(['get_detail_cust', { agent: data.id }], ['get_activity_history', { agent: data.id }], ['get_payment_history', { agent: data.id }])
@@ -140,6 +145,14 @@ class Login extends React.Component {
                     .then(select => {
                         if (select.length == 0) {
                             SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [PIN, data.PIN])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }
+                    }).catch(err => log(err));
+                SQLite.query('SELECT value from Collection where key=?', [DEVICE_INFO])
+                    .then(select => {
+                        if (select.length == 0) {
+                            SQLite.query('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [DEVICE_INFO, this.props.device])
                                 .then(insert => log(insert))
                                 .catch(err => log(err));
                         }
@@ -176,11 +189,18 @@ class Login extends React.Component {
                                 .catch(err => log(err));
                         }
                     }).catch(err => log(err));
-
                 this.props.navigate('/Main/', true);
             }).catch(err => log(err))
     }
-
+    _setLoginResult = (key = '') => {
+        if (!this.state.resultLogin.includes(key)) {
+            let tmpResultLogin = Object.assign([], this.state.resultLogin);
+            tmpResultLogin.push(key);
+            this.setState({ resultLogin: tmpResultLogin });
+        } else {
+            this.setState({ resultLogin: [] });
+        }
+    }
     render() {
         return (
             <Page noToolbar noNavbar noSwipeback loginScreen name="Login">
@@ -221,13 +241,29 @@ class Login extends React.Component {
                 </List>
 
                 <Popup
-                    className="demo-popup"
-                    opened={this.state.popUpState}
+                    className="daftarPin-popup"
+                    opened={this.state.popUpStateDaftarPin}
                     onPopupClosed={() => log('pop up Closed')}
                 >
                     <DaftarPin
                         onSubmitPin={this._submitPIN}
                     />
+                </Popup>
+                <Popup
+                    className="failedLogin-popup"
+                    opened={this.state.resultLogin.length > 0 ? true : false}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
+                    {
+                        this.state.resultLogin.length > 0 ?
+                            <Check
+                                backLink={(e) => this._setLoginResult()}
+                                title={"Gagal Login"}
+                                loginResult={this.state.resultLogin}
+                            />
+                            :
+                            <></>
+                    }
                 </Popup>
             </Page>
         );
@@ -256,3 +292,23 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+// _checkDate = (mobile, server) => {
+//     const [dayMobile, timeMobile] = mobile.split(' ');
+//     const [dayServer, timeServer] = server.split(' ');
+//     const [hMobile, mMobile, sMobile] = timeMobile.split(':');
+//     const [hServer, mServer, sServer] = timeServer.split(':');
+//     const mobileInS = (parseInt(hMobile) * 60 * 60) + (parseInt(mMobile) * 60) + parseInt(sMobile);
+//     const serverInS = (parseInt(hServer) * 60 * 60) + (parseInt(mServer) * 60) + parseInt(sServer);
+//     if (dayMobile == dayServer) {
+//         if (Math.abs(serverInS - mobileInS) <= 300) {
+//             return true;
+//         } else {
+//             f7.dialog.alert('Tidak sesuai dengan jam server')
+//             return false;
+//         }
+//     } else {
+//         f7.dialog.alert('Tidak sesuai dengan jam server')
+//         return false;
+//     }
+// }

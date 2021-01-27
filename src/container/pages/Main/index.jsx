@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 import {
     Page,
     List,
-    ListInput,
-    ListItem,
     Block,
-    Row,
-    Col,
-    Button,
-    Card,
     CardContent,
-    Link,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -42,7 +35,7 @@ class Main extends React.Component {
         //     if (err != "") alert("Error: " + err);
         // });
     }
-    _openMaps = async() => {
+    _openMaps = async () => {
         let elem = document.getElementById("map_canvas");
         Geolocation.getMapLocation(document.getElementById("map_canvas"))
             .then(res => {
@@ -60,7 +53,10 @@ class Main extends React.Component {
     render() {
         return (
             <Page style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="MOBILE APPLICATION INTERACTION" network={Connection()} />
+                <DefaultNavbar
+                    title="MOBILE APPLICATION INTERACTION"
+                    network={Connection()}
+                />
                 <SystemInfo />
                 <Block style={{ marginTop: 0 }}>
                     <div id="map_canvas"></div>
@@ -69,8 +65,9 @@ class Main extends React.Component {
                             <ListMenu
                                 onClick={(e) => this.props.navigate('/ListDebitur/')}
                                 label="Daftar Debitur"
-                            />
+                                />
                             <ListMenu
+                                onClick={(e) => this.props.navigate('/AddKunjungan/')}
                                 label="Rencana Kunjungan"
                             />
                             <ListMenu

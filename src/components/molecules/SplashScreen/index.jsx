@@ -11,9 +11,10 @@ import {
 } from '../../../config/redux/actions';
 import { useDispatch, useSelector } from "react-redux";
 import region from '../../../data/region.json';
-import { log, SQLite } from '../../../utils/';
+import { log, SQLite, SQLiteTypes } from '../../../utils/';
 import PropTypes from 'prop-types'
-
+import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice } from '../../../config/redux/actions/';
+const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
         console.log('MOUNT OR UPDATE SplashScreen');
@@ -23,7 +24,7 @@ const SplashScreen = (props) => {
             _getLocalData(),
             //.... another promise
         ])
-            .then(res => props.onFinish({}));
+            .then(res => props.onFinish({ realApp: true }));
 
         // let enc = SQLite.enc({name : 'nama'});
         // let dec = SQLite.dec(enc);
@@ -42,14 +43,25 @@ const SplashScreen = (props) => {
         ]);
     }
     const _getLocalData = () => {
+
         SQLite.fetchAll()
-            .then(res => {
-                let [PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY] = res;
-                log(PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY);
-                log("KALO ADA SET KE REDUX");
-                log("KALO ADA LANGSUNG ROUTE KE /MAIN/")
-            })
-            .catch(err => log(err));
+            .then(res =>
+                res.map(item => {
+                    // switch (item.key) {
+                    //     case LIST_ACCOUNT: dispatch(setUser(item.value)); log(item.value);
+                    //         break;
+                    //     case DEVICE_INFO: dispatch(setDevice(item.val)); log(item.value);
+                    //         break;
+                    //     case DETAIL_COSTUMER: dispatch(setDetailCustomer(item.value));
+                    //         break;
+                    //     case ACTIVITY_HISTORY: dispatch(setActivityHistory(item.value));
+                    //         break;
+                    //     case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
+                    //         break;
+                    //     default: log('_getLocalData default');
+                    // }
+                })
+            ).catch(err => log(err));
     }
     return (
         <Page noToolbar noNavbar noSwipeback name="SplashScreen">

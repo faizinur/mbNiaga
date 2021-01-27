@@ -1,84 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
-  Page,
-  Navbar,
-  List,
-  ListItem,
-  CardContent,
-  Block,
-  Row,
-  Col,
-  Button,
-  Icon
+	Page,
+	List,
+	ListItem,
+	CardContent,
+	Icon
 } from 'framework7-react';
 
-import { connect } from 'react-redux';
-import stylesheet from './stylesheet';
 import { navigate } from '../../../config/redux/actions/routerActions';
-//import { log } from '../../../utils/consoles';
+import { log } from '../../../utils/';
+import { useDispatch, useSelector } from "react-redux";
+import { DefaultNavbar } from '../../../components/atoms'
 
-class Check extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <Page noToolbar noNavbar>
-        <CardContent padding={false}>
-          <List medial-list style={{ marginRight: 20, marginLeft: 20, fontSize: 12 }}>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Mobile Data On">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Airplane Mode On">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Login Jam 8 Pagi">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Jam Pada Perangkat Sesuai">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="User ID dan Password Anda Sesuai">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Device ID Anda Sesuai">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row' }} title="ICCID Anda Sesuai">
-              <Icon f7="checkmark_rectangle"></Icon>
-            </ListItem>
-          </List>
-        </CardContent>
-        <List>
-          <Block strong>
-            <Row>
-              <Col width="100">
-                <Button fill raised onClick={() => this._deviceInfo()} style={{ backgroundColor: '#c0392b' }}>Next</Button>
-              </Col>
-            </Row>
-          </Block>
-        </List>
-      </Page>
-    );
-  }
-  _deviceInfo() {
-    this.props.navigate('/DeviceInfo/');
-  }
+const Check = (props) => {
+	useEffect(() => {
+		log('MOUNT OR UPDATE Check');
+		setLoginResult('loginResult' in props ? props.loginResult : [])
+		return () => {
+			setLoginResult([])
+			log('UNMOUNT Check');
+		}
+	}, []);
+	const dispatch = useDispatch();
+	let [ loginResult, setLoginResult ] = useState([]);
+	return (
+		<Page noToolbar noNavbar>
+			<DefaultNavbar
+				mode="info"
+				backLink={(e) => 'backLink' in props ? props.backLink(e) : e.preventDefault()}
+				title={'title' in props ? props.title : 'null'}
+			/>
+			<CardContent padding={false}>
+				<List medial-list style={{ marginRight: 20, marginLeft: 20, fontSize: 12 }}>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Mobile Data On">
+						<Icon f7={loginResult.includes('MobileData') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon> {/* SUDAH */}
+					</ListItem>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Airplane Mode On">
+						<Icon f7={loginResult.includes('Airplane') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
+					</ListItem>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Login Jam 8 Pagi">
+						<Icon f7={loginResult.includes('LoginTime') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon> {/* SUDAH */}
+					</ListItem>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Jam Pada Perangkat Sesuai">
+						<Icon f7={loginResult.includes('DeviceTime') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon> {/* SUDAH */}
+					</ListItem>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="User ID dan Password Anda Sesuai">
+						<Icon f7={loginResult.includes('UserAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon> {/* SUDAH */}
+					</ListItem>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Device ID Anda Sesuai">
+						<Icon f7={loginResult.includes('DeviceAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon> {/* BELUM ADA KOLOMNYA DI DB */}
+					</ListItem>
+					<ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row' }} title="ICCID Anda Sesuai">
+						<Icon f7={loginResult.includes('ICCIDAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon> {/* BELUM ADA KOLOMNYA DI DB */}
+					</ListItem>
+				</List>
+			</CardContent>
+		</Page>
+	)
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.main.user,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    //onUpdateUser: (data) => dispatch(updateUser(data)),
-    //onLogin: () => dispatch(login()),
-    navigate: (nav) => dispatch(navigate(nav))
-  };
-};
-
-export default connect(null, mapDispatchToProps)(Check);
+export default Check;

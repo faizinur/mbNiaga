@@ -74,7 +74,15 @@ class Root extends React.Component {
 	render() {
 		const { realApp } = this.state;
 		if (!realApp) {
-			return (<SplashScreen onFinish={(e) => this.setState({ realApp: !realApp })} />)
+			return (
+				<SplashScreen
+					onFinish={(e) =>
+						this.setState({
+							realApp: e.realApp,
+						})
+					}
+				/>
+			)
 		} else {
 			return (
 				<App params={this.state.f7params} >
@@ -82,7 +90,7 @@ class Root extends React.Component {
 						shown={JSON.stringify(this.props.profile) === '{}'}
 					/>
 					<Views className="safe-areas">
-						<View main url="/" />
+						<View main url={'/'} />
 					</Views>
 				</ App >
 			)

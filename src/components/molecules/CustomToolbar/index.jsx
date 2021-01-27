@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
     Toolbar,
     Link,
     f7,
 } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, navigate } from '../../../config/redux/actions/';
+import { setUser, navigate, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice } from '../../../config/redux/actions/';
 import { log, POST, SQLite, SQLiteTypes } from '../../../utils';
 const { PIN } = SQLiteTypes;
 const CustomToolbar = (props) => {
@@ -49,10 +49,14 @@ const CustomToolbar = (props) => {
                                                 .then(res => {
                                                     log(res);
                                                     dispatch(setUser({}));
+                                                    dispatch(setDetailCustomer([]));
+                                                    dispatch(setActivityHistory([]));
+                                                    dispatch(setPaymetHistory([]));
+                                                    dispatch(setDevice({}));
                                                     dispatch(navigate('/', true));
-                                                    setTablinkActive(0);
                                                 })
                                                 .catch(err => log(err));
+                                            setTablinkActive(0);
                                         } else {
                                             setTablinkActive(prevState);
                                         }
@@ -77,7 +81,7 @@ const CustomToolbar = (props) => {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                zIndex: 9999,
+                zIndex: 'shown' in props ? 9999 : 0,
                 display: props.shown ? 'none' : 'block'
             }}>
             <Toolbar tabbar bottom labels>
