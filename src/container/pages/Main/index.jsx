@@ -67,7 +67,7 @@ class Main extends React.Component {
                                 label="Daftar Debitur"
                                 />
                             <ListMenu
-                                onClick={(e) => this.props.navigate('/AddKunjungan/')}
+                                onClick={(e) => this.props.navigate('/RencanaKunjungan/')}
                                 label="Rencana Kunjungan"
                             />
                             <ListMenu

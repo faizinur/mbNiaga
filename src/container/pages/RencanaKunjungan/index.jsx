@@ -16,7 +16,7 @@ import { log, Filter, SQLite, SQLiteTypes, Connection } from '../../../utils/';
 import { SystemInfo } from '../../../components/molecules';
 import { DefaultNavbar } from '../../../components/atoms'
 
-class ListDebitur extends React.Component {
+class RencanaKunjungan extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,15 +57,32 @@ class ListDebitur extends React.Component {
     }
     componentDidMount(){
         this._tambahParameter()
+        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
+        .then(res => {
+            var arr_result = [];
+            var data = res.length != 0 ? res[0] : res;
+            data.map((item, index) => arr_result.push({
+                namaDebitur: item.name,
+                nomorKartu: item.card_no,
+                alamat: item.home_address_1,
+                produk: item.loan_type,
+                tagihan: item.dpd_cur_days,
+                bucket: item.current_bucket,
+                dpd: item.day_past_due,
+                data : item
+            }));
+            this.setState({searchResult : arr_result});
+        })
+        .catch(err => log(err))
     }
     _next(data) {
         this.props.setDetailCustomer(data);
-        this.props.navigate('/InfoDebitur/');
+        this.props.navigate('/AddKunjungan/');
     }
     _search = async () => {
         var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");
         if(param.length == 0) return false;
-        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.DETAIL_COSTUMER])
+        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
         .then(res => {
             Filter.select(res, param).then((resFilter) => {
                 var arr_result = [];
@@ -101,7 +118,7 @@ class ListDebitur extends React.Component {
     render() {
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} />
+                <DefaultNavbar title="RENCANA KUNJUNGAN" network={Connection()} />
                 <List noHairlinesMd style={{ marginBottom: 0, padding: 0 }}>
                     <SystemInfo />
                     <Block style={{ margin: 0, padding: 0 }}>
@@ -276,4 +293,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListDebitur);
+export default connect(mapStateToProps, mapDispatchToProps)(RencanaKunjungan);

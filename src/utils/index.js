@@ -9,6 +9,7 @@ import Geolocation from './Geolocation';
 import { SQLite , SQLiteTypes } from './SQLite';
 import QueryBuilder from './QueryBuilder';
 import ClockTick from './ClockTick';
+import Filter from './Filter';
 
 export {
     POST,
@@ -25,4 +26,5 @@ export {
     SQLiteTypes,
     QueryBuilder,
     ClockTick,
+    Filter,
 }

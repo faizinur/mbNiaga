@@ -29,6 +29,7 @@ import {
 	ApprovalUploadDataProvinsi,
 	SetupParameter,
 	AddParameterMetodeKontak,
+	RencanaKunjungan,
 } from '../../container/pages';
 
 
@@ -160,6 +161,10 @@ var router = [
 	{
 		path: '/HomeTemplates/',
 		component: HomeTemplates,
+	},
+	{
+		path: '/RencanaKunjungan/',
+		component: RencanaKunjungan,
 	},
 	{
 		path: '(.*)',

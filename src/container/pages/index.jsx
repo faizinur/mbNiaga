@@ -28,6 +28,7 @@ import ApprovalSetupParameter from './ApprovalSetupParameter';
 import UploadMasterProvinsi from './UploadMasterProvinsi';
 import ApprovalUploadDataProvinsi from './ApprovalUploadDataProvinsi';
 import SetupParameter from './SetupParameter';
+import RencanaKunjungan from './RencanaKunjungan';
 
 export {
     NotFound,
@@ -60,4 +61,5 @@ export {
     ApprovalUploadDataProvinsi,
     SetupParameter,
     AddParameterMetodeKontak,
+    RencanaKunjungan,
 }

@@ -16,3 +16,9 @@
   opacity: 1;
   background-color: rgb(192, 57, 43);
 }
+.item-input-outline .item-label{
+  left: 0px;
+}
+.list{
+  margin: 8px 0px;
+}
