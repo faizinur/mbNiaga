@@ -28,7 +28,6 @@ const selfDecrypt = (ciphertext) => {
     var encryptedString = CryptoJS.enc.Utf8.stringify(
         CryptoJS.enc.Base64.parse(ciphertext)
     );
-    return JSON.parse(Decrypt(encryptedString));
+    return JSON.parse(Decrypt(encryptedString).replace(/\:null/gi, "\:\"\""));
 }
-
 export { Decrypt, selfDecrypt };
