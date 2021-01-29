@@ -107,7 +107,7 @@ class RekapTerkirim extends React.Component {
     );
   }
      _next() {
-        this.props.navigate('/UpdatePin/');
+        this.props.navigate('/DetailHasilKunjungan/');
     }
 }
 

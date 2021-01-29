@@ -7,13 +7,16 @@ import {
 	Block,
 	Row,
 	Col,
-	Button
+	Button,
+	Card,
+	CardContent
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms'
-import { Connection, log, SQLiteTypes, SQLite, Filter } from '../../../utils'
+import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
+import { Connection, log, SQLiteTypes, SQLite, Filter } from '../../../utils';
+const { ACTIVITY_HISTORY, RENCANA_KUNJUNGAN } = SQLiteTypes;
 
 class InfoDebitur extends React.Component {
 	constructor(props) {
@@ -21,16 +24,7 @@ class InfoDebitur extends React.Component {
 		this.state = {
 			detailCust : this.props.detailCust,
 			arrDetailCust : [],
-			history : {
-				tanggal : '26 NOVEMBER 2020 08:30:05',
-				metodeKontak : 'VISIT',
-				detailMetode : 'BERTEMU DENGAN DEBITUR',
-				kontak : 'PEMBAYARAN DI AMBIL',
-				tempatKunjungan : 'ALAMAT KTP',
-				bertemuDengan : 'DEBITUR',
-				keterangan : 'DIKUNJUNGI',
-				petugas : 'NA',
-			},
+			history : [],
 			infoUpdateData : [
 				{kategori : 'ALAMAT RUMAH', perubahan : 'PROVINSI, KOTA/KABUPATEN, KECAMATAN, KELURAHAN, ALAMAT, ZIP CODE, NO TELEPHONE'},
 				{kategori : 'ALAMAT KANTOR', perubahan : 'PROVINSI, KOTA/KABUPATEN, KECAMATAN, KELURAHAN, ALAMAT, ZIP CODE, NO TELEPHONE'},
@@ -45,18 +39,26 @@ class InfoDebitur extends React.Component {
 			arrDetailCust.push({'key' : key, 'value' : this.state.detailCust[key]})
 		}
 		this.setState({arrDetailCust : arrDetailCust})
+		SQLite.query('SELECT * FROM collection where key = ?', [ACTIVITY_HISTORY])
+        .then(res => {
+			Filter.select(res, [{'column':'account_number', 'operator':'EQUAL', 'value': this.state.detailCust.account_number }]).then((resFilter) => {
+				log("HASIL FILTER", resFilter)
+				resFilter.slice(0, 5);
+				this.setState({history : resFilter});
+            }).catch(err => log(err))
+		}).catch(err => log(err))
 	}
 	_updateData(){
 		this.props.navigate('/UpdateDebitur/');
 	}
 	_rencanaKunjungan(){
-		SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
+		SQLite.query('SELECT * FROM collection where key = ?', [RENCANA_KUNJUNGAN])
         .then(res => {
             Filter.select(res, [{'column':'account_number', 'operator':'EQUAL', 'value': this.state.detailCust.account_number }]).then((resFilter) => {
 				if(resFilter.length != 0) return false;
 				var data = res.length != 0 ? res[0] : res;
 				data.push((this.state.detailCust))
-				SQLite.query(`INSERT OR REPLACE INTO collection (id, key, value) VALUES(?,?,?)`, [SQLiteTypes.RENCANA_KUNJUNGAN, data])
+				SQLite.query(`INSERT OR REPLACE INTO collection (id, key, value) VALUES(?,?,?)`, [RENCANA_KUNJUNGAN, data])
 				.then(insert => {
 					log(insert)
 					this.props.navigate('/Main/');
@@ -119,66 +121,32 @@ class InfoDebitur extends React.Component {
 				<Block>
 					{arrDetailCust.map((item, key) => (
 						<Row key={key} noGap>
-							<Col width="50" style={{border:1, borderStyle:'solid', borderColor:'#a9a9a9', borderCollapse: 'collapse'}}>
+							<Col width="50" style={{border:1, borderStyle:'solid', borderColor:'#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch'}}>
 								<p style={{margin:8}}>{item.key.toUpperCase()}</p>
 							</Col>
-							<Col width="50" style={{border:1, borderStyle:'solid', borderColor:'#a9a9a9', borderCollapse: 'collapse'}}>
+							<Col width="50" style={{border:1, borderStyle:'solid', borderColor:'#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch'}}>
 								<p style={{margin:8}}>{item.value}</p>
 							</Col>
 						</Row>
 					))}
 				</Block>
 				<CustomBlockTitle title="HISTORI PENANGANAN" />
-				<List noHairlinesMd style={{ fontSize: 1 }}>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={history.tanggal}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"METODE KONTAK: " + history.metodeKontak}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"DETAIL METODE: " + history.detailMetode}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"KONTAK: " + history.kontak}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"TEMPAT KUNJUNGAN: " + history.tempatKunjungan}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"BERTEMU DENGAN: " + history.bertemuDengan}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"KETERANGAN: " + history.keterangan}
-					/>
-					<ListInput
-						outline
-						disabled={true}
-						type="text"
-						value={"PETUGAS: " + history.petugas}
-					/>
-				</List>
+				<Block style={{margin:0}}>
+				{history.map((item, key) => (
+					<Card key={key} style={{border:'2px solid #c0392b'}}>
+						<CardContent>
+							<p><b>TANGGAL:</b> {item.created_time}</p>
+							<p><b>METODE KONTAK:</b> {item.contact_mode}</p>
+							<p><b>DETAIL METODE:</b> {item.contact_person}</p>
+							<p><b>KONTAK:</b> {item.call_result}</p>
+							<p><b>TEMPAT KUNJUNGAN:</b> {item.place_contacted} </p>
+							<p><b>BERTEMU DENGAN:</b> {item.contact_person}</p>
+							<p><b>KETERANGAN:</b> {item.notepad}</p>
+							<p><b>PETUGAS:</b> {item.user_id}</p>
+						</CardContent>
+					</Card>
+				))}
+				</Block>
 				<CustomBlockTitle noGap title="INFORMASI UPDATE DATA" />
 				<Block>
 					{infoUpdateData.map((item, key) => (

@@ -6,7 +6,8 @@ import {
   mainReducers as main,
   counterReducers as counter,
   regionReducers as region,
-  userReducers as user
+  userReducers as user,
+  referenceReducers as reference,
 } from '../reducers/';
 
 export const stateKernel = new Framework7StateKernel();
@@ -18,6 +19,7 @@ export const store = createStore(
     counter: counter,
     region: region,
     user : user,
+    reference : reference,
     // ...
   }),
   applyMiddleware(thunk)

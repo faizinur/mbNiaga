@@ -111,7 +111,7 @@ class ListDebitur extends React.Component {
                                     <List style={{ marginBottom: 8, marginTop: 8, padding: 0 }}>
                                         <ListInput
                                             outline
-                                            label="Hasil Kunjungan"
+                                            label="Parameter"
                                             type="select"
                                             defaultValue=""
                                             onChange={({ target }) => {
@@ -190,8 +190,8 @@ class ListDebitur extends React.Component {
                     </Block>
                 </List>
                 <List style={{ margin: 0, padding: 0 }}>
-                    <Block style={{ margin: 0 }}>
-                        {this.state.searchResult.map((item, key) => (
+                    {this.state.searchResult.map((item, key) => (
+                        <Block key={key} style={{ margin: 0 }}>
                             <Row key={key}>
                                 <Col width="80" tag="span">
                                     <List style={{ margin: 0, padding: 0 }}>
@@ -254,8 +254,8 @@ class ListDebitur extends React.Component {
                                     </div>
                                 </Col>
                             </Row>
-                        ))}
-                    </Block>
+                        </Block>
+                    ))}
                 </List>
             </Page>
         );

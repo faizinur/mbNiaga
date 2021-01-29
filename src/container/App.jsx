@@ -15,7 +15,7 @@ import { log, ClockTick } from '../utils/';
 import { navigate, setUser } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
 
-let INTERVAL_LENGTH = 2000;
+let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
 class Root extends React.Component {
 	constructor(props) {
@@ -52,10 +52,14 @@ class Root extends React.Component {
 			if (Device.cordova) {
 				cordovaApp.init(f7);
 			}
+			document.addEventListener("click", ()=>{
+				alert('jvasdjvas')
+			});
 			// Call F7 APIs here
 		});
 		INTERVAL_ID = setInterval(() => {
-			if (JSON.stringify(this.props.profile) !== '{}') {
+
+			if (Object.keys(this.props.profile).length > 1) {
 				this.props.setUser({
 					...this.props.profile,
 					...{
@@ -73,6 +77,8 @@ class Root extends React.Component {
 	}
 	render() {
 		const { realApp } = this.state;
+		let shownToolbar = (Object.keys(this.props.profile).length > 0 && this.props.profile.is_login == true) ? true : false;
+		// log('shownToolbar', shownToolbar);
 		if (!realApp) {
 			return (
 				<SplashScreen
@@ -87,10 +93,11 @@ class Root extends React.Component {
 			return (
 				<App params={this.state.f7params} >
 					<CustomToolbar
-						shown={JSON.stringify(this.props.profile) === '{}'}
+						shown={shownToolbar}
 					/>
+					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login) }  */}
 					<Views className="safe-areas">
-						<View main url={'/'} />
+							<View main url={'/'} />
 					</Views>
 				</ App >
 			)
@@ -101,6 +108,7 @@ class Root extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		profile: state.user.profile,
+		pin: state.user.pin,
 	};
 };
 

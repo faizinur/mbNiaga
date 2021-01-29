@@ -5,6 +5,7 @@ import { log, uuid } from '../../utils';
 import { DB_NAME, TABLES } from './tables';
 import { Encrypt, selfDecrypt } from '../Encryption';
 import * as SQLiteTypes from './types';
+const { PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY, DEVICE_INFO, RENCANA_KUNJUNGAN } = SQLiteTypes;
 class SQLModules extends Component {
     initDB = (populateDB = true) => {
         let db;
@@ -19,7 +20,15 @@ class SQLModules extends Component {
     };
     populateTable = (db) => {
         db.transaction(tx => {
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
+            // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
+            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.pk}))`);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), PIN, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), LIST_ACCOUNT, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), DETAIL_COSTUMER, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), ACTIVITY_HISTORY, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), PAYMENT_HISTORY, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), DEVICE_INFO, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), RENCANA_KUNJUNGAN, Encrypt('')]);
             // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
@@ -37,7 +46,7 @@ class SQLModules extends Component {
     };
     query = (sqlQuery, param = []) => {
         let [dmlCommand] = sqlQuery.split(' ')
-        if (param.length > 0 && dmlCommand === 'INSERT') {
+        if (param.length > 0 && (dmlCommand === 'INSERT')) {
             param = [uuid(), ...param];
             param[2] = Encrypt(param[2])
         }
@@ -69,19 +78,21 @@ class SQLModules extends Component {
                 .then(db =>
                     db.transaction(tx =>
                         tx.executeSql('SELECT * from COLLECTION', [],
-                            (tx, rs) =>
-                                resolve(
-                                    (!this.isset(() => rs.insertId)) ?
-                                        Object.values(rs.rows)
-                                            .reduce((acc, val) => {
-                                                return [
-                                                    ...acc,
-                                                    { id: val.id, key: val.key, value: selfDecrypt(val.value) }
-                                                ]
-                                            }, [])
-                                        : { 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected }
-                                )
-                            , (tx, error) => reject(`SQL statement ERROR: ${error.message}`))
+                            (tx, rs) => {
+                                if (!this.isset(() => rs.insertId)) {
+                                    // log('RESULT : ',Object.values(rs.rows).length)
+                                    resolve(Object.values(rs.rows)
+                                        .reduce((acc, val) => {
+                                            return [
+                                                ...acc,
+                                                { id: val.id, key: val.key, value: selfDecrypt(val.value) }
+                                            ]
+                                        }, []))
+                                } else {
+                                    resolve({ 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected })
+                                }
+
+                            }, (tx, error) => reject(`SQL statement ERROR: ${error.message}`))
                     )
                 )
                 .catch(err => reject(err))

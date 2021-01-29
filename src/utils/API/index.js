@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
-import { log } from '../Consoles/';
+import { log } from '../../utils/';
 const API = axios.create({
 	baseURL: `https://app56.ecentrix.net/niaga_api_coll/`,
 	headers: {

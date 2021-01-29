@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import region from '../../../data/region.json';
 import { log, SQLite, SQLiteTypes } from '../../../utils/';
 import PropTypes from 'prop-types'
-import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice } from '../../../config/redux/actions/';
+import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice, setPin } from '../../../config/redux/actions/';
 const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
@@ -23,12 +23,10 @@ const SplashScreen = (props) => {
             SQLite.initDB(),
             _getLocalData(),
             //.... another promise
-        ])
-            .then(res => props.onFinish({ realApp: true }));
+        ]).then(res => {
+            setTimeout(() => props.onFinish({ realApp: true }), 2000)
+        });
 
-        // let enc = SQLite.enc({name : 'nama'});
-        // let dec = SQLite.dec(enc);
-        // log(dec);
         return () => {
             console.log('UNMOUNT SplashScreen');
         }
@@ -43,23 +41,24 @@ const SplashScreen = (props) => {
         ]);
     }
     const _getLocalData = () => {
-
         SQLite.fetchAll()
             .then(res =>
                 res.map(item => {
-                    // switch (item.key) {
-                    //     case LIST_ACCOUNT: dispatch(setUser(item.value)); log(item.value);
-                    //         break;
-                    //     case DEVICE_INFO: dispatch(setDevice(item.val)); log(item.value);
-                    //         break;
-                    //     case DETAIL_COSTUMER: dispatch(setDetailCustomer(item.value));
-                    //         break;
-                    //     case ACTIVITY_HISTORY: dispatch(setActivityHistory(item.value));
-                    //         break;
-                    //     case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
-                    //         break;
-                    //     default: log('_getLocalData default');
-                    // }
+                    switch (item.key) {
+                        case PIN: dispatch(setPin(item.value));
+                            break;
+                        case LIST_ACCOUNT: dispatch(setUser(item.value));
+                            break;
+                        case DEVICE_INFO: dispatch(setDevice(item.value));
+                            break;
+                        case DETAIL_COSTUMER: dispatch(setDetailCustomer(item.value));
+                            break;
+                        case ACTIVITY_HISTORY: dispatch(setActivityHistory(item.value));
+                            break;
+                        case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
+                            break;
+                        default: log('_getLocalData default');
+                    }
                 })
             ).catch(err => log(err));
     }

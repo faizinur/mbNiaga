@@ -1,3 +1,4 @@
+import { log } from "../../utils";
 const ClockTick = (clock) => {
     let [day, time] = clock.split(' ');
     let [h, m, s] = time.split(':');

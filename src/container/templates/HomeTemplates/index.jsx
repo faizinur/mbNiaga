@@ -71,7 +71,7 @@ class HomeTemplates extends Component {
         return (
             <Page pageName="HomeTemplates">
                 {
-                    JSON.stringify(this.props.profile) !== '{}' ?
+                    Object.keys(this.props.profile).length > 1 ?
                         (
                             <div
                                 style={{

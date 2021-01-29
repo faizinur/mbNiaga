@@ -18,6 +18,7 @@ import {
     setDetailCustomer,
     setActivityHistory,
     setPaymetHistory,
+    setPin,
 } from './userActions';
 
 import {
@@ -26,6 +27,14 @@ import {
     setDistrict,
     setSubDistrict,
 } from './regionActions';
+
+import {
+    setCallResult,
+    setContactMode,
+    setContactPerson,
+    setPlaceContacted,
+} from './referenceActions';
+
 
 export {
     increment,
@@ -42,4 +51,9 @@ export {
     setDetailCustomer,
     setActivityHistory,
     setPaymetHistory,
+    setPin,
+    setCallResult,
+    setContactMode,
+    setContactPerson,
+    setPlaceContacted,
 }

@@ -3,13 +3,17 @@ import {
     SET_DETAIL_CUSTOMER,
     SET_ACTIVITY_HISTORY,
     SET_PAYMENT_HISTORY,
+    SET_PIN
 } from '../../actions/types'
 
 const initialState = {
-    profile: {},
+    profile: {
+        is_login : false,
+    },
     detailCust: [],
     activityHistory: [],
     paymentHistory: [],
+    pin : '',
 };
 import { log } from '../../../../utils/';
 
@@ -38,6 +42,12 @@ const userReducers = (state = initialState, action) => {
             return {
                 ...state,
                 paymentHistory: action.payload,
+            }
+        case SET_PIN:
+            // log('SET PAYMENT HISTORY : ', action.payload)
+            return {
+                ...state,
+                pin: action.payload,
             }
         default:
             return state;
