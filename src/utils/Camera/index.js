@@ -39,7 +39,7 @@ Contoh:
 const startCamera = () => {
     Camera.start().then(res => {
         //res = string jpeg base64
-        console.log(res);
+        log(res);
     }
     ).catch(err => {
         if(err != "") alert("Error: " + err);

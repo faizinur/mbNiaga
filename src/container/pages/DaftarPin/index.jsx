@@ -18,9 +18,9 @@ import Login from '../Login';
 
 const DaftarPin = (props) => {
     useEffect(() => {
-        console.log('MOUNT OR UPDATE DaftarPin');
+        log('MOUNT OR UPDATE DaftarPin');
         return () => {
-            console.log('UNMOUNT DaftarPin');
+            log('UNMOUNT DaftarPin');
         }
     }, []);
     const dispatch = useDispatch();

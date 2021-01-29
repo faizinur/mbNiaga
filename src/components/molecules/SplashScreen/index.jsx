@@ -17,7 +17,7 @@ import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDe
 const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
-        console.log('MOUNT OR UPDATE SplashScreen');
+        log('MOUNT OR UPDATE SplashScreen');
         Promise.all([
             _getRegion(),
             SQLite.initDB(),
@@ -28,7 +28,7 @@ const SplashScreen = (props) => {
         });
 
         return () => {
-            console.log('UNMOUNT SplashScreen');
+            log('UNMOUNT SplashScreen');
         }
     }, [])
     const dispatch = useDispatch();

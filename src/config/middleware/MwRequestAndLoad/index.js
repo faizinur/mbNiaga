@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { f7 } from 'framework7-react';
-
+import {log} from '../../../utils/'
 const mwRequestAndLoad = (routeTo, routeFrom, resolve, reject, component) => {
     // Show Preloader
     f7.preloader.show();
@@ -29,8 +29,8 @@ const mwRequestAndLoad = (routeTo, routeFrom, resolve, reject, component) => {
         // //decrypt
         // let formdata = new FormData();
         // formdata.append('msg', Encrypt(user));
-        // console.log(formdata);
-        // API.post(`users`, Encrypt(user)).then(res => console.log(res))
+        // log(formdata);
+        // API.post(`users`, Encrypt(user)).then(res => log(res))
 
         // hide Preloader
         f7.preloader.hide();

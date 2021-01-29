@@ -20,7 +20,7 @@ const Encrypt = (props) => {
 		iterations: iterations,
 	});
 
-	// console.log('AES', hashKey);
+	// log('AES', hashKey);
 	var encrypted = CryptoJS.AES.encrypt(JSON.stringify(props), hashKey, {
 		mode: CryptoJS.mode.CBC,
 		iv: iv,

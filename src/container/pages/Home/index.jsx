@@ -35,7 +35,7 @@ class Home extends React.Component {
 	}
 
 	componentDidMount() {
-		// console.log("componentDidMount Home", this.props);
+		// log("componentDidMount Home", this.props);
 	};
 	_onLogin = () => {
 		this.props.onUpdateUser(
@@ -79,7 +79,7 @@ class Home extends React.Component {
 										required
 										pattern="[A-Za-z]{4}"
 										validate
-										onValidate={(isValid) => console.log('Validation', isValid)}
+										onValidate={(isValid) => log('Validation', isValid)}
 										errorMessageForce={false}
 										errorMessage="Harap isi Input"
 										ignoreStoreData={true}
@@ -98,7 +98,7 @@ class Home extends React.Component {
 										validate
 										pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
 										validate
-										onValidate={(isValid) => console.log('password', isValid)}
+										onValidate={(isValid) => log('password', isValid)}
 										errorMessageForce={false}
 										errorMessage="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
 									/>

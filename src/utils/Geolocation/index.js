@@ -82,7 +82,7 @@ const currentLocation = () => {
 const displayMaps = () => {
     Geolocation.getMapLocaton(document.getElementById("map_canvas")).then(res => {
         //res = string
-        console.log(res);
+        log(res);
     }
     ).catch(err => {
         if(err != "") alert('error : ' + err);

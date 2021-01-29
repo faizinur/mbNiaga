@@ -95,6 +95,7 @@ class Root extends React.Component {
 		} else {
 			return (
 				<App params={this.state.f7params} >
+					{/* https://github.com/supremetechnopriest/react-idle-timer#readme */}
 					<IdleTimer
 						ref={ref => { this.idleTimer = ref }}
 						timeout={1000 * 60 * 15}

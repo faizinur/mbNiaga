@@ -18,9 +18,9 @@ const { PIN } = SQLiteTypes;
 
 const UpdatePin = () => {
     useEffect(() => {
-        console.log('MOUNT OR UPDATE UpdatePin');
+        log('MOUNT OR UPDATE UpdatePin');
         return () => {
-            console.log('UNMOUNT UpdatePin');
+            log('UNMOUNT UpdatePin');
         }
     }, []);
     const dispatch = useDispatch();

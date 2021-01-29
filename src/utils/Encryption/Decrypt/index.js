@@ -8,7 +8,7 @@ const Decrypt = (ciphertext) => {
         obj_json = JSON.parse(obj_json);
     }
     while (typeof obj_json === "string");
-    // console.log("Decrypt : obj_json ---->",typeof obj_json);
+    // log("Decrypt : obj_json ---->",typeof obj_json);
     var passphrase = KEY;
     var encrypted = obj_json.ciphertext;
     var salt = CryptoJS.enc.Hex.parse(obj_json.salt);
