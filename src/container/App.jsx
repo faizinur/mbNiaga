@@ -42,6 +42,7 @@ class Root extends React.Component {
 					iosOverlaysWebView: true,
 					androidOverlaysWebView: false,
 				},
+				idleTimer : 0,
 			},
 			realApp: false,
 		}
@@ -53,7 +54,7 @@ class Root extends React.Component {
 				cordovaApp.init(f7);
 			}
 			document.addEventListener("click", ()=>{
-				alert('jvasdjvas')
+				log('cek timer kalo udah 5 menit munculin popup dan set timer ke 0');
 			});
 			// Call F7 APIs here
 		});
@@ -97,7 +98,7 @@ class Root extends React.Component {
 					/>
 					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login) }  */}
 					<Views className="safe-areas">
-							<View main url={'/'} />
+							<View main url={realApp ? '/' : '/Main/'} />
 					</Views>
 				</ App >
 			)
