@@ -4,6 +4,7 @@ import {
 	App,
 	Views,
 	View,
+	f7,
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -14,6 +15,8 @@ import { connect } from 'react-redux';
 import { log, ClockTick } from '../utils/';
 import { navigate, setUser } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
+import IdleTimer from 'react-idle-timer';
+
 
 let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
@@ -42,7 +45,6 @@ class Root extends React.Component {
 					iosOverlaysWebView: true,
 					androidOverlaysWebView: false,
 				},
-				idleTimer : 0,
 			},
 			realApp: false,
 		}
@@ -53,7 +55,7 @@ class Root extends React.Component {
 			if (Device.cordova) {
 				cordovaApp.init(f7);
 			}
-			document.addEventListener("click", ()=>{
+			document.addEventListener("click", () => {
 				log('cek timer kalo udah 5 menit munculin popup dan set timer ke 0');
 			});
 			// Call F7 APIs here
@@ -93,12 +95,20 @@ class Root extends React.Component {
 		} else {
 			return (
 				<App params={this.state.f7params} >
+					<IdleTimer
+						ref={ref => { this.idleTimer = ref }}
+						timeout={1000 * 60 * 15}
+						onActive={()=> log('handleOnActive')}
+						onIdle={()=> log('handleOnIdle')}
+						onAction={()=> log('handleOnAction')}
+						debounce={250}
+					/>
 					<CustomToolbar
 						shown={shownToolbar}
 					/>
 					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login) }  */}
 					<Views className="safe-areas">
-							<View main url={realApp ? '/' : '/Main/'} />
+						<View main url={realApp ? '/' : '/Main/'} />
 					</Views>
 				</ App >
 			)
