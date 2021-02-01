@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import region from '../../../data/region.json';
 import { log, SQLite, SQLiteTypes } from '../../../utils/';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice, setPin } from '../../../config/redux/actions/';
 const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY } = SQLiteTypes;
 const SplashScreen = (props) => {

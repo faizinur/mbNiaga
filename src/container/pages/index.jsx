@@ -29,6 +29,7 @@ import UploadMasterProvinsi from './UploadMasterProvinsi';
 import ApprovalUploadDataProvinsi from './ApprovalUploadDataProvinsi';
 import SetupParameter from './SetupParameter';
 import RencanaKunjungan from './RencanaKunjungan';
+import Idle from './Idle';
 
 export {
     NotFound,
@@ -62,4 +63,5 @@ export {
     SetupParameter,
     AddParameterMetodeKontak,
     RencanaKunjungan,
+    Idle,
 }

@@ -65,9 +65,11 @@ class Login extends React.Component {
         //     .then(res => res.length > 0 ? this.setState({ popUpStateLoginPin: res[0].is_login == true && res[0].PIN != '' ? true : false }) : this.setState({ popUpStateLoginPin: false }))
         //     .catch(err => log(err))
         if (this.props.pin != "" && this.props.profile.is_login == true) {
-            this.setState({ popUpStateLoginPin: true })
+            // this.setState({ popUpStateLoginPin: true })
+            log('TAMPILKAN POPUP!')
         } else {
-            this.setState({ popUpStateLoginPin: false })
+            log('TUTUP POPUP!')
+            // this.setState({ popUpStateLoginPin: false })
         }
     }
     _onClickLogin = async () => {
@@ -264,14 +266,14 @@ class Login extends React.Component {
     _getReference = () => {
         POST(`Get_all_refs`, [])
             .then(res => {
-                SQLite.query('SELECT value from Collection where key=?', [REFERENCE])
-                    .then(select => {
+                // SQLite.query('SELECT value from Collection where key=?', [REFERENCE])
+                //     .then(select => {
                         SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [REFERENCE, res.data])
                             .then(insert => this._setReference())
                             .catch(err => log(err));
                     }).catch(err => log(err));
-            })
-            .catch(err => log(err));
+            // })
+            // .catch(err => log(err));
     }
     _setReference = () => {
         SQLite.query('SELECT value FROM Collection WHERE key=?', [REFERENCE])

@@ -4,7 +4,7 @@ import {
 	App,
 	Views,
 	View,
-	f7,
+	Popup,
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -12,10 +12,11 @@ import { Provider } from 'react-redux'
 import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
 
-import { log, ClockTick } from '../utils/';
+import { log, ClockTick , Connection} from '../utils/';
 import { navigate, setUser } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
-import IdleTimer from 'react-idle-timer';
+import { Idle } from '../container/pages/'
+// import IdleTimer from 'react-idle-timer';
 
 
 let INTERVAL_LENGTH = 1000;
@@ -47,6 +48,9 @@ class Root extends React.Component {
 				},
 			},
 			realApp: false,
+			idleCounter: 0,
+			idleTime: 2,
+			popUpStateIdle: false,
 		}
 	}
 	componentDidMount() {
@@ -56,13 +60,22 @@ class Root extends React.Component {
 				cordovaApp.init(f7);
 			}
 			document.addEventListener("click", () => {
-				log('cek timer kalo udah 5 menit munculin popup dan set timer ke 0');
+				this.setState({ idleCounter: 0 });
 			});
 			// Call F7 APIs here
 		});
 		INTERVAL_ID = setInterval(() => {
 
 			if (Object.keys(this.props.profile).length > 1) {
+				//idle counter kalo udah login 
+				if (this.props.profile.is_login == true && this.state.popUpStateIdle == false) {
+					// log('itung timer idle', JSON.stringify(this.props.profile.is_login));
+					this.setState({
+						idleCounter: this.state.idleCounter + 1,
+						popUpStateIdle: this.state.idleCounter > this.state.idleTime ? true : false,
+					});
+				}
+				//jam
 				this.props.setUser({
 					...this.props.profile,
 					...{
@@ -95,19 +108,20 @@ class Root extends React.Component {
 		} else {
 			return (
 				<App params={this.state.f7params} >
-					{/* https://github.com/supremetechnopriest/react-idle-timer#readme */}
-					<IdleTimer
-						ref={ref => { this.idleTimer = ref }}
-						timeout={1000 * 60 * 15}
-						onActive={()=> log('handleOnActive')}
-						onIdle={()=> log('handleOnIdle')}
-						onAction={()=> log('handleOnAction')}
-						debounce={250}
-					/>
 					<CustomToolbar
 						shown={shownToolbar}
 					/>
 					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login) }  */}
+					<Popup
+						className="idle-popup"
+						opened={this.state.popUpStateIdle}
+						onPopupClosed={() => log('pop up Closed')}
+					>
+						<Idle
+							onFinish={(result) => { this.setState({ popUpStateIdle: false, idleCounter: 0 }) }}
+							Connection = {Connection()}
+						/>
+					</Popup>
 					<Views className="safe-areas">
 						<View main url={realApp ? '/' : '/Main/'} />
 					</Views>
