@@ -61,7 +61,9 @@ class Root extends React.Component {
 				cordovaApp.init(f7);
 			}
 			document.addEventListener("click", () => {
-				this.setState({ idleCounter: 0 });
+				if(this.state.popUpStateIdle == false){
+					this.setState({ idleCounter: 0 });
+				}
 			});
 			// Call F7 APIs here
 		});
