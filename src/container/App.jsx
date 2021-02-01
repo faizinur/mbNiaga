@@ -12,8 +12,8 @@ import { Provider } from 'react-redux'
 import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
 
-import { log, ClockTick , Connection} from '../utils/';
-import { navigate, setUser } from '../config/redux/actions/';
+import { log, ClockTick, Connection, Geolocation } from '../utils/';
+import { navigate, setUser, setGeolocation } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
 import { Idle } from '../container/pages/'
 // import IdleTimer from 'react-idle-timer';
@@ -21,6 +21,8 @@ import { Idle } from '../container/pages/'
 
 let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
+let idleTime = 60;
+let idleTimeGeo = 0;
 class Root extends React.Component {
 	constructor(props) {
 		super(props);
@@ -49,7 +51,6 @@ class Root extends React.Component {
 			},
 			realApp: false,
 			idleCounter: 0,
-			idleTime: 2,
 			popUpStateIdle: false,
 		}
 	}
@@ -65,16 +66,7 @@ class Root extends React.Component {
 			// Call F7 APIs here
 		});
 		INTERVAL_ID = setInterval(() => {
-
 			if (Object.keys(this.props.profile).length > 1) {
-				//idle counter kalo udah login 
-				if (this.props.profile.is_login == true && this.state.popUpStateIdle == false) {
-					// log('itung timer idle', JSON.stringify(this.props.profile.is_login));
-					this.setState({
-						idleCounter: this.state.idleCounter + 1,
-						popUpStateIdle: this.state.idleCounter > this.state.idleTime ? true : false,
-					});
-				}
 				//jam
 				this.props.setUser({
 					...this.props.profile,
@@ -84,6 +76,29 @@ class Root extends React.Component {
 					}
 				});
 			}
+			//idle counter kalo udah login
+			this.setState({ idleCounter: this.state.idleCounter + 1 });
+			if (this.props.pin != "" && this.props.profile.is_login == true) {
+				let pageCurrentName = document.getElementsByClassName('page-current')[0].dataset.name;
+				if ((this.state.idleCounter % idleTime) == 0 && this.state.popUpStateIdle == false && pageCurrentName != 'Login') {
+					this.setState({ popUpStateIdle: true });
+				}
+			}
+
+			//geolocation
+			if (this.state.idleCounter % idleTimeGeo == 0) {
+				Geolocation.currentLocation()
+					.then(res => {
+						if (res.longitude == 0 && res.latitude == 0) {
+							log('SET GEOLOCATION')
+							this.props.setGeolocation(res);
+						}
+					})
+					.catch(err => {
+						if (err != "") log('error : ' + JSON.stringify(err));
+					})
+			}
+
 		}, INTERVAL_LENGTH);
 	}
 
@@ -98,11 +113,13 @@ class Root extends React.Component {
 		if (!realApp) {
 			return (
 				<SplashScreen
-					onFinish={(e) =>
+					onFinish={(e) => {
 						this.setState({
 							realApp: e.realApp,
-						})
-					}
+							idleTime: e.idleTime
+						});
+						idleTimeGeo = e.refesh_coordinate;
+					}}
 				/>
 			)
 		} else {
@@ -111,15 +128,19 @@ class Root extends React.Component {
 					<CustomToolbar
 						shown={shownToolbar}
 					/>
-					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login) }  */}
+					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login)} */}
 					<Popup
 						className="idle-popup"
 						opened={this.state.popUpStateIdle}
 						onPopupClosed={() => log('pop up Closed')}
 					>
 						<Idle
-							onFinish={(result) => { this.setState({ popUpStateIdle: false, idleCounter: 0 }) }}
-							Connection = {Connection()}
+							onFinish={(result) => {
+								if (result != false) {
+									this.setState({ popUpStateIdle: false, idleCounter: 0 })
+								}
+							}}
+							Connection={Connection()}
 						/>
 					</Popup>
 					<Views className="safe-areas">
@@ -135,6 +156,7 @@ const mapStateToProps = (state) => {
 	return {
 		profile: state.user.profile,
 		pin: state.user.pin,
+		geo: state.main.geolocation,
 	};
 };
 
@@ -142,6 +164,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		setUser: (data) => dispatch(setUser(data)),
 		navigate: (nav) => dispatch(navigate(nav)),
+		setGeolocation: (data) => dispatch(setGeolocation(data))
 	};
 };
 

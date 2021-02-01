@@ -3,6 +3,8 @@ import { goBack, navigateTo, showAlert } from 'framework7-redux';
 import {
 	SET_DEVICE,
 	UPDATE_USER,
+	SET_GEOLOCATION,
+	SET_GEOLOCATION_IDLE
 } from '../types'
 
 
@@ -14,6 +16,11 @@ const setDevice = (data) => ({
 	type: SET_DEVICE,
 	payload: data
 });
+const setGeolocation = (data) => ({
+	type: SET_GEOLOCATION,
+	payload: data
+});
+
 
 const login = (pageName) => {
 	return (dispatch, getState) => {
@@ -31,4 +38,5 @@ export {
 	updateUser,
 	login,
 	setDevice,
+	setGeolocation,
 }

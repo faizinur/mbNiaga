@@ -7,6 +7,7 @@ import {
     updateUser,
     login,
     setDevice,
+    setGeolocation,
 } from './mainActions';
 
 import {
@@ -56,4 +57,5 @@ export {
     setContactMode,
     setContactPerson,
     setPlaceContacted,
+    setGeolocation,
 }

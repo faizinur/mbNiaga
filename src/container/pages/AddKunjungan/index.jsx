@@ -7,6 +7,7 @@ import {
     Row,
     Col,
     Button,
+    f7,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -19,6 +20,8 @@ class AddKunjungan extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            ptp: 'PTP',
+            maxDayPtp: 3,
             detailCust: this.props.detailCust,
             contactMode : this.props.contactMode,
             contactPerson : this.props.contactPerson,
@@ -38,8 +41,12 @@ class AddKunjungan extends React.Component {
                 gambar :['', '', '', ''],
                 longitude : '',
                 latitude : '',
+                created_time: this.props.user.mobileTime,
+                ptp_date: '',                
+                ptp_amount: '',                
             }
         }
+        log(this.props)
     }
     _kirim() {
         SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
@@ -66,6 +73,17 @@ class AddKunjungan extends React.Component {
 
     render() {
         var {detailCust, contactMode, contactPerson, placeContacted, callResult} = this.state;
+        var [year, month, day] = this.state.detailCust.due_date.split("-")
+        var minDate = new Date();
+        var maxDate = new Date();
+        var dueDate = new Date(year, month - 1, day);
+        var diff = Math.ceil(Math.abs(dueDate.getTime() - minDate.getTime()) / (1000 * 3600 * 24));
+        var lastDay = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0);
+        maxDate.setDate(minDate.getDate() + diff < 0 ? 0 
+        : diff < this.state.maxDayPtp ? diff + 1 
+        : (lastDay.getDate() - minDate.getDate()) < this.state.maxDayPtp ? (lastDay.getDate() - minDate.getDate()) + 1
+        : this.state.maxDayPtp + 1);
+        
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
                 <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} />
@@ -181,6 +199,39 @@ class AddKunjungan extends React.Component {
                         }))}}
                     />
                 </List>
+                {this.state.formData.call_result == this.state.ptp ? (
+                <>
+                    <CustomBlockTitle title="Tanggal PTP" />
+                    <List>
+                        <ListInput
+                            outline
+                            type="datepicker"
+                            defaultValue=""
+                            onChange={(e)=> this.setState({ptp_date: e.target.value})}
+                            readonly
+                            calendarParams={{openIn: 'customModal', header: false, footer: true, dateFormat: 'yyyy-mm-dd', minDate: minDate, maxDate: maxDate}
+                        }
+                        />
+                    </List>
+                    <CustomBlockTitle title="PTP Amount" />
+                    <List>
+                        <ListInput
+                            outline
+                            type="number"
+                            defaultValue=""
+                            onBlur={(e)=>{
+                                log(e.target.value, this.state.detailCust.option_payment_9)
+                                if(parseInt(e.target.value) < parseInt(this.state.detailCust.option_payment_9)){
+                                    f7.dialog.alert("Payment Amount Kurang Dari Minimal Payment");
+                                    e.target.value = "";
+                                    return false;
+                                }
+                                this.setState({ptp_amount : e.target.value})
+                            }}
+                        />
+                    </List>
+                </>
+                ) : null}                
                 <CustomBlockTitle noGap title="Foto Dokumendasi" />
                 <Block>
                     <Row>

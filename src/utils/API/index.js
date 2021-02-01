@@ -57,7 +57,7 @@ export {
 /*
 import { POST } from '../utils/API';
 POST([`Login`,data], [`Login`,data]) // kalau mau banyak.
-POST(`Login`, {}, false) // satu satu aja.
+POST(`Login`, {}) // satu satu aja.
 	.then(res => log(res))
 	.catch(err => log(err));
 */

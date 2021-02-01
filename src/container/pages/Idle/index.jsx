@@ -15,7 +15,7 @@ import {
     Popup
 } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
-import { log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
+import { log, Connection, SQLite, SQLiteTypes, POST } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import PropTypes from 'prop-types';
 import stylesheet from './stylesheet';
@@ -24,34 +24,83 @@ import { DefaultNavbar } from '../../../components/atoms';
 const Idle = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE Idle', props.Connection);
+        return () => {
+            setPIN('');
+            setPassword('');
+            log('UNMOUNT Idle');
+        }
     }, [])
     const [password, setPassword] = useState('');
     const [PIN, setPIN] = useState('');
     const user = useSelector(state => state.user.profile);
     const device = useSelector(state => state.main.device);
     let [loginResult, setLoginResult] = useState([]);
-    let [networkStatus, setNetworkStatus] = useState('');
     const _validate = async () => {
-        // props.onFinish({ result: true });
         if (props.Connection == 'OFFLINE') {
-            // let deviceInfo = await Device.getInformation();
-            // if (deviceInfo.serial != device.serial) {
-                setLoginResult([...loginResult, 'ICCIDAuth']);
-                // return false;
-            // }
-        }else{
             //LOGIN ONLINE
+            let dvc = (!Device.android && !Device.ios) ? false : true;
+            if (dvc) {
+                let deviceInfo = await Device.getInformation();
+                if (deviceInfo.serial != device.serial) {
+                    setLoginResult([...loginResult, 'ICCIDAuth']);
+                    return false;
+                }
+            }
+            SQLite.query("SELECT value from COLLECTION where key=?", [SQLiteTypes.PIN])
+                .then(res => {
+                    if (PIN == res[0]) {
+                        setPIN('');
+                        setLoginResult([]);
+                        props.onFinish({ result: true });
+                    } else {
+                        setPIN('');
+                        setLoginResult([...loginResult, 'UserAuth']);
+                    }
+                })
+                .catch(err => log(err));
+        } else {
+            //LOGIN ONLINE
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hours = date.getHours();
+            var minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+            var seconds = date.getSeconds();
+            const { uuid, serial } = device;
+
+            var data = {
+                username: user.user_id,
+                password: password,
+                imei: JSON.stringify(uuid),
+                iccd: JSON.stringify(serial),
+                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+            }
+            POST(`Login`, data)
+                .then(res => {
+                    props.onFinish({ result: true });
+                    setPassword('');
+                })
+                .catch(err => {
+                    setPassword('');
+                    switch (err) {
+                        case 'Username/Password tidak valid': setLoginResult([...loginResult, 'UserAuth']);
+                            break;
+                        default: log(err)
+                    }
+                });
         }
     }
     const _exit = () => {
-        log('exit')
+        // props.onFinish({ result: 'exit' });
+        f7.dialog.alert('EXIT')
     }
     return (
         <Page noToolbar noNavbar noSwipeback loginScreen name="Idle">
             <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
             <List inlineLabels noHairlinesMd>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                    <p>STANDBY MODE <br />HI {user.full_name.toUpperCase()}, PLEASE RELOGIN</p>
+                    <p>STANDBY MODE <br />HI <b>{'full_name' in user ? user.full_name.toUpperCase() : '~'}</b>, PLEASE RELOGIN</p>
                 </div>
             </List>
             {
@@ -60,13 +109,14 @@ const Idle = (props) => {
                         <List inlineLabels noHairlinesMd>
                             <ListInput
                                 outline
-                                label="Masukan PIN"
+                                label="PIN"
                                 type={"password"}
                                 inputmode={"tel"}
                                 pattern="[0-9]*"
                                 onChange={({ target }) => setPIN(target.value)}
                                 maxlength={6}
                                 minlength={4}
+                                value={PIN}
                             />
                         </List>
                     ) : (
@@ -75,6 +125,7 @@ const Idle = (props) => {
                                 outline
                                 label="Password :"
                                 type="password"
+                                value={password}
                                 onChange={({ target }) => setPassword(target.value)}
                             />
                         </List>
@@ -118,7 +169,7 @@ const Idle = (props) => {
                             <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="User ID dan Password anda belum sesuai">
                                 <Icon f7={loginResult.includes('UserAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
                             </ListItem>
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Device id anda tidak sesuai">
+                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Device id anda sesuai">
                                 <Icon f7={loginResult.includes('ICCIDAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
                             </ListItem>
                         </List>

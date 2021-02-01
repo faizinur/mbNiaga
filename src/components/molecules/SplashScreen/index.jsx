@@ -14,7 +14,7 @@ import region from '../../../data/region.json';
 import { log, SQLite, SQLiteTypes } from '../../../utils/';
 import PropTypes from 'prop-types';
 import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice, setPin } from '../../../config/redux/actions/';
-const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY } = SQLiteTypes;
+const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY, REFERENCE } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE SplashScreen');
@@ -24,7 +24,13 @@ const SplashScreen = (props) => {
             _getLocalData(),
             //.... another promise
         ]).then(res => {
-            setTimeout(() => props.onFinish({ realApp: true }), 2000)
+            setTimeout(() =>
+                props.onFinish({
+                    realApp: true,
+                    idleTime: 20,
+                    refesh_coordinate : 60,
+                })
+                , 2000)
         });
 
         return () => {
@@ -40,6 +46,7 @@ const SplashScreen = (props) => {
             dispatch(setSubDistrict(region.filter(item => { return item.level == 3 }))),
         ]);
     }
+    let refesh_coordinate = 60;
     const _getLocalData = () => {
         SQLite.fetchAll()
             .then(res =>
@@ -57,6 +64,9 @@ const SplashScreen = (props) => {
                             break;
                         case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
                             break;
+                        case REFERENCE:
+                            log('REFERENCE : ', item.value);
+                            refesh_coordinate = 'refesh_coordinate' in item.value ? item.value : 60;
                         default: log('_getLocalData default');
                     }
                 })
