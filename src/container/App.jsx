@@ -81,7 +81,7 @@ class Root extends React.Component {
 			//idle counter kalo udah login
 			this.setState({ idleCounter: this.state.idleCounter + 1 });
 			if (this.props.pin != "" && this.props.profile.is_login == true) {
-				let pageCurrentName = document.getElementsByClassName('page-current')[0].dataset.name;
+				let pageCurrentName = document.getElementsByClassName('page-current').length > 0 ? document.getElementsByClassName('page-current')[0].dataset.name : undefined;
 				if ((this.state.idleCounter % idleTime) == 0 && this.state.popUpStateIdle == false && pageCurrentName != 'Login') {
 					this.setState({ popUpStateIdle: true });
 				}
