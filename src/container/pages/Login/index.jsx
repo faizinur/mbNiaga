@@ -190,7 +190,7 @@ class Login extends React.Component {
                     };
                     var params = [];
                     select[0].map((item) => {
-                        params = [...params, ['save_visit_history', item]]
+                        params = [...params, [item.transaction_type == 'KUNJUNGAN' ? 'save_visit_history' : 'save_update_data', item]]
                     })
                     this._kirimDataTertunda(params).then(res => {
                         log("HASIL KIRIM: ", res)
@@ -250,6 +250,9 @@ class Login extends React.Component {
                     .then(insert => log(insert))
                     .catch(err => log(err));
                 SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [PAYMENT_HISTORY, paymentHistory.data])
+                    .then(insert => log(insert))
+                    .catch(err => log(err));
+                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [RENCANA_KUNJUNGAN, []])
                     .then(insert => log(insert))
                     .catch(err => log(err));
                 this.props.navigate('/Main/', true);
