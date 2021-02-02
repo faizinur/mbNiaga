@@ -12,13 +12,13 @@ import { Provider } from 'react-redux'
 import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
 
-import { log, ClockTick, Connection, Geolocation } from '../utils/';
+import { log, ClockTick, Connection, Geolocation, SQLite, SQLiteTypes } from '../utils/';
 import { navigate, setUser, setGeolocation } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
 import { Idle } from '../container/pages/'
 // import IdleTimer from 'react-idle-timer';
 
-
+const { GEOLOCATION } = SQLiteTypes;
 let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
 let idleTime = 60;
@@ -61,7 +61,7 @@ class Root extends React.Component {
 				cordovaApp.init(f7);
 			}
 			document.addEventListener("click", () => {
-				if(this.state.popUpStateIdle == false){
+				if (this.state.popUpStateIdle == false) {
 					this.setState({ idleCounter: 0 });
 				}
 			});
@@ -93,7 +93,9 @@ class Root extends React.Component {
 					.then(res => {
 						if (res.longitude == 0 && res.latitude == 0) {
 							log('SET GEOLOCATION')
-							this.props.setGeolocation(res);
+							SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [GEOLOCATION, res])
+							.then(dbRes => this.props.setGeolocation(res))
+							.catch(err  => log(err))
 						}
 					})
 					.catch(err => {
