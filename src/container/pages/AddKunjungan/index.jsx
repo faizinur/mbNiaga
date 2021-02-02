@@ -8,13 +8,14 @@ import {
     Col,
     Button,
     f7,
+    Icon,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
-import { Connection, log, SQLite, SQLiteTypes, Filter } from '../../../utils';
-const { REKAP_TERTUNDA, RENCANA_KUNJUNGAN } = SQLiteTypes;
+import { DefaultNavbar, CustomBlockTitle, Maps } from '../../../components/atoms';
+import { Connection, log, SQLite, SQLiteTypes, Filter, Camera, POST } from '../../../utils';
+const { REKAP_TERTUNDA, REKAP_TERKIRIM } = SQLiteTypes;
 
 class AddKunjungan extends React.Component {
     constructor(props) {
@@ -22,6 +23,7 @@ class AddKunjungan extends React.Component {
         this.state = {
             ptp: 'PTP',
             maxDayPtp: 3,
+            online: true,
             detailCust: this.props.detailCust,
             contactMode : this.props.contactMode,
             contactPerson : this.props.contactPerson,
@@ -39,36 +41,64 @@ class AddKunjungan extends React.Component {
                 contact_mode : '',
                 place_contacted : '',
                 gambar :['', '', '', ''],
-                longitude : '',
-                latitude : '',
+                longitude : this.props.geolocation.longitude,
+                latitude : this.props.geolocation.latitude,
                 created_time: this.props.user.mobileTime,
                 ptp_date: '',                
-                ptp_amount: '',                
+                ptp_amount: '', 
+                transaction_type: 'KUNJUNGAN'
             }
         }
         log(this.props)
     }
     _kirim() {
-        SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
-        .then(select => {
-            var data = select.length != 0 ? select[0] : []; 
-            data.push(this.state.formData);
-            SQLite.query('INSERT OR REPLACE INTO Collection (id, key, value) VALUES(?,?,?)', [REKAP_TERTUNDA, data])
-            .then(insert => {
-                SQLite.query('SELECT value from Collection where key=?', [RENCANA_KUNJUNGAN])
-                .then(select => {
-                    Filter.select(select, [{'column':'account_number', 'operator':'DOES_NOT_EQUAL', 'value':this.state.formData.account_number}])
-                    .then((resFilter) => {
-                        SQLite.query('INSERT OR REPLACE INTO Collection (id, key, value) VALUES(?,?,?)', [RENCANA_KUNJUNGAN, resFilter])
-                        .then(replace => this.props.navigate('/Main/'))
-                        .catch(err => log(err));
-                    }).catch(err => log(err))
-                }).catch(err => log(err))
+        if(Connection() == "OFFLINE"){
+            POST('save_visit_history', this.state.formData)
+            .then(res => res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
+            ).catch(err => log(err));
+        }else{
+            this._saveRekapTertunda();            
+        }
+    }
+    _saveRekapTerkirim(){        
+        SQLite.query('SELECT value from Collection where key=?', [REKAP_TERKIRIM])
+            .then(select => {
+                var data = select.length != 0 ? select[0] : []; 
+                data.push(this.state.formData);
+                SQLite.query('INSERT OR REPLACE INTO Collection (id, key, value) VALUES(?,?,?)', [REKAP_TERKIRIM, data])
+                .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
             }).catch(err => log(err));
-        }).catch(err => log(err));
+    }
+    _saveRekapTertunda() {
+        SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
+            .then(select => {
+                var data = select.length != 0 ? select[0] : []; 
+                data.push(this.state.formData);
+                SQLite.query('INSERT OR REPLACE INTO Collection (id, key, value) VALUES(?,?,?)', [REKAP_TERTUNDA, data])
+                .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
+            }).catch(err => log(err));
+            
     }
     _foto(index) {
-        log("foto")
+        Camera.start().then(res => {
+            this.setState(prevState => ({
+                formData: {
+                    ...prevState.formData,
+                    gambar: prevState.formData.gambar.map((item, key) => index == key ? res : item)
+                }
+            }))
+        }
+        ).catch(err => {
+            if(err != "") f7.dialog.alert("Error: " + err);
+        });
+    }
+    _hapusFoto(index){
+        this.setState(prevState => ({
+            formData: {
+                ...prevState.formData,
+                gambar: prevState.formData.gambar.map((item, key) => index == key ? "" : item)
+            }
+        }))
     }
 
     render() {
@@ -79,11 +109,11 @@ class AddKunjungan extends React.Component {
         var dueDate = new Date(year, month - 1, day);
         var diff = Math.ceil(Math.abs(dueDate.getTime() - minDate.getTime()) / (1000 * 3600 * 24));
         var lastDay = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0);
-        maxDate.setDate(minDate.getDate() + diff < 0 ? 0 
-        : diff < this.state.maxDayPtp ? diff + 1 
-        : (lastDay.getDate() - minDate.getDate()) < this.state.maxDayPtp ? (lastDay.getDate() - minDate.getDate()) + 1
-        : this.state.maxDayPtp + 1);
-        
+        var limDayPtp = diff < 0 ? 0 
+        : diff < this.state.maxDayPtp ? diff 
+        : (lastDay.getDate() - minDate.getDate()) < this.state.maxDayPtp ? (lastDay.getDate() - minDate.getDate())
+        : this.state.maxDayPtp;
+        maxDate.setDate(minDate.getDate() + limDayPtp);        
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
                 <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} />
@@ -237,12 +267,34 @@ class AddKunjungan extends React.Component {
                     <Row>
                         {this.state.formData.gambar.map((item, index) => (                            
                             <Col width="25" key={index}>
-                                <Button fill raised onClick={() => this._foto(index)} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>GAMBAR {index+1}</Button>
-                                <img src={item} style={{width:'100%'}} />
+                                {item == "" ? (
+                                    <Button fill raised onClick={() => this._foto(index)} style={{ backgroundColor: '#c0392b', fontSize: 12 }}><Icon f7="camera_fill"></Icon></Button>
+                                ) : 
+                                (
+                                    <>
+                                        <img onClick={() => this._foto(index)} src={item} style={{width:'100%', marginBottom:8}} />
+                                        <Button fill raised onClick={() => this._hapusFoto(index)} style={{ backgroundColor: '#c0392b', fontSize: 12 }}><Icon f7="trash_fill"></Icon></Button>
+                                    </>
+                                )
+                                }
+                                
                             </Col>
                         ))}
                     </Row>
                 </Block>
+                {Connection() != "OFFLINE" ? (
+                    <>
+                        <CustomBlockTitle noGap title="Lokasi" />
+                        <Block>
+                            <Row>                           
+                                <Col width="100">
+                                    <Maps />
+                                </Col>
+                            </Row>
+                        </Block>
+                    </>
+                ):null}
+                
                 <Block>
                     <Row>
                         <Col width="100">
@@ -250,6 +302,7 @@ class AddKunjungan extends React.Component {
                         </Col>
                     </Row>
                 </Block>
+                
             </Page>
         );
     }
@@ -258,6 +311,7 @@ class AddKunjungan extends React.Component {
 const mapStateToProps = (state) => {
     return {
         user: state.user.profile,
+        geolocation: state.main.geolocation,
         detailCust: state.user.detailCust,
         contactMode : state.reference.contactMode,
         contactPerson : state.reference.contactPerson,

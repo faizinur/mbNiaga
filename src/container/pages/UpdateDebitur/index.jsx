@@ -14,7 +14,7 @@ import {
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms'
+import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
 import { log, Connection } from '../../../utils/';
 
 class UpdateDebitur extends React.Component {
@@ -33,7 +33,8 @@ class UpdateDebitur extends React.Component {
     }
     _kirim() {
         
-        this.props.navigate('/RekapTerkirim/');
+        // this.props.navigate('/RekapTerkirim/');
+        this.props.navigate('/DetailHasilKunjungan/');
     }
     render() {
         var {detailCust} = this.props;

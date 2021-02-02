@@ -12,19 +12,23 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { navigate } from '../../../config/redux/actions/';
 import { log } from '../../../utils';
-
+import { DefaultNavbar } from '../../../components/atoms/';
 const DeviceInfo = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE DeviceInfo');
-        log(props)
         return () => {
             log('UNMOUNT DeviceInfo');
         }
     }, [])
     const device = useSelector(state => state.main.device);
-
+    const dispatch = useDispatch();
     return (
         <Page noToolbar noNavbar>
+            <DefaultNavbar
+                mode={'info'}
+                backLink={(e)=> dispatch(navigate('/Main/'))}
+                title={'DEVICE INFORMATION'}
+            />
             <List noHairlinesMd style={{ fontSize: 1 }}>
                 <ListInput
                     outline

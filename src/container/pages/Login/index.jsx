@@ -29,7 +29,7 @@ import {
     setContactPerson,
     setPlaceContacted
 } from '../../../config/redux/actions/';
-import { POST } from '../../../utils/';
+import { POST, Device as Perangkat } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin, Check } from '../../pages/';
 const {
@@ -41,6 +41,7 @@ const {
     PAYMENT_HISTORY,
     REFERENCE,
     REKAP_TERTUNDA,
+    RENCANA_KUNJUNGAN,
 }
     = SQLiteTypes;
 
@@ -65,8 +66,8 @@ class Login extends React.Component {
         //     .then(res => res.length > 0 ? this.setState({ popUpStateLoginPin: res[0].is_login == true && res[0].PIN != '' ? true : false }) : this.setState({ popUpStateLoginPin: false }))
         //     .catch(err => log(err))
         if (this.props.pin != "" && this.props.profile.is_login == true) {
-            this.setState({ popUpStateLoginPin: true })
             // log('TAMPILKAN POPUP!')
+            this.setState({ popUpStateLoginPin: true })
         } else {
             // log('TUTUP POPUP!')
             this.setState({ popUpStateLoginPin: false })
@@ -100,7 +101,7 @@ class Login extends React.Component {
 
         try {
             if (dvc) {
-                this.props.setDevice(await Device.getInformation());
+                this.props.setDevice(await Perangkat.getInformation());
                 if (Connection() == 'OFFLINE') {
                     this._setLoginResult('MobileData');
                     f7.dialog.alert('Pastikan anda tersambung jaringan internet')
@@ -125,7 +126,7 @@ class Login extends React.Component {
                             }
                             if (userPIN.length == 0 || userPIN == "") {
                                 this._getReference();
-                                this.setState({ user: res.data, popUpStateDaftarPin: true });
+                                this.setState({ user: res.data })
                                 //--> _submitPIN
                             } else {
                                 this._getUserInfo({
@@ -158,9 +159,9 @@ class Login extends React.Component {
             ...Object.assign({}, this.state.user),
             ...{ PIN: PIN }
         }
-        this.setState({ user: userTmp, popUpStateDaftarPin: false })
+        this.setState({ user: userTmp })
         this._getUserInfo(userTmp);
-        this._setReference();
+        // this._setReference();
     }
     _onValidatePIN = (PIN) => {
         log('_onValidatePIN : ', PIN)
@@ -199,7 +200,7 @@ class Login extends React.Component {
                             if (item == "GAGAL")
                                 gagalKirim = [...gagalKirim, select[0][index]]
                         })
-                        SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [REKAP_TERTUNDA, gagalKirim])
+                        SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REKAP_TERTUNDA, gagalKirim])
                             .then(insert => gagalKirim.length != 0 ? reject("GAGAL KIRIM REKAP TERTUNDA") : resolve(true))
                             .catch(err => reject(err));
                     }).catch(err => reject(err))
@@ -229,33 +230,29 @@ class Login extends React.Component {
                 }
                 failedResponse = [];
                 const [detailCustomer, activityHistory, paymentHistory] = res;
-                this.props.setUser(data);
-                this.props.setPin(data.PIN);
-                this.props.setPaymetHistory(paymentHistory);
-                this.props.setActivityHistory(activityHistory);
-                this.props.setDetailCustomer(detailCustomer);
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [PIN, data.PIN])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [DEVICE_INFO, this.props.device])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [LIST_ACCOUNT, data])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [DETAIL_COSTUMER, detailCustomer.data])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [ACTIVITY_HISTORY, activityHistory.data])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [PAYMENT_HISTORY, paymentHistory.data])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [RENCANA_KUNJUNGAN, []])
-                    .then(insert => log(insert))
-                    .catch(err => log(err));
-                this.props.navigate('/Main/', true);
+
+                let promiseUserInfo = [
+                    this.props.setUser(data),
+                    this.props.setPin(data.PIN),
+                    this.props.setPaymetHistory(paymentHistory),
+                    this.props.setActivityHistory(activityHistory),
+                    this.props.setDetailCustomer(detailCustomer),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PIN, data.PIN]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [DEVICE_INFO, this.props.device]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [LIST_ACCOUNT, data]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [DETAIL_COSTUMER, detailCustomer.data]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [ACTIVITY_HISTORY, activityHistory.data]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PAYMENT_HISTORY, paymentHistory.data]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [RENCANA_KUNJUNGAN, []]),
+                ]
+                f7.preloader.show();
+                Promise.all(promiseUserInfo)
+                    .then(res => {
+                        f7.preloader.hide();
+                        this.setState({ popUpStateDaftarPin: false });
+                        this.props.navigate('/Main/', true);
+                    })
+                    .catch(err => log(err))
             }).catch(err => log(err))
     }
     _setLoginResult = (key = '') => {
@@ -272,10 +269,8 @@ class Login extends React.Component {
             .then(res => {
                 // SQLite.query('SELECT value from Collection where key=?', [REFERENCE])
                 //     .then(select => {
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [REFERENCE, res.data])
-                    .then(insert => {
-                        this._setReference();
-                    })
+                SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
+                    .then(insert => this._setReference())
                     .catch(err => log(err));
             }).catch(err => log(err));
         // })
@@ -284,12 +279,13 @@ class Login extends React.Component {
     _setReference = () => {
         SQLite.query('SELECT value FROM Collection WHERE key=?', [REFERENCE])
             .then(select => {
-                if (select.length != 0) {
-                    var reference = select[0];
+                if (select.length > 0) {
+                    let [reference] = select;
                     this.props.setCallResult(reference.call_result)
                     this.props.setContactMode(reference.contact_mode)
                     this.props.setContactPerson(reference.contact_person)
                     this.props.setPlaceContacted(reference.place_contacted)
+                    this.setState({ popUpStateDaftarPin: true });
                 }
             })
             .catch(err => log(err));

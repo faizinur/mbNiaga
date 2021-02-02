@@ -58,7 +58,7 @@ class InfoDebitur extends React.Component {
 				if(resFilter.length != 0) return false;
 				var data = res.length != 0 ? res[0] : res;
 				data.push((this.state.detailCust))
-				SQLite.query(`INSERT OR REPLACE INTO collection (id, key, value) VALUES(?,?,?)`, [RENCANA_KUNJUNGAN, data])
+				SQLite.query(`INSERT OR REPLACE INTO collection (key, value) VALUES(?,?)`, [RENCANA_KUNJUNGAN, data])
 				.then(insert => {
 					log(insert)
 					this.props.navigate('/Main/');

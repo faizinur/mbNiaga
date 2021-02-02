@@ -8,7 +8,7 @@ import {
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/';
-import { log, Camera, Geolocation, Connection } from '../../../utils';
+import { log, Camera, Connection } from '../../../utils';
 import { DefaultNavbar, ListMenu } from '../../../components/atoms'
 import { SystemInfo } from '../../../components/molecules'
 class Main extends React.Component {
@@ -27,28 +27,6 @@ class Main extends React.Component {
         } catch (e) {
             if (err != "") alert("Error: " + err);
         }
-        // .then(res => {
-        //     //res = string jpeg base64
-        //     alert(res);
-        // }
-        // ).catch(err => {
-        //     if (err != "") alert("Error: " + err);
-        // });
-    }
-    _openMaps = async () => {
-        let elem = document.getElementById("map_canvas");
-        Geolocation.getMapLocation(document.getElementById("map_canvas"))
-            .then(res => {
-                //res = string
-                elem.style.position = null;
-                elem.style.overflow = null;
-
-                log(res);
-            }
-            ).catch(err => {
-                if (err != "") alert('error : ' + err);
-            })
-
     }
     render() {
         return (
@@ -59,13 +37,12 @@ class Main extends React.Component {
                 />
                 <SystemInfo />
                 <Block style={{ marginTop: 0 }}>
-                    <div id="map_canvas"></div>
                     <CardContent padding={false}>
                         <List medial-list style={{ marginRight: 5, marginLeft: 5, fontSize: 12 }}>
                             <ListMenu
                                 onClick={(e) => this.props.navigate('/ListDebitur/')}
                                 label="Daftar Debitur"
-                                />
+                            />
                             <ListMenu
                                 onClick={(e) => this.props.navigate('/RencanaKunjungan/')}
                                 label="Rencana Kunjungan"

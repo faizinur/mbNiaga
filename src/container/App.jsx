@@ -15,8 +15,7 @@ import { connect } from 'react-redux';
 import { log, ClockTick, Connection, Geolocation, SQLite, SQLiteTypes } from '../utils/';
 import { navigate, setUser, setGeolocation } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
-import { Idle } from '../container/pages/'
-// import IdleTimer from 'react-idle-timer';
+import { Idle } from '../container/pages/';
 
 const { GEOLOCATION } = SQLiteTypes;
 let INTERVAL_LENGTH = 1000;
@@ -59,6 +58,9 @@ class Root extends React.Component {
 			// Init cordova APIs (see cordova-app.js)
 			if (Device.cordova) {
 				cordovaApp.init(f7);
+				document.addEventListener('deviceready', ()=>{
+					// alert(JSON.stringify(cordova.plugins));
+				}, false);
 			}
 			document.addEventListener("click", () => {
 				if (this.state.popUpStateIdle == false) {
@@ -91,11 +93,10 @@ class Root extends React.Component {
 			if (this.state.idleCounter % idleTimeGeo == 0) {
 				Geolocation.currentLocation()
 					.then(res => {
-						if (res.longitude == 0 && res.latitude == 0) {
-							log('SET GEOLOCATION')
-							SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [GEOLOCATION, res])
-							.then(dbRes => this.props.setGeolocation(res))
-							.catch(err  => log(err))
+						if (res.longitude != 0 && res.latitude != 0) {
+							SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [GEOLOCATION, res])
+								.then(dbRes => this.props.setGeolocation(res))
+								.catch(err => log(err))
 						}
 					})
 					.catch(err => {

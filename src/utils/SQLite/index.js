@@ -21,14 +21,14 @@ class SQLModules extends Component {
     populateTable = (db) => {
         db.transaction(tx => {
             // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.pk}))`);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), PIN, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), LIST_ACCOUNT, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), DETAIL_COSTUMER, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), ACTIVITY_HISTORY, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), PAYMENT_HISTORY, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), DEVICE_INFO, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (id, key, value) VALUES(?,?,?)', [uuid(), RENCANA_KUNJUNGAN, Encrypt('')]);
+            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), PIN, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), LIST_ACCOUNT, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), DETAIL_COSTUMER, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), ACTIVITY_HISTORY, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), PAYMENT_HISTORY, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), DEVICE_INFO, Encrypt('')]);
+            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), RENCANA_KUNJUNGAN, Encrypt('')]);
             // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
@@ -47,8 +47,8 @@ class SQLModules extends Component {
     query = (sqlQuery, param = []) => {
         let [dmlCommand] = sqlQuery.split(' ')
         if (param.length > 0 && (dmlCommand === 'INSERT')) {
-            param = [uuid(), ...param];
-            param[2] = Encrypt(param[2])
+        //     param = [uuid(), ...param];
+            param[1] = Encrypt(param[1])
         }
         return new Promise((resolve, reject) => {
             this.initDB(false)

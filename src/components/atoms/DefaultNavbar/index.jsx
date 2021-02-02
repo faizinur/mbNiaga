@@ -10,20 +10,34 @@ const DefaultNavbar = (props) => {
     switch (props.mode) {
         case 'info':
             return (
-                <div style={info.container}>
+                <div style={
+                    {
+                        ...info.container,
+                        ...{
+                            justifyContent: 'network' in props ? 'space-between' : 'flex-start'
+                        }
+                    }
+                }>
                     <div
                         style={info.iconContainer}
                         onClick={(e) => 'backLink' in props ? props.backLink(e) : e.preventDefault()}>
                         <Icon style={info.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
+                        <p style={info.title}>{'title' in props ? props.title : ''}</p>
                     </div>
-                    <p style={info.title}>{'title' in props ? props.title : 'null'}</p>
+                    {
+                        'network' in props ?
+                            <div>
+                                <p style={info.network}>{props.network}</p>
+                            </div>
+                            : ''
+                    }
                 </div>
             )
         default:
             return (
                 <div style={dashboard.container}>
-                    <p style={dashboard.title}>{'title' in props ? props.title : 'null'}</p>
-                    <p style={dashboard.network}>{'network' in props ? props.network : 'null'}</p>
+                    <p style={dashboard.title}>{'title' in props ? props.title : ''}</p>
+                    <p style={dashboard.network}>{'network' in props ? props.network : ''}</p>
                 </div>
             )
     }
@@ -86,6 +100,11 @@ const info = {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+    },
+    network: {
+        fontSize: 12,
+        fontWeight: 'initial',
+        color: '#fcf5f4',
     }
 };
 

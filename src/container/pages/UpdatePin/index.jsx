@@ -35,7 +35,7 @@ const UpdatePin = () => {
                 log(res[0])
                 if (res[0] == oldPIN) {
                     if (newPIN === confirmPIN) {
-                        SQLite.query('INSERT OR REPLACE INTO COLLECTION (id, key, value) VALUES(?,?,?)', [PIN, newPIN])
+                        SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PIN, newPIN])
                         .then(res => {
                             setOldPIN('');
                             setNewPIN('');
