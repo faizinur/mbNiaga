@@ -3,7 +3,7 @@ import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
 import { log } from '../../utils/';
 const API = axios.create({
-	baseURL: `https://app56.ecentrix.net/niaga_api_coll2/`,
+	baseURL: `https://app56.ecentrix.net/niaga_api_coll/`,
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 	},
