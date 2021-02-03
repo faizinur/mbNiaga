@@ -32,12 +32,9 @@ class RekapTerkirim extends React.Component {
     render() {
         return (
             <Page noToolbar noNavbar>
-                {/* <BlockTitle>Rekap Terkirim</BlockTitle> */}
                 <DefaultNavbar
                     title="Rekap Terkirim"
-                    mode={'info'}
                     network={Connection()}
-                    backLink={() => this.props.navigate('/Main/')}
                 />
                 <List noHairlinesMd style={{ fontSize: 1, paddingBottom: 80 }}>
                     <div style={{

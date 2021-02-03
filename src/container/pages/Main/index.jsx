@@ -9,8 +9,8 @@ import {
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/';
 import { log, Camera, Connection } from '../../../utils';
-import { DefaultNavbar, ListMenu } from '../../../components/atoms'
-import { SystemInfo } from '../../../components/molecules'
+import { DefaultNavbar, ListMenu } from '../../../components/atoms';
+import { SystemInfo } from '../../../components/molecules';
 class Main extends React.Component {
     constructor(props) {
         super(props);
@@ -48,6 +48,7 @@ class Main extends React.Component {
                                 label="Rencana Kunjungan"
                             />
                             <ListMenu
+                                onClick={(e) => this.props.navigate('/VisitedList/')}
                                 label="Daftar Dikunjungi"
                             />
                             <ListMenu

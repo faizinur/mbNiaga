@@ -30,6 +30,7 @@ import {
 	SetupParameter,
 	AddParameterMetodeKontak,
 	RencanaKunjungan,
+	VisitedList
 } from '../../container/pages';
 
 
@@ -165,6 +166,10 @@ var router = [
 	{
 		path: '/RencanaKunjungan/',
 		component: RencanaKunjungan,
+	},
+	{
+		path: '/VisitedList/',
+		component: VisitedList,
 	},
 	{
 		path: '(.*)',

@@ -28,7 +28,10 @@ const SplashScreen = (props) => {
                 props.onFinish({
                     realApp: true,
                     idleTime: 20,
-                    refesh_coordinate : 60,
+                    refesh_coordinate: refesh_coordinate,
+                    idle_time : idle_time,
+                    mount_point : mount_point,
+                    shownToolbar : mount_point == '/' ? false : true,
                 })
                 , 2000)
         });
@@ -47,6 +50,8 @@ const SplashScreen = (props) => {
         ]);
     }
     let refesh_coordinate = 60;
+    let idle_time = 60;
+    let mount_point = '/';
     const _getLocalData = () => {
         SQLite.fetchAll()
             .then(res =>
@@ -54,7 +59,7 @@ const SplashScreen = (props) => {
                     switch (item.key) {
                         case PIN: dispatch(setPin(item.value));
                             break;
-                        case LIST_ACCOUNT: dispatch(setUser(item.value));
+                        case LIST_ACCOUNT: dispatch(setUser(item.value)); mount_point = (item.value.is_login == true && item.value.PIN != '') ? '/Main/' : '/';  
                             break;
                         case DEVICE_INFO: dispatch(setDevice(item.value));
                             break;
@@ -65,8 +70,8 @@ const SplashScreen = (props) => {
                         case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
                             break;
                         case REFERENCE:
-                            log('REFERENCE : ', item.value);
-                            refesh_coordinate = 'refesh_coordinate' in item.value ? item.value : 60;
+                            refesh_coordinate = 'refesh_coordinate' in item.value ? item.value.refesh_coordinate : 60;
+                            idle_time = 'idle_time' in item.value ? item.value.idle_time : 60;
                         default: log('_getLocalData default');
                     }
                 })

@@ -11,9 +11,9 @@ import {
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
-import { navigate, setDetailCustomer  } from '../../../config/redux/actions/';
+import { navigate, setDetailCustomer } from '../../../config/redux/actions/';
 import { log, Filter, SQLite, SQLiteTypes, Connection } from '../../../utils/';
-import { SystemInfo } from '../../../components/molecules';
+import { SystemInfo, KunjunganItem } from '../../../components/molecules';
 import { DefaultNavbar } from '../../../components/atoms'
 
 class RencanaKunjungan extends React.Component {
@@ -55,39 +55,14 @@ class RencanaKunjungan extends React.Component {
             searchParameter: [],
         }
     }
-    componentDidMount(){
+    componentDidMount() {
         this._tambahParameter()
         SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
-        .then(res => {
-            log(res);
-            var arr_result = [];
-            var data = res.length != 0 ? res[0] : res;
-            data.map((item, index) => arr_result.push({
-                namaDebitur: item.name,
-                nomorKartu: item.card_no,
-                alamat: item.home_address_1,
-                produk: item.loan_type,
-                tagihan: item.dpd_cur_days,
-                bucket: item.current_bucket,
-                dpd: item.day_past_due,
-                data : item
-            }));
-            this.setState({searchResult : arr_result});
-        })
-        .catch(err => log(err))
-    }
-    _next(data) {
-        this.props.setDetailCustomer(data);
-        this.props.navigate('/AddKunjungan/');
-    }
-    _search = async () => {
-        var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");
-        if(param.length == 0) return false;
-        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
-        .then(res => {
-            Filter.select(res, param).then((resFilter) => {
+            .then(res => {
+                log(res);
                 var arr_result = [];
-                resFilter.map((item, index) => arr_result.push({
+                var data = res.length != 0 ? res[0] : res;
+                data.map((item, index) => arr_result.push({
                     namaDebitur: item.name,
                     nomorKartu: item.card_no,
                     alamat: item.home_address_1,
@@ -95,24 +70,49 @@ class RencanaKunjungan extends React.Component {
                     tagihan: item.dpd_cur_days,
                     bucket: item.current_bucket,
                     dpd: item.day_past_due,
-                    data : item
+                    data: item
                 }));
-                this.setState({searchResult : arr_result});
-            }).catch(err => log(err))
-        })
-        .catch(err => log(err))
+                this.setState({ searchResult: arr_result });
+            })
+            .catch(err => log(err))
+    }
+    _next(data) {
+        this.props.setDetailCustomer(data);
+        this.props.navigate('/AddKunjungan/');
+    }
+    _search = async () => {
+        var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");
+        if (param.length == 0) return false;
+        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
+            .then(res => {
+                Filter.select(res, param).then((resFilter) => {
+                    var arr_result = [];
+                    resFilter.map((item, index) => arr_result.push({
+                        namaDebitur: item.name,
+                        nomorKartu: item.card_no,
+                        alamat: item.home_address_1,
+                        produk: item.loan_type,
+                        tagihan: item.dpd_cur_days,
+                        bucket: item.current_bucket,
+                        dpd: item.day_past_due,
+                        data: item
+                    }));
+                    this.setState({ searchResult: arr_result });
+                }).catch(err => log(err))
+            })
+            .catch(err => log(err))
     }
 
-    _tambahParameter(){
+    _tambahParameter() {
         var searchParam = this.state.searchParameter;
-        if(searchParam.length == this.state.parameter.length) return false;
-        searchParam.push({'column':'', 'operator':'', 'value':''})
+        if (searchParam.length == this.state.parameter.length) return false;
+        searchParam.push({ 'column': '', 'operator': '', 'value': '' })
         this.setState({ searchParameter: searchParam });
     }
-    _kurangiParameter(){
+    _kurangiParameter() {
         var searchParam = this.state.searchParameter;
-        if(searchParam.length == 1) return false;
-        searchParam = searchParam.slice(0, -1); 
+        if (searchParam.length == 1) return false;
+        searchParam = searchParam.slice(0, -1);
         this.setState({ searchParameter: searchParam });
     }
 
@@ -123,7 +123,7 @@ class RencanaKunjungan extends React.Component {
                 <List noHairlinesMd style={{ marginBottom: 0, padding: 0 }}>
                     <SystemInfo />
                     <Block style={{ margin: 0, padding: 0 }}>
-                    {this.state.searchParameter.map((item, key) => (
+                        {this.state.searchParameter.map((item, key) => (
                             <Row key={key} noGap>
                                 <Col width="40" tag="span" style={{ margin: 0, padding: 0 }}>
                                     <List style={{ marginBottom: 8, marginTop: 8, padding: 0 }}>
@@ -134,7 +134,7 @@ class RencanaKunjungan extends React.Component {
                                             defaultValue=""
                                             onChange={({ target }) => {
                                                 this.setState(prevState => ({
-                                                    searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, {column: target.value}) : item)
+                                                    searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, { column: target.value }) : item)
                                                 }))
                                             }}
                                         >
@@ -157,7 +157,7 @@ class RencanaKunjungan extends React.Component {
                                             defaultValue=""
                                             onChange={({ target }) => {
                                                 this.setState(prevState => ({
-                                                    searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, {operator: target.value}) : item)
+                                                    searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, { operator: target.value }) : item)
                                                 }))
                                             }}
                                         >
@@ -179,7 +179,7 @@ class RencanaKunjungan extends React.Component {
                                             type="text"
                                             onChange={({ target }) => {
                                                 this.setState(prevState => ({
-                                                    searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, {value: target.value}) : item)
+                                                    searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, { value: target.value }) : item)
                                                 }))
                                             }}
                                         >
@@ -188,7 +188,7 @@ class RencanaKunjungan extends React.Component {
                                 </Col>
                             </Row>
                         ))}
-                        <Block strong style={{margin:0}}>
+                        <Block strong style={{ margin: 0 }}>
                             <Row>
                                 <Col width="50">
                                     <Button fill raised onClick={() => this._tambahParameter()} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>Tambah</Button>
@@ -207,74 +207,10 @@ class RencanaKunjungan extends React.Component {
                         </Block>
                     </Block>
                 </List>
-                <List style={{ margin: 0, padding: 0 }}>
-                    {this.state.searchResult.map((item, key) => (
-                        <Block key={key} style={{ margin: 0 }}>
-                            <Row>
-                                <Col width="80" tag="span">
-                                    <List style={{ margin: 0, padding: 0 }}>
-                                        <ListInput
-                                            outline
-                                            label="NAMA DEBITUR"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.namaDebitur}
-                                        />
-                                        <ListInput
-                                            outline
-                                            label="NOMOR KARTU"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.nomorKartu}
-                                        />
-                                        <ListInput
-                                            outline
-                                            label="ALAMAT"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.alamat}
-                                        />
-                                        <ListInput
-                                            outline
-                                            label="PRODUK ( CC, PL, AL, MORTGAGE )"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.produk}
-                                        />
-                                        <ListInput
-                                            outline
-                                            label="TAGIHAN"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.tagihan}
-                                        />
-                                        <ListInput
-                                            outline
-                                            label="BUCKET"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.bucket}
-                                        />
-                                        <ListInput
-                                            outline
-                                            label="DPD"
-                                            type="text"
-                                            disabled={true}
-                                            value={item.dpd}
-                                        />
-                                    </List>
-                                </Col>
-                                <Col width="20">
-                                    <div style={{ backgroundColor: 'red', position: 'absolute', right: '5%', top: '45%' }}>
-                                        <Button fill raised onClick={() => this._next(item.data)} style={{ backgroundColor: '#c0392b' }}>
-                                            <Icon ios="f7:arrow_right" aurora="f7:arrow_right" md="material:keyboard_arrow_right"></Icon>
-                                        </Button>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Block>
-                    ))}
-                </List>
+                <KunjunganItem
+                    item={this.state.searchResult}
+                    onItemClick={(e) => this._next(e)}
+                />
             </Page>
         );
     }

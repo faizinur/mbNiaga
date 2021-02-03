@@ -126,7 +126,7 @@ class Login extends React.Component {
                             }
                             if (userPIN.length == 0 || userPIN == "") {
                                 this._getReference();
-                                this.setState({ user: res.data })
+                                this.setState({ user: res.data, popUpStateDaftarPin: true })
                                 //--> _submitPIN
                             } else {
                                 this._getUserInfo({
@@ -161,7 +161,6 @@ class Login extends React.Component {
         }
         this.setState({ user: userTmp })
         this._getUserInfo(userTmp);
-        // this._setReference();
     }
     _onValidatePIN = (PIN) => {
         log('_onValidatePIN : ', PIN)
@@ -171,6 +170,7 @@ class Login extends React.Component {
                     this.props.setPin(PIN);
                     this.props.navigate('/Main/');
                     this.setState({ popUpStateLoginPin: false });
+                    this._setReference();
                 } else {
                     f7.dialog.alert('PIN belum benar!');
                 }
@@ -285,7 +285,6 @@ class Login extends React.Component {
                     this.props.setContactMode(reference.contact_mode)
                     this.props.setContactPerson(reference.contact_person)
                     this.props.setPlaceContacted(reference.place_contacted)
-                    this.setState({ popUpStateDaftarPin: true });
                 }
             })
             .catch(err => log(err));

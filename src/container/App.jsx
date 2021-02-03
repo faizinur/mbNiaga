@@ -51,6 +51,7 @@ class Root extends React.Component {
 			realApp: false,
 			idleCounter: 0,
 			popUpStateIdle: false,
+			mountPoint: '/',
 		}
 	}
 	componentDidMount() {
@@ -58,7 +59,7 @@ class Root extends React.Component {
 			// Init cordova APIs (see cordova-app.js)
 			if (Device.cordova) {
 				cordovaApp.init(f7);
-				document.addEventListener('deviceready', ()=>{
+				document.addEventListener('deviceready', () => {
 					// alert(JSON.stringify(cordova.plugins));
 				}, false);
 			}
@@ -121,9 +122,11 @@ class Root extends React.Component {
 					onFinish={(e) => {
 						this.setState({
 							realApp: e.realApp,
-							idleTime: e.idleTime
+							idleTime: e.idleTime,
+							mountPoint: e.mount_point,
 						});
 						idleTimeGeo = e.refesh_coordinate;
+						idleTime = e.idle_time;
 					}}
 				/>
 			)
@@ -149,7 +152,7 @@ class Root extends React.Component {
 						/>
 					</Popup>
 					<Views className="safe-areas">
-						<View main url={realApp ? '/' : '/Main/'} />
+						<View main url={'/'} />
 					</Views>
 				</ App >
 			)

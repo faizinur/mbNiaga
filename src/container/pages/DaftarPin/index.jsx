@@ -59,6 +59,7 @@ const DaftarPin = (props) => {
                                 onChange={({ target }) => setNewPIN(target.value)}
                                 maxlength={6}
                                 minlength={4}
+                                value={newPIN}
                             />
                         </List>
                         :
@@ -76,6 +77,7 @@ const DaftarPin = (props) => {
                                 onChange={({ target }) => setNewPIN(target.value)}
                                 maxlength={6}
                                 minlength={4}
+                                value={newPIN}
                             />
                             <ListInput
                                 outline
@@ -86,6 +88,7 @@ const DaftarPin = (props) => {
                                 onChange={({ target }) => setConfirmPIN(target.value)}
                                 maxlength={6}
                                 minlength={4}
+                                value={confirmPIN}
                             />
                         </List>
                 }
