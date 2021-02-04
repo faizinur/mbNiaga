@@ -20,7 +20,7 @@ import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import PropTypes from 'prop-types';
 import stylesheet from './stylesheet';
 import { DefaultNavbar } from '../../../components/atoms';
-
+const { REKAP_TERTUNDA } = SQLiteTypes;
 const Idle = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE Idle', props.Connection);
@@ -92,8 +92,70 @@ const Idle = (props) => {
         }
     }
     const _exit = () => {
-        // props.onFinish({ result: 'exit' });
-        f7.dialog.alert('EXIT')
+        f7.dialog.confirm('Keluar dan hapus data ?',
+            () => {
+                f7.dialog.confirm('Unggah data tertunda?',
+                    () => {
+                        if (props.Connection == "OFFLINE") {
+                            _getDelayedList()
+                                .then(e => {
+                                    f7.preloader.hide();
+                                })
+                                .catch(e => {
+                                    f7.preloader.hide();
+                                });
+                                log('MASIH BELUM TAU HARUS DIAPAIN.')
+                                // props.onFinish({ result: true });
+                        }else{
+                            f7.dialog.alert('Pastikan Perangkat terhubung dengan internet.');
+                        }
+                    });
+            });
+        //
+    }
+    const _getDelayedList = () => {
+        f7.preloader.show();
+        return new Promise((resolve, reject) => {
+            SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
+                .then(select => {
+                    if (select.length == 0) {
+                        resolve(true);
+                        return;
+                    }
+                    if (select[0].length == 0) {
+                        resolve(true);
+                        return;
+                    };
+                    var params = [];
+                    select[0].map((item) => {
+                        params = [...params, [item.transaction_type == 'KUNJUNGAN' ? 'save_visit_history' : 'save_update_data', item]]
+                    })
+                    _kirimDataTertunda(params)
+                        .then(res => {
+                            log("HASIL KIRIM: ", res)
+                            var gagalKirim = [];
+                            res.map((item, index) => {
+                                if (item == "GAGAL")
+                                    gagalKirim = [...gagalKirim, select[0][index]]
+                            })
+                            SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REKAP_TERTUNDA, gagalKirim])
+                                .then(insert => gagalKirim.length != 0 ? reject("GAGAL KIRIM REKAP TERTUNDA") : resolve(true))
+                                .catch(err => reject(err));
+                        }).catch(err => reject(err))
+                }).catch(err => reject(err));
+        })
+    }
+    const _kirimDataTertunda = (params) => {
+        let reqList = [];
+        params.map(item =>
+            reqList.push(
+                new Promise((resolve, reject) => {
+                    POST(...item)
+                        .then(res => resolve(res.status != 'success' ? "GAGAL" : "BERHASIL")
+                        ).catch(err => reject(err));
+                })
+            ));
+        return Promise.all(reqList);
     }
     return (
         <Page noToolbar noNavbar noSwipeback loginScreen name="Idle">

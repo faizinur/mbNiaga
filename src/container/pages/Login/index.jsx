@@ -193,17 +193,18 @@ class Login extends React.Component {
                     select[0].map((item) => {
                         params = [...params, [item.transaction_type == 'KUNJUNGAN' ? 'save_visit_history' : 'save_update_data', item]]
                     })
-                    this._kirimDataTertunda(params).then(res => {
-                        log("HASIL KIRIM: ", res)
-                        var gagalKirim = [];
-                        res.map((item, index) => {
-                            if (item == "GAGAL")
-                                gagalKirim = [...gagalKirim, select[0][index]]
-                        })
-                        SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REKAP_TERTUNDA, gagalKirim])
-                            .then(insert => gagalKirim.length != 0 ? reject("GAGAL KIRIM REKAP TERTUNDA") : resolve(true))
-                            .catch(err => reject(err));
-                    }).catch(err => reject(err))
+                    this._kirimDataTertunda(params)
+                        .then(res => {
+                            log("HASIL KIRIM: ", res)
+                            var gagalKirim = [];
+                            res.map((item, index) => {
+                                if (item == "GAGAL")
+                                    gagalKirim = [...gagalKirim, select[0][index]]
+                            })
+                            SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REKAP_TERTUNDA, gagalKirim])
+                                .then(insert => gagalKirim.length != 0 ? reject("GAGAL KIRIM REKAP TERTUNDA") : resolve(true))
+                                .catch(err => reject(err));
+                        }).catch(err => reject(err))
                 }).catch(err => reject(err));
         })
     }
@@ -397,23 +398,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
-
-// _checkDate = (mobile, server) => {
-//     const [dayMobile, timeMobile] = mobile.split(' ');
-//     const [dayServer, timeServer] = server.split(' ');
-//     const [hMobile, mMobile, sMobile] = timeMobile.split(':');
-//     const [hServer, mServer, sServer] = timeServer.split(':');
-//     const mobileInS = (parseInt(hMobile) * 60 * 60) + (parseInt(mMobile) * 60) + parseInt(sMobile);
-//     const serverInS = (parseInt(hServer) * 60 * 60) + (parseInt(mServer) * 60) + parseInt(sServer);
-//     if (dayMobile == dayServer) {
-//         if (Math.abs(serverInS - mobileInS) <= 300) {
-//             return true;
-//         } else {
-//             f7.dialog.alert('Tidak sesuai dengan jam server')
-//             return false;
-//         }
-//     } else {
-//         f7.dialog.alert('Tidak sesuai dengan jam server')
-//         return false;
-//     }
-// }
