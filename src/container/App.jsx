@@ -61,8 +61,18 @@ class Root extends React.Component {
 			if (Device.cordova) {
 				cordovaApp.init(f7);
 				document.addEventListener('deviceready', () => {
-					if(JSON.stringify(cordova.plugins.uid) == '{}'){
+					if (JSON.stringify(cordova.plugins.uid) == '{}') {
 						alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
+					}
+					document.addEventListener("pause", () => {
+						if (this.props.pin != "" && this.props.profile.is_login == true) {
+							this.setState({ popUpStateIdle: true });
+						}
+					}, false);
+					document.addEventListener("resume", () => { log('resume') }, false);
+					if (cordova.platformId == 'android') {
+						StatusBar.overlaysWebView(true);
+						StatusBar.styleLightContent();
 					}
 				}, false);
 			}
