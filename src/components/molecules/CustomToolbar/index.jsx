@@ -36,11 +36,11 @@ const CustomToolbar = (props) => {
     const _setTablink = (index) => {
         if (!props.shown) return false;
         log('clicked index', index, JSON.stringify(props.shown))
+        let currentRoute = f7.views.main.router.history[f7.views.main.router.history.length - 1];
         if (currentRoute == '/Main/' && index == 0) return false;
         if (currentRoute == '/UpdatePin/' && index == 1) return false;
         if (pin == "" && user.is_login == false) return false;
         
-        let currentRoute = f7.views.main.router.history[f7.views.main.router.history.length - 1];
         setPrevTablink(tablinkActive);
         setTablinkActive(index);
         switch (index) {

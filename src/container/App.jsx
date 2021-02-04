@@ -5,6 +5,7 @@ import {
 	Views,
 	View,
 	Popup,
+	f7,
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -60,7 +61,7 @@ class Root extends React.Component {
 			if (Device.cordova) {
 				cordovaApp.init(f7);
 				document.addEventListener('deviceready', () => {
-					// alert(JSON.stringify(cordova.plugins));
+					alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
 				}, false);
 			}
 			document.addEventListener("click", () => {
@@ -70,6 +71,7 @@ class Root extends React.Component {
 			});
 			// Call F7 APIs here
 		});
+		this._getGeo();
 		INTERVAL_ID = setInterval(() => {
 			if (Object.keys(this.props.profile).length > 1) {
 				//jam
@@ -92,22 +94,24 @@ class Root extends React.Component {
 
 			//geolocation
 			if (this.state.idleCounter % idleTimeGeo == 0) {
-				Geolocation.currentLocation()
-					.then(res => {
-						if (res.longitude != 0 && res.latitude != 0) {
-							SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [GEOLOCATION, res])
-								.then(dbRes => this.props.setGeolocation(res))
-								.catch(err => log(err))
-						}
-					})
-					.catch(err => {
-						if (err != "") log('error : ' + JSON.stringify(err));
-					})
+				this._getGeo();
 			}
 
 		}, INTERVAL_LENGTH);
 	}
-
+	_getGeo = () => {
+		Geolocation.currentLocation()
+			.then(res => {
+				if (res.longitude != 0 && res.latitude != 0) {
+					SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [GEOLOCATION, res])
+						.then(dbRes => this.props.setGeolocation(res))
+						.catch(err => log(err))
+				}
+			})
+			.catch(err => {
+				if (err != "") log('error : ' + JSON.stringify(err));
+			})
+	}
 	componentWillUnmount() {
 		log('CLEAR INTERVAL')
 		clearInterval(INTERVAL_ID);
@@ -118,17 +122,19 @@ class Root extends React.Component {
 		// log('shownToolbar', shownToolbar);
 		if (!realApp) {
 			return (
-				<SplashScreen
-					onFinish={(e) => {
-						this.setState({
-							realApp: e.realApp,
-							idleTime: e.idleTime,
-							mountPoint: e.mount_point,
-						});
-						idleTimeGeo = e.refesh_coordinate;
-						idleTime = e.idle_time;
-					}}
-				/>
+				<App params={this.state.f7params} >
+					<SplashScreen
+						onFinish={(e) => {
+							this.setState({
+								realApp: e.realApp,
+								idleTime: e.idleTime,
+								mountPoint: e.mount_point,
+							});
+							idleTimeGeo = e.refesh_coordinate;
+							idleTime = e.idle_time;
+						}}
+					/>
+				</App>
 			)
 		} else {
 			return (

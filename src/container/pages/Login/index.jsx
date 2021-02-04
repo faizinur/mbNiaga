@@ -15,7 +15,6 @@ import {
 
 import { connect } from 'react-redux';
 import stylesheet from './stylesheet';
-import { log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
 import {
     navigate,
     setDevice,
@@ -29,7 +28,7 @@ import {
     setContactPerson,
     setPlaceContacted
 } from '../../../config/redux/actions/';
-import { POST, Device as Perangkat } from '../../../utils/';
+import { POST, Device as Perangkat, log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin, Check } from '../../pages/';
 const {
@@ -50,8 +49,8 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: (!Device.android && !Device.ios) ? 'USER_TEST_1' : '',
-            password: (!Device.android && !Device.ios) ? '12345678' : '',
+            username: 'USER_TEST_1',
+            password: '12345678',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
@@ -61,10 +60,7 @@ class Login extends React.Component {
     }
     componentDidMount() {
         log('componentDidMount LOGIN : ');
-        // this._onClickLogin();
-        // SQLite.query('SELECT VALUE from COLLECTION where key=?', [LIST_ACCOUNT])
-        //     .then(res => res.length > 0 ? this.setState({ popUpStateLoginPin: res[0].is_login == true && res[0].PIN != '' ? true : false }) : this.setState({ popUpStateLoginPin: false }))
-        //     .catch(err => log(err))
+
         if (this.props.pin != "" && this.props.profile.is_login == true) {
             // log('TAMPILKAN POPUP!')
             this.setState({ popUpStateLoginPin: true })
@@ -89,15 +85,6 @@ class Login extends React.Component {
         var minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
         var seconds = date.getSeconds();
 
-        const { username, password } = this.state;
-        const { uuid, serial } = this.props.device;
-        var data = {
-            username: username,
-            password: password,
-            imei: JSON.stringify(uuid),
-            iccd: JSON.stringify(serial),
-            jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
-        }
 
         try {
             if (dvc) {
@@ -108,8 +95,19 @@ class Login extends React.Component {
                     return false;
                 }
             } else {
+                //Dummy Data
                 this.props.setDevice({ available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' });
             }
+            const { username, password } = this.state;
+            const { uuid, serial } = this.props.device;
+            var data = {
+                username: username,
+                password: password,
+                imei: JSON.stringify(uuid),
+                iccd: JSON.stringify(serial),
+                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+            }
+
             const userPIN = await SQLite.query('SELECT value from COLLECTION where key=?', [PIN]);
             POST(`Login`, data)
                 .then(res => {
@@ -125,15 +123,16 @@ class Login extends React.Component {
                                 }
                             }
                             if (userPIN.length == 0 || userPIN == "") {
-                                this._getReference();
+                                // this._getReference();
                                 this.setState({ user: res.data, popUpStateDaftarPin: true })
                                 //--> _submitPIN
                             } else {
-                                this._getUserInfo({
-                                    ...res.data,
-                                    ...{ PIN: userPIN[0] }
-                                });
-                                this._setReference();
+                                alert('INI NGAPAIN??!');
+                                // this._getUserInfo({
+                                //     ...res.data,
+                                //     ...{ PIN: userPIN[0] }
+                                // });
+                                // this._setReference();
                             }
                         })
                         .catch(err => log(err));
@@ -170,7 +169,7 @@ class Login extends React.Component {
                     this.props.setPin(PIN);
                     this.props.navigate('/Main/');
                     this.setState({ popUpStateLoginPin: false });
-                    this._setReference();
+                    // this._setReference();
                 } else {
                     f7.dialog.alert('PIN belum benar!');
                 }

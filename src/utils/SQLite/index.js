@@ -13,7 +13,7 @@ class SQLModules extends Component {
             populateDB ? log("%cPlugin integrity check ...", 'background: #FF0; color: #F00') : log('');
             db = (!Device.android && !Device.ios) ?
                 window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) :
-                window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default' });
+                window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default', androidDatabaseProvider: 'system' }); //LOKASI DI MOBILE /data/user/0/io.framework7.myapp/databases/MobileCollection.db
             populateDB ? this.populateTable(db) : resolve(db);
             resolve(db);
         });
@@ -21,14 +21,9 @@ class SQLModules extends Component {
     populateTable = (db) => {
         db.transaction(tx => {
             // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), PIN, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), LIST_ACCOUNT, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), DETAIL_COSTUMER, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), ACTIVITY_HISTORY, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), PAYMENT_HISTORY, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), DEVICE_INFO, Encrypt('')]);
-            // tx.executeSql('INSERT into COLLECTION (key, value) VALUES(?,?)', [uuid(), RENCANA_KUNJUNGAN, Encrypt('')]);
+            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`, [] , (tx, rs) => {
+                // log(`POPULATE TABLE! ${JSON.stringify('')}`, tx, rs)
+            });
             // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
@@ -80,9 +75,9 @@ class SQLModules extends Component {
                         tx.executeSql('SELECT * from COLLECTION', [],
                             (tx, rs) => {
                                 if (!this.isset(() => rs.insertId)) {
-                                    // log('RESULT : ',Object.values(rs.rows).length)
+                                    // log('fetchAll : ',Object.values(rs.rows)[0].key)
                                     resolve(Object.values(rs.rows)
-                                        .reduce((acc, val) => {
+                                    .reduce((acc, val) => {
                                             return [
                                                 ...acc,
                                                 { id: val.id, key: val.key, value: selfDecrypt(val.value) }

@@ -3,7 +3,7 @@ import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
 import { log } from '../../utils/';
 const API = axios.create({
-	baseURL: `https://app56.ecentrix.net/niaga_api_coll/`,
+	baseURL: `https://app56.ecentrix.net/niaga_api_coll2/`,
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 	},
@@ -38,7 +38,10 @@ const POST = (...params) => {
 							f7.preloader.hide();
 							resolve(result.data);
 						}
-					}).catch(err => reject(err));
+					}).catch(err => {
+						f7.preloader.hide();
+						reject(err)
+					});
 			});
 		case "object":
 			let reqList = [];
@@ -55,7 +58,10 @@ const POST = (...params) => {
 									f7.preloader.hide();
 									resolve(res.data);
 								}
-							}).catch(err => reject(err));
+							}).catch(err => {
+								f7.preloader.hide();
+								reject(err)
+							});
 					})
 				));
 			return Promise.all(reqList);
