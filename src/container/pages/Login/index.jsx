@@ -41,6 +41,7 @@ const {
     REFERENCE,
     REKAP_TERTUNDA,
     RENCANA_KUNJUNGAN,
+    UPDATE_HISTORY,
 }
     = SQLiteTypes;
 
@@ -62,7 +63,7 @@ class Login extends React.Component {
         log('componentDidMount LOGIN : ');
 
         if (this.props.pin != "" && this.props.profile.is_login == true) {
-            log('TAMPILKAN POPUP!');
+            // log('TAMPILKAN POPUP!');
             this.setState({ popUpStateLoginPin: true })
         } else {
             // log('TUTUP POPUP!')
@@ -220,7 +221,7 @@ class Login extends React.Component {
     }
 
     _getUserInfo = (data) => {
-        POST(['get_detail_cust', { agent: data.id }], ['get_activity_history', { agent: data.id }], ['get_payment_history', { agent: data.id }])
+        POST(['get_detail_cust', { agent: data.id }], ['get_activity_history', { agent: data.id }], ['get_payment_history', { agent: data.id }], ['get_update_history', { agent: data.id }])
             .then(res => {
                 let failedResponse = res.filter(item => { return item.status != "success" });
                 if (failedResponse.length > 0) {
@@ -228,7 +229,7 @@ class Login extends React.Component {
                     return false;
                 }
                 failedResponse = [];
-                const [detailCustomer, activityHistory, paymentHistory] = res;
+                const [detailCustomer, activityHistory, paymentHistory, updateHistory] = res;
 
                 let promiseUserInfo = [
                     this.props.setUser(data),
@@ -242,6 +243,7 @@ class Login extends React.Component {
                     SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [DETAIL_COSTUMER, detailCustomer.data]),
                     SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [ACTIVITY_HISTORY, activityHistory.data]),
                     SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PAYMENT_HISTORY, paymentHistory.data]),
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [UPDATE_HISTORY, updateHistory.data]),
                     SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [RENCANA_KUNJUNGAN, []]),
                 ]
                 f7.preloader.show();

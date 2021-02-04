@@ -20,6 +20,7 @@ class UpdateDebitur extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            user: this.props.user,
             region: this.props.region,
             detailCust : this.props.detailCust,
             tipeAlamat: [
@@ -38,12 +39,11 @@ class UpdateDebitur extends React.Component {
                 kecamatan : '',
                 kelurahan : '',
                 zipCode : '',
-                noTelp : '',
-                transaction_type: 'UPDATE_DATA'
+                noTelp : ''
             },
             
         }
-        log(this.props.region)
+        log(this.props.user)
     }
     _kirim() {
         var { formData } = this.state;
@@ -57,30 +57,70 @@ class UpdateDebitur extends React.Component {
                 }
             }
         }
-        // return;
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+        var hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+        var minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds();
+        var dateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        var updateData = {
+            'account_number': this.state.detailCust.account_number,
+            'home_address_1': '',
+            'home_city': '',
+            'home_post_code': '',
+            'home_phone': '',
+            'office_address_1': '',
+            'office_city': '',
+            'office_post_code': '',
+            'office_phone': '',
+            'refferal_address_1': '',
+            'refferal_city': '',
+            'refferal_post_code': '',
+            'refferal_home_phone': '',
+            'update_time': dateTime,
+            'updated_by': this.state.user.user_id,
+            'transaction_type': 'UPDATE_DATA'
+        }
+        switch(formData.tipeAlamat){
+            case 'ALAMAT_RUMAH':
+                updateData = {...updateData, 
+                    home_address_1: `${formData.provinsi}, ${formData.kokab}, KECAMATAN ${formData.kecamatan}, KELURAHAN ${formData.kelurahan}, ${formData.zipCode}`,
+                    home_city: formData.kokab,
+                    home_post_code: formData.zipCode,
+                    home_phone: formData.noTelp
+                }
+            break;
+            case 'ALAMAT_KANTOR':
+                updateData = {...updateData,
+                    office_address_1: `${formData.provinsi}, ${formData.kokab}, KECAMATAN ${formData.kecamatan}, KELURAHAN ${formData.kelurahan}, ${formData.zipCode}`,
+                    office_city: formData.kokab,
+                    office_post_code: formData.zipCode,
+                    office_phone: formData.noTelp
+                }
+            break;
+            case 'ALAMAT_EMERGENCY':
+                updateData = {...updateData,
+                    refferal_address_1: `${formData.provinsi}, ${formData.kokab}, KECAMATAN ${formData.kecamatan}, KELURAHAN ${formData.kelurahan}, ${formData.zipCode}`,
+                    refferal_city: formData.kokab,
+                    refferal_post_code: formData.zipCode,
+                    refferal_home_phone: formData.noTelp
+                }
+            break;
+        }
         if (Connection() != "OFFLINE") {
-            POST('save_update_data', formData)
-                .then(res => res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
+            POST('save_update_data', updateData)
+                .then(res => res.status != 'success' ? this._saveRekapData(updateData, false) : this._saveRekapData(updateData)
                 ).catch(err => log(err));
         } else {
-            this._saveRekapTertunda();
+            this._saveRekapData(updateData, false);
         }
     }    
-    _saveRekapTerkirim() {
-        SQLite.query('SELECT value from Collection where key=?', [REKAP_TERKIRIM])
+    _saveRekapData(updateData, kirim = true) {
+        SQLite.query('SELECT value from Collection where key=?', [kirim ? REKAP_TERKIRIM : REKAP_TERTUNDA])
             .then(select => {
-                var data = select.length != 0 ? select[0] : [];
-                data.push(this.state.formData);
-                SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [REKAP_TERKIRIM, data])
-                    .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
-            }).catch(err => log(err));
-    }
-    _saveRekapTertunda() {
-        SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
-            .then(select => {
-                var data = select.length != 0 ? select[0] : [];
-                data.push(this.state.formData);
-                SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [REKAP_TERTUNDA, data])
+                SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [kirim ? REKAP_TERKIRIM : REKAP_TERTUNDA, [...(select.length != 0 ? select[0] : []), updateData]])
                     .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
             }).catch(err => log(err));
     }
@@ -182,7 +222,7 @@ class UpdateDebitur extends React.Component {
                     >
                         <option value="" disabled>--pilih--</option>
                         {tipeAlamat.map((item, key) => (
-                            <option key={key} value={item.value} > {item.description} </option>
+                            <option key={key} value={item.code} > {item.description} </option>
                         ))}
                     </ListInput>   
                     
@@ -334,7 +374,7 @@ class UpdateDebitur extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.main.user,
+        user: state.user.profile,
         detailCust: state.user.detailCust,
         region: state.region,
     };

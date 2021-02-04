@@ -14,16 +14,28 @@ import {
 
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log, Connection } from '../../../utils/';
+import { log, Connection, SQLite, SQLiteTypes, Filter } from '../../../utils/';
 import { DefaultNavbar } from '../../../components/atoms';
+var { REKAP_TERKIRIM } = SQLiteTypes;
 
 class RekapTerkirim extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            listTerkirim : []
+        }
     }
 
     componentDidMount(){
         log('componentDidMount RekapTerikirim')
+        SQLite.query('SELECT * FROM collection where key = ?', [REKAP_TERKIRIM])
+        .then(res => {
+			log("REKAP TERKIRIM", res)
+            if(res.length == 0) return false;
+            Filter.select(res, [{'column':'transaction_type', 'operator':'EQUAL', 'value': 'KUNJUNGAN' }]).then((resFilter) => {
+				this.setState({listTerkirim : resFilter})
+            }).catch(err => log(err))
+		}).catch(err => log(err))
     }
     _onPTPclick = () => {
         log('_onPTPclick');
@@ -36,113 +48,128 @@ class RekapTerkirim extends React.Component {
                     title="Rekap Terkirim"
                     network={Connection()}
                 />
-                <List noHairlinesMd style={{ fontSize: 1, paddingBottom: 80 }}>
-                    <div style={{
-                        display: 'flex',
-                        height: 58,
-                        backgroundColor: "#c0392b",
-                        paddingLeft: '5%',
-                        paddingRight: '5%',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }}
-                    // onClick={()=> this._onPTPclick()}
-                    >
-                        <p style={{
-                            fontSize: 14,
-                            fontWeight: 'initial',
-                            color: '#fcf5f4',
-                            lineHeight: 16
-                        }}>123456xxxx12</p>
-                        <div
-                            style={{
-                                height: 40,
-                                width: 60,
-                                backgroundColor: 'red',
-                                borderRadius: 20,
-                                borderWidth: 1,
-                                borderColor: 'blue',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-
-                            }}
+                {this.state.listTerkirim.map((item, key) => (
+                    <List key={key} noHairlinesMd style={{ fontSize: 1, paddingBottom: 80 }}>
+                        <div style={{
+                            display: 'flex',
+                            height: 58,
+                            backgroundColor: "#c0392b",
+                            paddingLeft: '5%',
+                            paddingRight: '5%',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                        // onClick={()=> this._onPTPclick()}
                         >
                             <p style={{
                                 fontSize: 14,
                                 fontWeight: 'initial',
                                 color: '#fcf5f4',
-                                margin: 0,
-                            }}>PTP</p>
+                                lineHeight: 16
+                            }}>{item.account_number}</p>
+                            <div
+                                style={{
+                                    height: 40,
+                                    paddingLeft:16,
+                                    paddingRight:16,
+                                    backgroundColor: 'red',
+                                    borderRadius: 20,
+                                    borderWidth: 1,
+                                    borderColor: 'blue',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+
+                                }}
+                            >
+                                <p style={{
+                                    fontSize: 14,
+                                    fontWeight: 'initial',
+                                    color: '#fcf5f4',
+                                    margin: 0,
+                                }}>{item.call_result}</p>
+                            </div>
                         </div>
-                    </div>
-                    <ListInput
-                        outline
-                        label="Nomor Kartu"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Nama"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Metode Kontak"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Kontak"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Tempat Kunjungan"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Hasil Kunjungan"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Detail Hasil Kunjungan"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Waktu Visit"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Petugas"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Tanggal PTP"
-                        type="text"
-                        disabled={true}
-                    />
-                    <ListInput
-                        outline
-                        label="Jumlah PTP"
-                        type="text"
-                        disabled={true}
-                    />
-                </List>
+                        <ListInput
+                            outline
+                            label="Nomor Kartu"
+                            type="text"
+                            value={item.card_no}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Nama"
+                            type="text"
+                            value={item.name}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Metode Kontak"
+                            type="text"
+                            value={item.contact_mode}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Kontak"
+                            type="text"
+                            value={item.contact_person}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Tempat Kunjungan"
+                            type="text"
+                            value={item.place_contacted}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Hasil Kunjungan"
+                            type="text"
+                            value={item.call_result}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Detail Hasil Kunjungan"
+                            type="text"
+                            value={item.notepad}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Waktu Visit"
+                            type="text"
+                            value={item.created_time}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Petugas"
+                            type="text"
+                            value={item.user_id}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Tanggal PTP"
+                            type="text"
+                            value={item.ptp_date}
+                            disabled={true}
+                        />
+                        <ListInput
+                            outline
+                            label="Jumlah PTP"
+                            type="text"
+                            value={item.ptp_amount}
+                            disabled={true}
+                        />
+                    </List>
+                ))}
+                
 
                 {/* <List>
                     <Block strong>

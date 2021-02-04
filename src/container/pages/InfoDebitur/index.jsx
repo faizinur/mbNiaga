@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
 import { Connection, log, SQLiteTypes, SQLite, Filter } from '../../../utils';
-const { ACTIVITY_HISTORY, RENCANA_KUNJUNGAN } = SQLiteTypes;
+const { ACTIVITY_HISTORY, RENCANA_KUNJUNGAN, UPDATE_HISTORY } = SQLiteTypes;
 
 class InfoDebitur extends React.Component {
 	constructor(props) {
@@ -26,10 +26,9 @@ class InfoDebitur extends React.Component {
 			arrDetailCust : [],
 			history : [],
 			infoUpdateData : [
-				{kategori : 'ALAMAT RUMAH', perubahan : 'PROVINSI, KOTA/KABUPATEN, KECAMATAN, KELURAHAN, ALAMAT, ZIP CODE, NO TELEPHONE'},
-				{kategori : 'ALAMAT KANTOR', perubahan : 'PROVINSI, KOTA/KABUPATEN, KECAMATAN, KELURAHAN, ALAMAT, ZIP CODE, NO TELEPHONE'},
-				{kategori : 'ALAMAT EMERGENCY', perubahan : 'PROVINSI, KOTA/KABUPATEN, KECAMATAN, KELURAHAN, ALAMAT, ZIP CODE, NO TELEPHONE'},
-				{kategori : 'ALAMAT RUMAH', perubahan : 'PROVINSI, KOTA/KABUPATEN, KECAMATAN, KELURAHAN, ALAMAT, ZIP CODE, NO TELEPHONE'},
+				// {kategori : 'ALAMAT RUMAH', perubahan : []},
+				// {kategori : 'ALAMAT KANTOR', perubahan : []},
+				// {kategori : 'ALAMAT EMERGENCY', perubahan : []},
 			]
 		}
 	}
@@ -43,9 +42,45 @@ class InfoDebitur extends React.Component {
         .then(res => {
 			Filter.select(res, [{'column':'account_number', 'operator':'EQUAL', 'value': this.state.detailCust.account_number }]).then((resFilter) => {
 				log("HASIL FILTER", resFilter)
-				resFilter.slice(0, 5);
+				// resFilter.slice(0, 5);
 				this.setState({history : resFilter});
             }).catch(err => log(err))
+		}).catch(err => log(err))
+
+		SQLite.query('SELECT * FROM collection where key = ?', [UPDATE_HISTORY])
+        .then(res => {
+			log("UPDATE_HITORY", res)
+			Filter.select(res, [
+				{'column':'account_number', 'operator':'EQUAL', 'value': this.state.detailCust.account_number},
+				{'column':'home_address_1', 'operator':'DOES_NOT_EQUAL', 'value': ''}
+			]).then((resFilter) => {
+				resFilter.slice(0, 3);			
+				this.setState(prevState => ({
+                    infoUpdateData: [...prevState.infoUpdateData, {kategori:"ALAMAT RUMAH", perubahan: resFilter.map(({home_address_1})=> home_address_1)}]
+                }))
+			}).catch(err => log(err))
+			
+			Filter.select(res, [
+				{'column':'account_number', 'operator':'EQUAL', 'value': this.state.detailCust.account_number},
+				{'column':'office_address_1', 'operator':'DOES_NOT_EQUAL', 'value': ''}
+			]).then((resFilter) => {
+				resFilter.slice(0, 3);	
+				this.setState(prevState => ({
+                    infoUpdateData: [...prevState.infoUpdateData, {kategori:"ALAMAT KANTOR", perubahan: resFilter.map(({office_address_1})=> office_address_1)}]
+                }))
+			}).catch(err => log(err))
+
+			Filter.select(res, [
+				{'column':'account_number', 'operator':'EQUAL', 'value': this.state.detailCust.account_number},
+				{'column':'refferal_address_1', 'operator':'DOES_NOT_EQUAL', 'value': ''}
+			]).then((resFilter) => {
+				resFilter.slice(0, 3);		
+				this.setState(prevState => ({
+                    infoUpdateData: [...prevState.infoUpdateData, {kategori:"ALAMAT EMERGENCY", perubahan: resFilter.map(({refferal_address_1})=> refferal_address_1)}]
+                }))
+			}).catch(err => log(err))
+			log("STATE", this.state)
+
 		}).catch(err => log(err))
 	}
 	_updateData(){
@@ -154,8 +189,14 @@ class InfoDebitur extends React.Component {
 							<Col width="45" style={{backgroundColor:'#c0392b', color: '#fff'}}>
 								<p style={{margin:8, textAlign: 'center'}}>{item.kategori}</p>
 							</Col>
-							<Col width="55" style={{border:1, borderStyle:'solid', borderColor:'#c0392b', borderCollapse: 'collapse'}}>
-								<p style={{margin:8, textAlign: 'center'}}>{item.perubahan}</p>
+							<Col width="55">
+								{item.perubahan.map((val, idx)=>(
+									<div key={idx}>
+										<div style={{border:1, borderStyle:'solid', borderColor:'#c0392b', borderCollapse: 'collapse', marginBottom:8}}>
+											<p style={{margin:8, textAlign: 'center'}}>{val}</p>
+										</div>
+									</div>
+								))}
 							</Col>
 						</Row>
 					))}

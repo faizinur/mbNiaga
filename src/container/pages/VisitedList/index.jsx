@@ -4,13 +4,33 @@ import {
 } from 'framework7-react';
 
 import { navigate } from '../../../config/redux/actions/routerActions';
-import { log, Connection } from '../../../utils';
+import { log, Connection, SQLite, SQLiteTypes, Filter } from '../../../utils';
 import { useDispatch, useSelector } from "react-redux";
 import { DefaultNavbar } from '../../../components/atoms';
 import { SystemInfo, KunjunganItem } from '../../../components/molecules';
+var {DAFTAR_DIKUNJUNGI} = SQLiteTypes;
 
 const VisitedList = (props) => {
+	const [listDikunjungi, setListDikunjungi] = useState([]);
 	useEffect(() => {
+		SQLite.query('SELECT * FROM collection where key = ?', [DAFTAR_DIKUNJUNGI])
+			.then(res => {
+				Filter.select(res, [{'column':'transaction_type', 'operator':'EQUAL', 'value': 'KUNJUNGAN' }]).then((resFilter) => {
+					var arr_result = [];
+					resFilter.map((item, index) => arr_result.push({
+						namaDebitur: item.detailCust.name,
+						nomorKartu: item.detailCust.card_no,
+						alamat: item.detailCust.home_address_1,
+						produk: item.detailCust.loan_type,
+						tagihan: item.detailCust.dpd_cur_days,
+						bucket: item.detailCust.current_bucket,
+						dpd: item.detailCust.day_past_due,
+						data: item.detailCust
+					}));
+					setListDikunjungi(arr_result);
+				}).catch(err => log(err))
+			})
+			.catch(err => log(err))
 		log('MOUNT OR UPDATE visitedList');
 		return () => {
 			log('UNMOUNT visitedList');
@@ -21,14 +41,14 @@ const VisitedList = (props) => {
 	return (
 		<Page noToolbar noNavbar style={{paddingBottom : 60}}>
 			<DefaultNavbar
-				title={'Daftar di Kunjungi'}
+				title={'Daftar Dikunjungi'}
 				network={Connection()}
 			/>
 			<SystemInfo />
 			<br/>
 			<br/>
 			<KunjunganItem
-				item={listTemp}
+				item={listDikunjungi}
 				onItemClick={(e) => log(e)}
 			/>
 		</Page>

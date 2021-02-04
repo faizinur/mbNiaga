@@ -72,14 +72,13 @@ const Idle = (props) => {
 
             var data = {
                 username: user.user_id,
-                password: password,
+                password: '12345678',
                 imei: JSON.stringify(uuid),
                 iccd: JSON.stringify(serial),
                 jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
             }
             POST(`Login`, data)
                 .then(res => {
-                    alert(JSON.stringify(res.data))
                     props.onFinish({ result: true });
                     setPassword('');
                 })

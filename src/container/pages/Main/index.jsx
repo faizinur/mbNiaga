@@ -56,6 +56,7 @@ class Main extends React.Component {
                                 label="Rekap Terkirim"
                             />
                             <ListMenu
+                                onClick={(e) => this.props.navigate('/RekapTertunda/')}
                                 label="Rekap Tertunda"
                             />
                             <ListMenu

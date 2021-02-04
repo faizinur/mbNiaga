@@ -21,9 +21,7 @@ class SQLModules extends Component {
     populateTable = (db) => {
         db.transaction(tx => {
             // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`, [] , (tx, rs) => {
-                // log(`POPULATE TABLE! ${JSON.stringify('')}`, tx, rs)
-            });
+            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`);
             // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
@@ -75,14 +73,20 @@ class SQLModules extends Component {
                         tx.executeSql('SELECT * from COLLECTION', [],
                             (tx, rs) => {
                                 if (!this.isset(() => rs.insertId)) {
+                                    var data = [];
+                                    for (var i = 0; i < rs.rows.length; i++) {
+                                        var tmp = {key: rs.rows.item(i).key, value: selfDecrypt(rs.rows.item(i).value)}
+                                        data.push(tmp)
+                                    }
+                                    resolve(data)
                                     // log('fetchAll : ',Object.values(rs.rows)[0].key)
-                                    resolve(Object.values(rs.rows)
-                                    .reduce((acc, val) => {
-                                            return [
-                                                ...acc,
-                                                { id: val.id, key: val.key, value: selfDecrypt(val.value) }
-                                            ]
-                                        }, []))
+                                    // resolve(Object.values(rs.rows)
+                                    // .reduce((acc, val) => {
+                                    //         return [
+                                    //             ...acc,
+                                    //             { key: val.key, value: selfDecrypt(val.value) }
+                                    //         ]
+                                    //     }, []))
                                 } else {
                                     resolve({ 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected })
                                 }

@@ -31,6 +31,7 @@ import SetupParameter from './SetupParameter';
 import RencanaKunjungan from './RencanaKunjungan';
 import Idle from './Idle';
 import VisitedList from './VisitedList';
+import RekapTertunda from './RekapTertunda';
 
 export {
     NotFound,
@@ -66,4 +67,5 @@ export {
     RencanaKunjungan,
     Idle,
     VisitedList,
+    RekapTertunda,
 }

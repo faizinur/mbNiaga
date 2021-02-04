@@ -30,6 +30,8 @@ class AddKunjungan extends React.Component {
             placeContacted: this.props.placeContacted,
             callResult: this.props.callResult,
             formData: {
+                card_no : this.props.detailCust.card_no,
+                name : this.props.detailCust.name,
                 account_number: this.props.detailCust.account_number,
                 overdue_days: '',//GATAU DARIMANA
                 phone_number: this.props.detailCust.handphone,
@@ -52,6 +54,7 @@ class AddKunjungan extends React.Component {
     }
     _kirim() {
         var { formData, ptp } = this.state;
+        log(formData)
         var mandatoryField = ['contact_mode', 'contact_person', 'place_contacted', 'call_result', 'notepad', 'gambar'];
         if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
         for (var item in formData) {
@@ -99,8 +102,8 @@ class AddKunjungan extends React.Component {
     _saveDaftarDikunjungi() {
         SQLite.query('SELECT value from Collection where key=?', [DAFTAR_DIKUNJUNGI])
             .then(select => {
-                var data = select.length != 0 ? select[0] : [];
-                data.push(this.state.formData);
+                var data = select.length != 0 ? select[0] : [];            
+                data.push({...this.state.formData, detailCust : this.state.detailCust });
                 SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [DAFTAR_DIKUNJUNGI, data])
                     .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
             }).catch(err => log(err));
@@ -273,11 +276,13 @@ class AddKunjungan extends React.Component {
                                 outline
                                 type="datepicker"
                                 defaultValue=""
-                                onChange={({ target }) => {
+                                onCalendarChange={(val) => {
+                                    log("KALENDER", typeof(val[0]), JSON.stringify(val[0]).substr(1, 10))
+                                    // log("KALENDER", `${val.getFullYear()}-${val.getMonth+1 < 10 ? `0${val.getMonth()}` : val.getMonth()}-${val.getDate() < 10 ? `0${val.getDate()}` : val.getDate()}`)
                                     this.setState(prevState => ({
                                         formData: {
                                             ...prevState.formData,
-                                            ptp_date: target.value
+                                            ptp_date: JSON.stringify(val[0]).substr(1, 10)
                                         }
                                     }))
                                 }}
@@ -303,7 +308,7 @@ class AddKunjungan extends React.Component {
                                     this.setState(prevState => ({
                                         formData: {
                                             ...prevState.formData,
-                                            ptp_date: e.target.value
+                                            ptp_amount: e.target.value
                                         }
                                     }))
                                 }}

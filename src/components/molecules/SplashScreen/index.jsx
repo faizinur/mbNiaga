@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     Page,
-    f7
+    f7,
 } from 'framework7-react';
 import {
     setProvince,
@@ -14,7 +14,17 @@ import region from '../../../data/region.json';
 import { log, SQLite, SQLiteTypes, Connection, POST, Device } from '../../../utils/';
 import PropTypes from 'prop-types';
 import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice, setPin, setCallResult, setContactMode, setContactPerson, setPlaceContacted } from '../../../config/redux/actions/';
-const { PIN, DEVICE_INFO, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY, REFERENCE } = SQLiteTypes;
+const {
+    PIN,
+    DEVICE_INFO,
+    LIST_ACCOUNT,
+    DETAIL_COSTUMER,
+    ACTIVITY_HISTORY,
+    PAYMENT_HISTORY,
+    REFERENCE,
+    RENCANA_KUNJUNGAN,
+    GEOLOCATION
+} = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE SplashScreen');
@@ -22,7 +32,7 @@ const SplashScreen = (props) => {
             _getRegion(),
             SQLite.initDB(),
             _getLocalData(),
-            _synchRef(),
+            _getReference(),
             //.... another promise
         ]).then(res => {
             setTimeout(() =>
@@ -41,7 +51,7 @@ const SplashScreen = (props) => {
         }
     }, [])
     const dispatch = useDispatch();
-    let refesh_coordinate = 60; 
+    let refesh_coordinate = 60;
     let idle_time = 60;
     let mount_point = '/';
     const _getRegion = () => {
@@ -52,20 +62,7 @@ const SplashScreen = (props) => {
             dispatch(setSubDistrict(region.filter(item => { return item.level == 3 }))),
         ]);
     }
-    const _synchRef = () => {
-        let dvc = (!Device.android && !Device.ios) ? false : true;
-        if (dvc) {
-            _getReference();
-        }else{
-            log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
-            POST(`Get_all_refs`, [])
-                .then(res => {
-                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-                        .then(insert => _setReference(insert))
-                        .catch(err => log(err));
-                }).catch(err => log(err));
-        }
-    }
+
     const _getReference = async () => {
         try {
             let ref = await SQLite.query('SELECT value FROM Collection WHERE key=?', [REFERENCE]);
@@ -74,11 +71,20 @@ const SplashScreen = (props) => {
                 POST(`Get_all_refs`, [])
                     .then(res => {
                         SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-                            .then(insert => _setReference(insert))
+                            .then(insert => log(insert))
                             .catch(err => log(err));
                     }).catch(err => log(err));
             } else {
-                _setReference();
+                let dvc = (!Device.android && !Device.ios) ? false : true;
+                if (!dvc) {
+                    log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
+                    POST(`Get_all_refs`, [])
+                        .then(res => {
+                            SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
+                                .then(insert => log(insert))
+                                .catch(err => log(err));
+                        }).catch(err => log(err));
+                }
             }
         } catch (err) {
             log(err)
@@ -116,9 +122,20 @@ const SplashScreen = (props) => {
                         case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
                             break;
                         case REFERENCE:
+                            dispatch(setCallResult('call_result' in item.value ? item.value.call_result : {}));
+                            dispatch(setContactMode('contact_mode' in item.value ? item.value.contact_mode : {}));
+                            dispatch(setContactPerson('contact_person' in item.value ? item.value.contact_person : {}));
+                            dispatch(setPlaceContacted('place_contacted' in item.value ? item.value.place_contacted : {}));
                             refesh_coordinate = 'refesh_coordinate' in item.value ? item.value.refesh_coordinate : 60;
                             idle_time = 'idle_time' in item.value ? item.value.idle_time : 60;
-                        default: log('_getLocalData default');
+                            break;
+                        case RENCANA_KUNJUNGAN:
+                            log(`handle ${RENCANA_KUNJUNGAN}`)
+                            break;
+                        case GEOLOCATION:
+                            log(`handle ${GEOLOCATION}`)
+                            break;
+                        default: log('_getLocalData default', item.key);
                     }
                 })
             ).catch(err => log(err));

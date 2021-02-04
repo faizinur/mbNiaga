@@ -46,7 +46,7 @@ class Root extends React.Component {
 				// Cordova Statusbar settings
 				statusbar: {
 					iosOverlaysWebView: true,
-					androidOverlaysWebView: false,
+					androidOverlaysWebView: true,
 				},
 			},
 			realApp: false,
@@ -61,7 +61,9 @@ class Root extends React.Component {
 			if (Device.cordova) {
 				cordovaApp.init(f7);
 				document.addEventListener('deviceready', () => {
-					alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
+					if(JSON.stringify(cordova.plugins.uid) == '{}'){
+						alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
+					}
 				}, false);
 			}
 			document.addEventListener("click", () => {
@@ -122,7 +124,7 @@ class Root extends React.Component {
 		// log('shownToolbar', shownToolbar);
 		if (!realApp) {
 			return (
-				<App params={this.state.f7params} >
+				<App params={this.state.f7params}>
 					<SplashScreen
 						onFinish={(e) => {
 							this.setState({
@@ -131,15 +133,14 @@ class Root extends React.Component {
 								mountPoint: e.mount_point,
 							});
 							idleTimeGeo = e.refesh_coordinate;
-							// idleTime = e.idle_time;
-							idleTime = 10;
+							idleTime = e.idle_time;
 						}}
 					/>
 				</App>
 			)
 		} else {
 			return (
-				<App params={this.state.f7params} >
+				<App params={this.state.f7params}>
 					<CustomToolbar
 						shown={shownToolbar}
 					/>

@@ -18,7 +18,7 @@ const API = axios.create({
 		// Do whatever you want to transform the data
 		// f7.preloader.hide();
 		let response = JSON.parse(Decrypt(data));
-		log('transformResponse', response.data);
+		// log('transformResponse', response.data);
 		return response;
 	}],
 });
