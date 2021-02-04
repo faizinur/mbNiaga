@@ -131,7 +131,8 @@ class Root extends React.Component {
 								mountPoint: e.mount_point,
 							});
 							idleTimeGeo = e.refesh_coordinate;
-							idleTime = e.idle_time;
+							// idleTime = e.idle_time;
+							idleTime = 10;
 						}}
 					/>
 				</App>

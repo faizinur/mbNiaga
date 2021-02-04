@@ -31,7 +31,9 @@ const POST = (...params) => {
 				f7.preloader.show();
 				API.post(url, data)
 					.then(result => {
+						// alert(JSON.stringify(result));
 						if (result.data.status == "error" || result.status != 200) {
+							f7.preloader.hide();
 							f7.dialog.alert(result.data.message);
 							reject(result.data.message);
 						} else {
@@ -39,6 +41,7 @@ const POST = (...params) => {
 							resolve(result.data);
 						}
 					}).catch(err => {
+						// alert('keisini gak ya?');
 						f7.preloader.hide();
 						reject(err)
 					});
@@ -52,6 +55,7 @@ const POST = (...params) => {
 						API.post(...item)
 							.then(res => {
 								if (res.data == "error" || res.status != 200) {
+									f7.preloader.hide();
 									f7.dialog.alert(res.message);
 									reject(res);
 								} else {

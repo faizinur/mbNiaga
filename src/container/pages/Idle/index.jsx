@@ -20,6 +20,7 @@ import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import PropTypes from 'prop-types';
 import stylesheet from './stylesheet';
 import { DefaultNavbar } from '../../../components/atoms';
+import { errorMonitor } from 'nedb';
 const { REKAP_TERTUNDA } = SQLiteTypes;
 const Idle = (props) => {
     useEffect(() => {
@@ -37,7 +38,7 @@ const Idle = (props) => {
     let [loginResult, setLoginResult] = useState([]);
     const _validate = async () => {
         if (props.Connection == 'OFFLINE') {
-            //LOGIN ONLINE
+            //LOGIN OFFLINE
             let dvc = (!Device.android && !Device.ios) ? false : true;
             if (dvc) {
                 let deviceInfo = await Device.getInformation();
@@ -78,6 +79,7 @@ const Idle = (props) => {
             }
             POST(`Login`, data)
                 .then(res => {
+                    alert(JSON.stringify(res.data))
                     props.onFinish({ result: true });
                     setPassword('');
                 })

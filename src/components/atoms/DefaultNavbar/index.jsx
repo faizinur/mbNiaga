@@ -23,8 +23,8 @@ const DefaultNavbar = (props) => {
                 {
                     'backLink' in props ?
                         <div
-                        onClick={()=>alert('WOY!')}
-                        >dajsdsaj
+                            onClick={() => props.backLink()}
+                        >
                             <Icon style={styles.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
                         </div>
                         : <div></div>
@@ -42,7 +42,7 @@ const DefaultNavbar = (props) => {
                     </div>
                     : ''
             }
-        </div>
+        </div >
     )
     //     default:
     //         return (
@@ -57,7 +57,7 @@ const DefaultNavbar = (props) => {
 DefaultNavbar.propTypes = {
     title: PropTypes.string,
     network: PropTypes.string,
-    backLink  :PropTypes.func,
+    backLink: PropTypes.func,
 };
 
 

@@ -62,7 +62,7 @@ class Login extends React.Component {
         log('componentDidMount LOGIN : ');
 
         if (this.props.pin != "" && this.props.profile.is_login == true) {
-            // log('TAMPILKAN POPUP!')
+            log('TAMPILKAN POPUP!');
             this.setState({ popUpStateLoginPin: true })
         } else {
             // log('TUTUP POPUP!')
@@ -127,11 +127,10 @@ class Login extends React.Component {
                                 this.setState({ user: res.data, popUpStateDaftarPin: true })
                                 //--> _submitPIN
                             } else {
-                                alert('INI NGAPAIN??!');
-                                // this._getUserInfo({
-                                //     ...res.data,
-                                //     ...{ PIN: userPIN[0] }
-                                // });
+                                this._getUserInfo({
+                                    ...res.data,
+                                    ...{ PIN: userPIN[0] }
+                                });
                                 // this._setReference();
                             }
                         })
