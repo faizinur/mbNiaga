@@ -79,18 +79,16 @@ class Root extends React.Component {
 					}
 				}, false);
 			}
-
 			document.addEventListener("click", (e) => {
+				//KALO ENGGAK AMBIL TIME STAMP ESRVER DAN MOBILE NANTI DIITUNG
 				//HITUNG PERBEDAAN JAM SERVER DAN MOBILE KALO 5 MENIT RETURN
-				// if (this.props.profile.jam_server != 'undefined' || this.props.profile.mobileTime != 'undefined') {
-				// 	let [Mserver, Sserver] = this.props.profile.jam_server.slice(14, 19).split(':');
-				// 	let [Mmobile, Smobile] = this.props.profile.mobileTime.slice(13, 19).split(':');
-				// 	let accTimeServer = (parseInt(Mserver) * 60) + parseInt(Sserver);
-				// 	let accTimeMobile = (parseInt(Mmobile) * 60) + parseInt(Smobile);
-				// 	if (Math.abs(accTimeServer - accTimeMobile) > beda_jam) {
-				// 		this.setState({ blockTimeout: true })
-				// 	}
+				// let accTimeServer = 0; //minta egi kirim jam server, jam,menit, detik, konversi ke deetik
+				// let accTimeMobile = ((parseInt(new Date().getHours()) * 60) * 60) + (parseInt(new Date().getMinutes()) * 60) + parseInt(new Date().getSeconds());;
+				// if (Math.abs(accTimeServer - accTimeMobile) > beda_jam) {
+					// this.setState({ blockTimeout: true })
 				// }
+				//HITUNG PERBEDAAN JAM SERVER DAN MOBILE KALO 5 MENIT RETURN
+
 				if (this.state.popUpStateIdle == false) {
 					this.setState({ idleCounter: 0 });
 				}

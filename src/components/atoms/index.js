@@ -4,7 +4,7 @@ import CustomBlockTitle from './CustomBlockTitle';
 import Maps from './Maps';
 import CustomStatusBar from './CustomStatusBar';
 import BlockTimeout from './BlockTimeout';
-
+import Toast from './Toast';
 export {
     ListMenu,
     DefaultNavbar,
@@ -12,4 +12,5 @@ export {
     Maps,
     CustomStatusBar,
     BlockTimeout,
+    Toast,
 }
