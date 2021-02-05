@@ -62,7 +62,7 @@ const UpdatePin = () => {
                     outline
                     label="Masukan PIN Lama"
                     type={"password"}
-                    inputmode={"tel"}
+                    inputmode={"numeric"}
                     pattern="[0-9]*"
                     value={oldPIN}
                     onChange={({ target }) => setOldPIN(target.value)}
@@ -74,7 +74,7 @@ const UpdatePin = () => {
                     outline
                     label="Masukan PIN Baru"
                     type={"password"}
-                    inputmode={"tel"}
+                    inputmode={"numeric"}
                     pattern="[0-9]*"
                     value={newPIN}
                     onChange={({ target }) => setNewPIN(target.value)}
@@ -86,7 +86,7 @@ const UpdatePin = () => {
                     outline
                     label="Konfirmasi PIN Baru"
                     type={"password"}
-                    inputmode={"tel"}
+                    inputmode={"numeric"}
                     pattern="[0-9]*"
                     value={confirmPIN}
                     onChange={({ target }) => setConfirmPIN(target.value)}

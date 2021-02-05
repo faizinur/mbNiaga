@@ -61,7 +61,6 @@ class Login extends React.Component {
     }
     componentDidMount() {
         log('componentDidMount LOGIN : ');
-
         if (this.props.pin != "" && this.props.profile.is_login == true) {
             // log('TAMPILKAN POPUP!');
             this.setState({ popUpStateLoginPin: true })
@@ -152,7 +151,6 @@ class Login extends React.Component {
             f7.dialog.alert(err);
         }
     }
-
     _submitPIN = (PIN) => {
         let userTmp = {
             ...Object.assign({}, this.state.user),
@@ -161,12 +159,12 @@ class Login extends React.Component {
         this.setState({ user: userTmp })
         this._getUserInfo(userTmp);
     }
-    _onValidatePIN = (PIN) => {
-        log('_onValidatePIN : ', PIN)
-        SQLite.query('select value from COLLECTION where key=?', [SQLiteTypes.PIN])
+    _onValidatePIN = (inputPIN) => {
+        log('_onValidatePIN : ', inputPIN)
+        SQLite.query('select value from COLLECTION where key=?', [PIN])
             .then(res => {
-                if (res[0] === PIN) {
-                    this.props.setPin(PIN);
+                if (res[0] === inputPIN) {
+                    this.props.setPin(inputPIN);
                     this.props.navigate('/Main/');
                     this.setState({ popUpStateLoginPin: false });
                     // this._setReference();
@@ -175,7 +173,6 @@ class Login extends React.Component {
                 }
             }).catch(err => log(err));
     }
-
     _getDelayedList = () => {
         return new Promise((resolve, reject) => {
             SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
@@ -219,7 +216,6 @@ class Login extends React.Component {
             ));
         return Promise.all(reqList);
     }
-
     _getUserInfo = (data) => {
         POST(['get_detail_cust', { agent: data.id }], ['get_activity_history', { agent: data.id }], ['get_payment_history', { agent: data.id }], ['get_update_history', { agent: data.id }])
             .then(res => {

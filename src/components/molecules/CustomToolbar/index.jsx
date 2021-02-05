@@ -40,7 +40,7 @@ const CustomToolbar = (props) => {
         if (currentRoute == '/Main/' && index == 0) return false;
         if (currentRoute == '/UpdatePin/' && index == 1) return false;
         if (pin == "" && user.is_login == false) return false;
-        
+
         setPrevTablink(tablinkActive);
         setTablinkActive(index);
         switch (index) {
@@ -82,7 +82,7 @@ const CustomToolbar = (props) => {
             .catch(err => log("LOGOUT", err) && _setTablink(prevTablink))
     }
     const _cancel = () => {
-        _setTablink(prevTablink);
+        setTablinkActive(prevTablink)
         setPopupStateLogout(false);
     }
     return (

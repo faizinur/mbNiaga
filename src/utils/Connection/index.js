@@ -7,6 +7,7 @@ const Connection = () => {
     switch (networkState) {
         case 'wifi':
             network = "WIFI";
+            break;
         case '2g':
         case '3g':
         case '4g':

@@ -54,7 +54,7 @@ const DaftarPin = (props) => {
                                 outline
                                 label="Masukan PIN"
                                 type={"password"}
-                                inputmode={"tel"}
+                                inputmode={"numeric"}
                                 pattern="[0-9]*"
                                 onChange={({ target }) => setNewPIN(target.value)}
                                 maxlength={6}
@@ -72,7 +72,7 @@ const DaftarPin = (props) => {
                                 outline
                                 label="Masukan PIN Baru"
                                 type={"password"}
-                                inputmode={"tel"}
+                                inputmode={"numeric"}
                                 pattern="[0-9]*"
                                 onChange={({ target }) => setNewPIN(target.value)}
                                 maxlength={6}
@@ -83,7 +83,7 @@ const DaftarPin = (props) => {
                                 outline
                                 label="Konfirmasi PIN Baru"
                                 type={"password"}
-                                inputmode={"tel"}
+                                inputmode={"numeric"}
                                 pattern="[0-9]*"
                                 onChange={({ target }) => setConfirmPIN(target.value)}
                                 maxlength={6}

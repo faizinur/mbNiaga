@@ -100,7 +100,7 @@ class ListDebitur extends React.Component {
 
 	render() {
 		return (
-			<Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
+			<Page noToolbar noNavbar style={{ paddingBottom: 85 }}>
 				<DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} />
 				<List noHairlinesMd style={{ marginBottom: 0, padding: 0 }}>
 					<SystemInfo />

@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { log, ClockTick, Connection, Geolocation, SQLite, SQLiteTypes } from '../utils/';
 import { navigate, setUser, setGeolocation } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
+import { CustomStatusBar, BlockTimeout } from '../components/atoms';
 import { Idle } from '../container/pages/';
 
 const { GEOLOCATION } = SQLiteTypes;
@@ -23,6 +24,7 @@ let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
 let idleTime = 60;
 let idleTimeGeo = 0;
+let beda_jam = 300;
 class Root extends React.Component {
 	constructor(props) {
 		super(props);
@@ -53,6 +55,7 @@ class Root extends React.Component {
 			idleCounter: 0,
 			popUpStateIdle: false,
 			mountPoint: '/',
+			blockTimeout: false,
 		}
 	}
 	componentDidMount() {
@@ -62,7 +65,7 @@ class Root extends React.Component {
 				cordovaApp.init(f7);
 				document.addEventListener('deviceready', () => {
 					if (JSON.stringify(cordova.plugins.uid) == '{}') {
-						alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
+						// alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
 					}
 					document.addEventListener("pause", () => {
 						if (this.props.pin != "" && this.props.profile.is_login == true) {
@@ -76,7 +79,23 @@ class Root extends React.Component {
 					}
 				}, false);
 			}
-			document.addEventListener("click", () => {
+
+			document.addEventListener("click", (e) => {
+				//HITUNG PERBEDAAN JAM SERVER DAN MOBILE KALO 5 MENIT RETURN
+				// if (this.props.profile.jam_server != 'undefined' || this.props.profile.mobileTime != 'undefined') {
+				// 	let [Mserver, Sserver] = this.props.profile.jam_server.slice(14, 19).split(':');
+				// 	let [Mmobile, Smobile] = this.props.profile.mobileTime.slice(13, 19).split(':');
+				// 	let accTimeServer = (parseInt(Mserver) * 60) + parseInt(Sserver);
+				// 	let accTimeMobile = (parseInt(Mmobile) * 60) + parseInt(Smobile);
+				// 	if (Math.abs(accTimeServer - accTimeMobile) > beda_jam) {
+				// 		this.setState({ blockTimeout: true })
+				// 	}
+				// }
+				if (this.state.popUpStateIdle == false) {
+					this.setState({ idleCounter: 0 });
+				}
+			});
+			document.addEventListener("touchmove", () => {
 				if (this.state.popUpStateIdle == false) {
 					this.setState({ idleCounter: 0 });
 				}
@@ -144,6 +163,7 @@ class Root extends React.Component {
 							});
 							idleTimeGeo = e.refesh_coordinate;
 							idleTime = e.idle_time;
+							beda_jam = e.beda_jam;
 						}}
 					/>
 				</App>
@@ -151,6 +171,8 @@ class Root extends React.Component {
 		} else {
 			return (
 				<App params={this.state.f7params}>
+					<BlockTimeout display={this.state.blockTimeout} />
+					<CustomStatusBar />
 					<CustomToolbar
 						shown={shownToolbar}
 					/>

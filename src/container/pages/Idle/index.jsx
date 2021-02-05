@@ -20,25 +20,30 @@ import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import PropTypes from 'prop-types';
 import stylesheet from './stylesheet';
 import { DefaultNavbar } from '../../../components/atoms';
-import { errorMonitor } from 'nedb';
-const { REKAP_TERTUNDA } = SQLiteTypes;
+// import { errorMonitor } from 'nedb';
+import { setUser, navigate, setPin } from '../../../config/redux/actions/';
+const { LIST_ACCOUNT, PIN, REKAP_TERTUNDA } = SQLiteTypes;
+
+
 const Idle = (props) => {
     useEffect(() => {
-        log('MOUNT OR UPDATE Idle', props.Connection);
+        log('MOUNT OR UPDATE Idle', Connection());
         return () => {
-            setPIN('');
+            setUserPIN('');
             setPassword('');
             log('UNMOUNT Idle');
         }
     }, [])
+    const dispatch = useDispatch();
     const [password, setPassword] = useState('');
-    const [PIN, setPIN] = useState('');
+    const [userPIN, setUserPIN] = useState('');
     const user = useSelector(state => state.user.profile);
     const device = useSelector(state => state.main.device);
     let [loginResult, setLoginResult] = useState([]);
     const _validate = async () => {
-        if (props.Connection == 'OFFLINE') {
+        if (Connection() == 'OFFLINE') {
             //LOGIN OFFLINE
+            if (PIN == '') return false;
             let dvc = (!Device.android && !Device.ios) ? false : true;
             if (dvc) {
                 let deviceInfo = await Device.getInformation();
@@ -47,14 +52,14 @@ const Idle = (props) => {
                     return false;
                 }
             }
-            SQLite.query("SELECT value from COLLECTION where key=?", [SQLiteTypes.PIN])
+            SQLite.query("SELECT value from COLLECTION where key=?", [PIN])
                 .then(res => {
-                    if (PIN == res[0]) {
-                        setPIN('');
+                    if (userPIN == res[0]) {
+                        setUserPIN('');
                         setLoginResult([]);
                         props.onFinish({ result: true });
                     } else {
-                        setPIN('');
+                        setUserPIN('');
                         setLoginResult([...loginResult, 'UserAuth']);
                     }
                 })
@@ -97,19 +102,44 @@ const Idle = (props) => {
             () => {
                 f7.dialog.confirm('Unggah data tertunda?',
                     () => {
-                        if (props.Connection == "OFFLINE") {
+                        if (Connection() != "OFFLINE") {
                             _getDelayedList()
                                 .then(e => {
-                                    f7.preloader.hide();
+                                    // f7.preloader.hide();
+                                    POST(`Logout`, { username: user.user_id })
+                                        .then(res => {
+                                            if (res.status == 'success') {
+                                                let updatedUser = {
+                                                    ...user,
+                                                    ...{
+                                                        is_login: false,
+                                                    }
+                                                };
+                                                let updatedPIN = "";
+                                                Promise.all(
+                                                    [SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [LIST_ACCOUNT, updatedUser])],
+                                                    [SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PIN, updatedPIN])]
+                                                ).then(res => {
+                                                    f7.preloader.hide();
+                                                    dispatch(setUser(updatedUser));
+                                                    dispatch(setPin(updatedPIN));
+                                                    props.onFinish({ result: true });
+                                                    dispatch(navigate('/', true));
+                                                }).catch(err => log(err));
+                                            }
+                                            f7.preloader.hide();
+                                        })
+                                        .catch(err => log("LOGOUT", err))
                                 })
                                 .catch(e => {
                                     f7.preloader.hide();
                                 });
-                                log('MASIH BELUM TAU HARUS DIAPAIN.')
-                                // props.onFinish({ result: true });
-                        }else{
-                            f7.dialog.alert('Pastikan Perangkat terhubung dengan internet.');
+                            log('MASIH BELUM TAU HARUS DIAPAIN.')
+                            // props.onFinish({ result: true });
                         }
+                        // else{
+                        //     f7.dialog.alert('Pastikan Perangkat terhubung dengan internet.');
+                        // }
                     });
             });
         //
@@ -167,19 +197,19 @@ const Idle = (props) => {
                 </div>
             </List>
             {
-                props.Connection == "OFFLINE" ?
+                Connection() == "OFFLINE" ?
                     (
                         <List inlineLabels noHairlinesMd>
                             <ListInput
                                 outline
                                 label="PIN"
                                 type={"password"}
-                                inputmode={"tel"}
+                                inputmode={"numeric"}
                                 pattern="[0-9]*"
-                                onChange={({ target }) => setPIN(target.value)}
+                                onChange={({ target }) => setUserPIN(target.value)}
                                 maxlength={6}
                                 minlength={4}
-                                value={PIN}
+                                value={userPIN}
                             />
                         </List>
                     ) : (

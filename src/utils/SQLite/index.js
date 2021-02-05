@@ -10,12 +10,33 @@ class SQLModules extends Component {
     initDB = (populateDB = true) => {
         let db;
         return new Promise(resolve => {
-            populateDB ? log("%cPlugin integrity check ...", 'background: #FF0; color: #F00') : log('');
-            db = (!Device.android && !Device.ios) ?
-                window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) :
-                window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default', androidDatabaseProvider: 'system' }); //LOKASI DI MOBILE /data/user/0/io.framework7.myapp/databases/MobileCollection.db
-            populateDB ? this.populateTable(db) : resolve(db);
-            resolve(db);
+            //LOKASI DI MOBILE /data/user/0/io.framework7.myapp/databases/MobileCollection.db
+            // db = (!Device.android && !Device.ios) ?
+            //     window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) :
+            //     window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default', androidDatabaseProvider: 'system' }); 
+            // populateDB ? this.populateTable(db) : resolve(db);
+            // resolve(db);
+
+            if (!Device.android && !Device.ios) {
+                log("%cPlugin integrity check ...", 'background: #FF0; color: #F00')
+                db = window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024);
+                if (populateDB) this.populateTable(db);
+                resolve(db);
+            } else {
+                window.sqlitePlugin.openDatabase({ name: `${DB_NAME}.db`, location: 'default', androidDatabaseProvider: 'system' },
+                    (db) => {
+                        // alert(JSON.stringify(db));
+                        log("%cPlugin integrity check ...", 'background: #FF0; color: #F00')
+                        if (populateDB) this.populateTable(db);
+                        resolve(db);
+                    },
+                    (err) => {
+                        console.log('Open database ERROR: ' + JSON.stringify(error));
+                        alert('Open database ERROR: ' + JSON.stringify(error));
+                        return false;
+                    });
+            }
+
         });
     };
     populateTable = (db) => {
@@ -40,7 +61,7 @@ class SQLModules extends Component {
     query = (sqlQuery, param = []) => {
         let [dmlCommand] = sqlQuery.split(' ')
         if (param.length > 0 && (dmlCommand === 'INSERT')) {
-        //     param = [uuid(), ...param];
+            //     param = [uuid(), ...param];
             param[1] = Encrypt(param[1])
         }
         return new Promise((resolve, reject) => {
@@ -75,7 +96,7 @@ class SQLModules extends Component {
                                 if (!this.isset(() => rs.insertId)) {
                                     var data = [];
                                     for (var i = 0; i < rs.rows.length; i++) {
-                                        var tmp = {key: rs.rows.item(i).key, value: selfDecrypt(rs.rows.item(i).value)}
+                                        var tmp = { key: rs.rows.item(i).key, value: selfDecrypt(rs.rows.item(i).value) }
                                         data.push(tmp)
                                     }
                                     resolve(data)

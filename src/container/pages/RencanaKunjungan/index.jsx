@@ -15,6 +15,7 @@ import { navigate, setDetailCustomer } from '../../../config/redux/actions/';
 import { log, Filter, SQLite, SQLiteTypes, Connection } from '../../../utils/';
 import { SystemInfo, KunjunganItem } from '../../../components/molecules';
 import { DefaultNavbar } from '../../../components/atoms'
+const { RENCANA_KUNJUNGAN } = SQLiteTypes;
 
 class RencanaKunjungan extends React.Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class RencanaKunjungan extends React.Component {
     }
     componentDidMount() {
         this._tambahParameter()
-        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
+        SQLite.query('SELECT * FROM collection where key = ?', [RENCANA_KUNJUNGAN])
             .then(res => {
                 log(res);
                 var arr_result = [];
@@ -83,7 +84,7 @@ class RencanaKunjungan extends React.Component {
     _search = async () => {
         var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");
         if (param.length == 0) return false;
-        SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.RENCANA_KUNJUNGAN])
+        SQLite.query('SELECT * FROM collection where key = ?', [RENCANA_KUNJUNGAN])
             .then(res => {
                 Filter.select(res, param).then((resFilter) => {
                     var arr_result = [];
