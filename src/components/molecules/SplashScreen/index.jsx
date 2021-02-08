@@ -63,8 +63,7 @@ const SplashScreen = (props) => {
             dispatch(setDistrict(region.filter(item => { return item.level == 2 }))),
             dispatch(setSubDistrict(region.filter(item => { return item.level == 3 }))),
         ]);
-    }
-
+    }   
     const _getReference = async () => {
         try {
             let date = new Date();

@@ -164,14 +164,31 @@ class Login extends React.Component {
         this.setState({ user: userTmp })
         this._getUserInfo(userTmp);
     }
-    _onValidatePIN = (inputPIN) => {
+    _onValidatePIN = async (inputPIN) => {
+        let dvc = (!Device.android && !Device.ios) ? false : true;
+        let dvcInfo = {};
+        if (dvc) {
+            dvcInfo = {
+                ...await Perangkat.getInformation(),
+                ...{
+                    serial: cordova.plugins.uid.ICCID
+                }
+            }
+        } else {
+            dvcInfo = { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' };
+        }
         log('_onValidatePIN : ', inputPIN)
         SQLite.query('select value from COLLECTION where key=?', [PIN])
             .then(res => {
                 if (res[0] === inputPIN) {
-                    this.props.setPin(inputPIN);
-                    this.props.navigate('/Main/');
-                    this.setState({ popUpStateLoginPin: false });
+                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [DEVICE_INFO, this.props.device])
+                        .then(res => {
+                            this.props.setDevice(dvcInfo);
+                            this.props.setPin(inputPIN);
+                            this.setState({ popUpStateLoginPin: false });
+                            this.props.navigate('/Main/');
+                        }).catch(err => log(err));
+
                     // this._setReference();
                 } else {
                     f7.dialog.alert('PIN belum benar!');
