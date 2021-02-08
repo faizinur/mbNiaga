@@ -152,12 +152,12 @@ class Root extends React.Component {
 							idleTimeGeo = e.refesh_coordinate;
 							idleTime = e.idle_time;
 							e.beda_jam;
-							if (e.beda_jam > 300) {
-								log('beda jam lebih 5 menit')
-								// this.setState({ blockTimeout: true });
-							} else {
-								log('beda jam < 5 menit')
-								// this.setState({ blockTimeout: false });
+							if(!(!Device.android && !Device.ios)){
+								if (e.beda_jam > 300) {
+									this.setState({ blockTimeout: true });
+								} else {
+									this.setState({ blockTimeout: false });
+								}
 							}
 						}}
 					/>
