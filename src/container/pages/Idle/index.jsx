@@ -40,69 +40,75 @@ const Idle = (props) => {
     const user = useSelector(state => state.user.profile);
     const device = useSelector(state => state.main.device);
     let [loginResult, setLoginResult] = useState([]);
-    const _validate = async () => {
-        if (Connection() == 'OFFLINE') {
-            //LOGIN OFFLINE
-            if (PIN == '') return false;
-            let dvc = (!Device.android && !Device.ios) ? false : true;
-            if (dvc) {
-                let deviceInfo = await Device.getInformation();
-                if (deviceInfo.serial != device.serial) {
-                    setLoginResult([...loginResult, 'ICCIDAuth']);
-                    return false;
-                }
-            }
-            SQLite.query("SELECT value from COLLECTION where key=?", [PIN])
-                .then(res => {
-                    if (userPIN == res[0]) {
-                        setUserPIN('');
-                        setLoginResult([]);
-                        props.onFinish({ result: true });
-                    } else {
-                        setUserPIN('');
-                        setLoginResult([...loginResult, 'UserAuth']);
-                    }
-                })
-                .catch(err => log(err));
-        } else {
-            //LOGIN ONLINE
-            var date = new Date();
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
-            var hours = date.getHours();
-            var minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
-            var seconds = date.getSeconds();
-            const { uuid, serial } = device;
 
-            var data = {
-                username: user.user_id,
-                password: '12345678',
-                imei: JSON.stringify(uuid),
-                iccd: JSON.stringify(serial),
-                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+
+    const _validateOffline = async () => {
+        //LOGIN OFFLINE
+        if (PIN == '') return false;
+        let dvc = (!Device.android && !Device.ios) ? false : true;
+        if (dvc) {
+            let deviceInfo = await Device.getInformation();
+            if (deviceInfo.serial != device.serial) {
+                setLoginResult([...loginResult, 'ICCIDAuth']);
+                return false;
             }
-            POST(`Login`, data)
-                .then(res => {
-                    props.onFinish({ result: true });
-                    setPassword('');
-                })
-                .catch(err => {
-                    setPassword('');
-                    switch (err) {
-                        case 'Username/Password tidak valid': setLoginResult([...loginResult, 'UserAuth']);
-                            break;
-                        default: log(err)
-                    }
-                });
         }
+        SQLite.query("SELECT value from COLLECTION where key=?", [PIN])
+            .then(res => {
+                if (userPIN == res[0]) {
+                    setUserPIN('');
+                    setLoginResult([]);
+                    props.onLogin({ result: true });
+                } else {
+                    setUserPIN('');
+                    setLoginResult([...loginResult, 'UserAuth']);
+                }
+            })
+            .catch(err => log(err));
+    }
+    const _validateOnline = async () => {
+        //LOGIN ONLINE
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+        var seconds = date.getSeconds();
+        const { uuid, serial } = device;
+
+        var data = {
+            username: user.user_id,
+            password: '12345678',
+            imei: JSON.stringify(uuid),
+            iccd: JSON.stringify(serial),
+            jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+        }
+        POST(`Login`, data)
+            .then(res => {
+                props.onLogin({ result: true });
+                setPassword('');
+            })
+            .catch(err => {
+                setPassword('');
+                switch (err) {
+                    case 'Username/Password tidak valid': setLoginResult([...loginResult, 'UserAuth']);
+                        break;
+                    default: log(err)
+                }
+            });
     }
     const _exit = () => {
+        // if (Connection() != "OFFLINE") {
         f7.dialog.confirm('Keluar dan hapus data ?',
             () => {
                 f7.dialog.confirm('Unggah data tertunda?',
                     () => {
-                        if (Connection() != "OFFLINE") {
+                        f7.dialog.login('Masukkan Usrename dan Password', (username, password) => {
+                            if (username == '' || password == '') {
+                                f7.dialog.alert('Harap isi username dan password.');
+                                return false;
+                            }
                             _getDelayedList()
                                 .then(e => {
                                     // f7.preloader.hide();
@@ -119,12 +125,12 @@ const Idle = (props) => {
                                                 Promise.all(
                                                     [SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [LIST_ACCOUNT, updatedUser])],
                                                     [SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PIN, updatedPIN])]
+                                                    [dispatch(setUser(updatedUser))],
+                                                    [dispatch(setPin(updatedPIN))],
                                                 ).then(res => {
                                                     f7.preloader.hide();
-                                                    dispatch(setUser(updatedUser));
-                                                    dispatch(setPin(updatedPIN));
-                                                    props.onFinish({ result: true });
                                                     dispatch(navigate('/', true));
+                                                    props.onExit({ result: true });
                                                 }).catch(err => log(err));
                                             }
                                             f7.preloader.hide();
@@ -134,15 +140,12 @@ const Idle = (props) => {
                                 .catch(e => {
                                     f7.preloader.hide();
                                 });
-                            log('MASIH BELUM TAU HARUS DIAPAIN.')
-                            // props.onFinish({ result: true });
-                        }
-                        // else{
-                        //     f7.dialog.alert('Pastikan Perangkat terhubung dengan internet.');
-                        // }
+                        });
                     });
             });
-        //
+        // } else {
+        //     f7.dialog.alert('Pastikan Perangkat terhubung dengan internet.');
+        // }
     }
     const _getDelayedList = () => {
         f7.preloader.show();
@@ -191,6 +194,7 @@ const Idle = (props) => {
     return (
         <Page noToolbar noNavbar noSwipeback loginScreen name="Idle">
             <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
+            {/* <img src="./src/assets/img/splash_screen.png" alt=""/> */}
             <List inlineLabels noHairlinesMd>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                     <p>STANDBY MODE <br />HI <b>{'full_name' in user ? user.full_name.toUpperCase() : '~'}</b>, PLEASE RELOGIN</p>
@@ -229,7 +233,7 @@ const Idle = (props) => {
                     <Row>
                         <Col width="50">
                             <Button
-                                onClick={() => _validate()}
+                                onClick={() => Connection() == "OFFLINE" ? _validateOffline() : _validateOnline()}
                                 round
                                 style={{ backgroundColor: '#c0392b', color: 'white' }}
                                 text="Login"
@@ -274,7 +278,7 @@ const Idle = (props) => {
 }
 
 Idle.propTypes = {
-    onFinish: PropTypes.func,
+    onLogin: PropTypes.func,
 };
 
 

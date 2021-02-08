@@ -68,10 +68,12 @@ class Root extends React.Component {
 					}
 					document.addEventListener("pause", () => {
 						if (this.props.pin != "" && this.props.profile.is_login == true) {
-							this.setState({ popUpStateIdle: true });
+							if ((this.state.idleCounter % idleTime) == 0 && this.state.popUpStateIdle  == false){
+								this.setState({ popUpStateIdle: true });
+							}
 						}
 					}, false);
-					document.addEventListener("resume", () => { log('resume') }, false);
+					// document.addEventListener("resume", () => { log('resume') }, false);
 					if (cordova.platformId == 'android') {
 						StatusBar.overlaysWebView(true);
 						StatusBar.styleLightContent();
@@ -152,11 +154,11 @@ class Root extends React.Component {
 							idleTimeGeo = e.refesh_coordinate;
 							idleTime = e.idle_time;
 							e.beda_jam;
-							if(!(!Device.android && !Device.ios)){
+							if (!(!Device.android && !Device.ios)) {
 								if (e.beda_jam > 300) {
-									this.setState({ blockTimeout: true });
+									// this.setState({ blockTimeout: true });
 								} else {
-									this.setState({ blockTimeout: false });
+									// this.setState({ blockTimeout: false });
 								}
 							}
 						}}
@@ -178,7 +180,12 @@ class Root extends React.Component {
 						onPopupClosed={() => log('pop up Closed')}
 					>
 						<Idle
-							onFinish={(result) => {
+							onLogin={(result) => {
+								if (result != false) {
+									this.setState({ popUpStateIdle: false, idleCounter: 0 })
+								}
+							}}
+							onExit={(result) => {
 								if (result != false) {
 									this.setState({ popUpStateIdle: false, idleCounter: 0 })
 								}

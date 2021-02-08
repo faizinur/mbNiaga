@@ -88,7 +88,12 @@ class Login extends React.Component {
 
         try {
             if (dvc) {
-                this.props.setDevice(await Perangkat.getInformation());
+                this.props.setDevice({
+                    ...await Perangkat.getInformation(),
+                    ...{
+                        serial: cordova.plugins.uid.ICCID
+                    }
+                });
                 if (Connection() == 'OFFLINE') {
                     this._setLoginResult('MobileData');
                     f7.dialog.alert('Pastikan anda tersambung jaringan internet')

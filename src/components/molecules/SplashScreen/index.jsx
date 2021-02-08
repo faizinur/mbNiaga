@@ -101,20 +101,6 @@ const SplashScreen = (props) => {
             log(err)
         }
     }
-    const _setReference = () => {
-        SQLite.query('SELECT value FROM Collection WHERE key=?', [REFERENCE])
-            .then(select => {
-                if (select.length > 0) {
-                    log('_setReference');
-                    let [reference] = select;
-                    dispatch(setCallResult(reference.call_result));
-                    dispatch(setContactMode(reference.contact_mode));
-                    dispatch(setContactPerson(reference.contact_person));
-                    dispatch(setPlaceContacted(reference.place_contacted));
-                }
-            })
-            .catch(err => log(err));
-    }
     const _getLocalData = () => {
         SQLite.fetchAll()
             .then(res =>
