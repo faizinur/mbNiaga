@@ -24,7 +24,6 @@ let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
 let idleTime = 60;
 let idleTimeGeo = 0;
-let beda_jam = 300;
 class Root extends React.Component {
 	constructor(props) {
 		super(props);
@@ -80,15 +79,6 @@ class Root extends React.Component {
 				}, false);
 			}
 			document.addEventListener("click", (e) => {
-				//KALO ENGGAK AMBIL TIME STAMP ESRVER DAN MOBILE NANTI DIITUNG
-				//HITUNG PERBEDAAN JAM SERVER DAN MOBILE KALO 5 MENIT RETURN
-				// let accTimeServer = 0; //minta egi kirim jam server, jam,menit, detik, konversi ke deetik
-				// let accTimeMobile = ((parseInt(new Date().getHours()) * 60) * 60) + (parseInt(new Date().getMinutes()) * 60) + parseInt(new Date().getSeconds());;
-				// if (Math.abs(accTimeServer - accTimeMobile) > beda_jam) {
-					// this.setState({ blockTimeout: true })
-				// }
-				//HITUNG PERBEDAAN JAM SERVER DAN MOBILE KALO 5 MENIT RETURN
-
 				if (this.state.popUpStateIdle == false) {
 					this.setState({ idleCounter: 0 });
 				}
@@ -161,7 +151,14 @@ class Root extends React.Component {
 							});
 							idleTimeGeo = e.refesh_coordinate;
 							idleTime = e.idle_time;
-							beda_jam = e.beda_jam;
+							e.beda_jam;
+							if (e.beda_jam > 300) {
+								log('beda jam lebih 5 menit')
+								// this.setState({ blockTimeout: true });
+							} else {
+								log('beda jam < 5 menit')
+								// this.setState({ blockTimeout: false });
+							}
 						}}
 					/>
 				</App>

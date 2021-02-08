@@ -5,7 +5,9 @@ import { Toast } from '../../atoms';
 const BlockTimeout = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE BlockTimeout');
-        Toast('Jam Mobile dan Server lebih dari 5 menit', 4000).open()
+        if(props.display == true ){   
+            Toast('Jam Mobile dan Server lebih dari 5 menit', 4000).open()
+        }
         return () => {
             log('UNMOUNT BlockTimeout');
         }

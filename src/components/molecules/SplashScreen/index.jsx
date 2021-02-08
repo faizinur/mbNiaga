@@ -43,7 +43,7 @@ const SplashScreen = (props) => {
                     idle_time: idle_time,
                     mount_point: mount_point,
                     shownToolbar: mount_point == '/' ? false : true,
-                    beda_jam : beda_jam,
+                    beda_jam: beda_jam,
                 })
                 , 2000)
         });
@@ -67,10 +67,19 @@ const SplashScreen = (props) => {
 
     const _getReference = async () => {
         try {
+            let date = new Date();
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hours = date.getHours();
+            let minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+            let seconds = date.getSeconds();
+            let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`;
+
             let ref = await SQLite.query('SELECT value FROM Collection WHERE key=?', [REFERENCE]);
             if (Connection() != "OFFLINE" && ref.length == 0) {
                 log('_getReference');
-                POST(`Get_all_refs`, [])
+                POST(`Get_all_refs`, { jam_mobile: jam_mobile })
                     .then(res => {
                         SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
                             .then(insert => log(insert))
@@ -80,7 +89,7 @@ const SplashScreen = (props) => {
                 let dvc = (!Device.android && !Device.ios) ? false : true;
                 if (!dvc) {
                     log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
-                    POST(`Get_all_refs`, [])
+                    POST(`Get_all_refs`, { jam_mobile: jam_mobile })
                         .then(res => {
                             SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
                                 .then(insert => log(insert))
@@ -130,8 +139,7 @@ const SplashScreen = (props) => {
                             dispatch(setPlaceContacted('place_contacted' in item.value ? item.value.place_contacted : {}));
                             refesh_coordinate = 'refesh_coordinate' in item.value ? item.value.refesh_coordinate : 60;
                             idle_time = 'idle_time' in item.value ? item.value.idle_time : 60;
-                            beda_jam = 'beda_jam' in item.value ? item.value.beda_jam : 300; 
-                            log(item.value);
+                            beda_jam = 'beda_jam' in item.value ? item.value.beda_jam : 300;
                             break;
                         case RENCANA_KUNJUNGAN:
                             log(`handle ${RENCANA_KUNJUNGAN}`)
