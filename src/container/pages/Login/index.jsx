@@ -50,8 +50,8 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: 'USER_TEST_1',
-            password: '12345678',
+            username: '',//'USER_TEST_1',
+            password: '',//'12345678',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
