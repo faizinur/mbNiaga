@@ -67,11 +67,11 @@ class Root extends React.Component {
 						// alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
 					}
 					document.addEventListener("pause", () => {
-						if (this.props.pin != "" && this.props.profile.is_login == true) {
-							if ((this.state.idleCounter % idleTime) == 0 && this.state.popUpStateIdle  == false){
-								this.setState({ popUpStateIdle: true });
-							}
-						}
+						// if (this.props.pin != "" && this.props.profile.is_login == true) {
+						// 	if ((this.state.idleCounter % idleTime) == 0 && this.state.popUpStateIdle  == false){
+						// 		this.setState({ popUpStateIdle: true });
+						// 	}
+						// }
 					}, false);
 					// document.addEventListener("resume", () => { log('resume') }, false);
 					if (cordova.platformId == 'android') {
