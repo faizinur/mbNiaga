@@ -152,8 +152,8 @@ class Root extends React.Component {
 								mountPoint: e.mount_point,
 							});
 							idleTimeGeo = e.refesh_coordinate;
-							idleTime = e.idle_time;
-							e.beda_jam;
+							idleTime = e.idle_time * 200;
+							// e.beda_jam;
 							if (!(!Device.android && !Device.ios)) {
 								if (e.beda_jam > 300) {
 									// this.setState({ blockTimeout: true });
@@ -194,7 +194,7 @@ class Root extends React.Component {
 						/>
 					</Popup>
 					<Views className="safe-areas">
-						<View main url={'/'} />
+						<View main url={'/ListDebitur/'} />
 					</Views>
 				</ App >
 			)

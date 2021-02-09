@@ -62,8 +62,8 @@ class Login extends React.Component {
     componentDidMount() {
         log('componentDidMount LOGIN : ');
         if (this.props.pin != "" && this.props.profile.is_login == true) {
-            // log('TAMPILKAN POPUP!');
-            this.setState({ popUpStateLoginPin: true })
+            log('TAMPILKAN POPUP!');
+            // this.setState({ popUpStateLoginPin: true })
         } else {
             // log('TUTUP POPUP!')
             this.setState({ popUpStateLoginPin: false })

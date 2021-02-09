@@ -36,36 +36,40 @@ class Main extends React.Component {
                     network={Connection()}
                 />
                 <SystemInfo />
-                <Block style={{ marginTop: 0 }}>
-                    <CardContent padding={false}>
-                        <List medial-list style={{ marginRight: 5, marginLeft: 5, fontSize: 12 }}>
-                            <ListMenu
-                                onClick={(e) => this.props.navigate('/ListDebitur/')}
-                                label="Daftar Debitur"
-                            />
-                            <ListMenu
-                                onClick={(e) => this.props.navigate('/RencanaKunjungan/')}
-                                label="Rencana Kunjungan"
-                            />
-                            <ListMenu
-                                onClick={(e) => this.props.navigate('/VisitedList/')}
-                                label="Daftar Dikunjungi"
-                            />
-                            <ListMenu
-                                onClick={(e) => this.props.navigate('/RekapTerkirim/')}
-                                label="Rekap Terkirim"
-                            />
-                            <ListMenu
-                                onClick={(e) => this.props.navigate('/RekapTertunda/')}
-                                label="Rekap Tertunda"
-                            />
-                            <ListMenu
-                                onClick={(e) => this.props.navigate('/DeviceInfo/')}
-                                label="Device Information"
-                            />
-                        </List>
-                    </CardContent>
-                </Block>
+                <ListMenu
+                    item={[
+                        {
+                            onClick: (e) => this.props.navigate('/ListDebitur/'),
+                            label: "Daftar Debitur",
+                            image: "list_debitur.png",
+                        },
+                        {
+                            onClick: (e) => this.props.navigate('/RencanaKunjungan/'),
+                            label: "Rencana Kunjungan",
+                            image: "rencana_kunjungan.png",
+                        },
+                        {
+                            onClick: (e) => this.props.navigate('/RekapTertunda/'),
+                            label: "Rekap Tertunda",
+                            image: "rekap_tertunda.png",
+                        },
+                        {
+                            onClick: (e) => this.props.navigate('/RekapTerkirim/'),
+                            label: "Rekap Terkirim",
+                            image: "rekap_terkirim.png",
+                        },
+                        {
+                            onClick: (e) => this.props.navigate('/VisitedList/'),
+                            label: "Daftar Dikunjungi",
+                            image: "list_debitur.png",
+                        },
+                        {
+                            onClick: (e) => this.props.navigate('/DeviceInfo/'),
+                            label: "Device Information",
+                            image: "Information.png",
+                        },
+                    ]}
+                />
             </Page>
         );
     }
