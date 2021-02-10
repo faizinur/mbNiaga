@@ -156,9 +156,9 @@ class Root extends React.Component {
 							// e.beda_jam;
 							if (!(!Device.android && !Device.ios)) {
 								if (e.beda_jam > 300) {
-									// this.setState({ blockTimeout: true });
+									this.setState({ blockTimeout: true });
 								} else {
-									// this.setState({ blockTimeout: false });
+									this.setState({ blockTimeout: false });
 								}
 							}
 						}}
