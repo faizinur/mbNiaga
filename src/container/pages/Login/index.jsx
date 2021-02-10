@@ -31,6 +31,7 @@ import {
 import { POST, Device as Perangkat, log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin, Check } from '../../pages/';
+import { CustomStatusBar } from '../../../components/atoms/';
 const {
     PIN,
     DEVICE_INFO,
@@ -50,8 +51,8 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: 'USER_TEST_1',
-            password: '12345678',
+            username: 'TEST',
+            password: '1234',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
@@ -62,8 +63,8 @@ class Login extends React.Component {
     componentDidMount() {
         log('componentDidMount LOGIN : ');
         if (this.props.pin != "" && this.props.profile.is_login == true) {
-            log('TAMPILKAN POPUP!');
-            // this.setState({ popUpStateLoginPin: true })
+            // log('TAMPILKAN POPUP!');
+            this.setState({ popUpStateLoginPin: true })
         } else {
             // log('TUTUP POPUP!')
             this.setState({ popUpStateLoginPin: false })
@@ -343,7 +344,7 @@ class Login extends React.Component {
                                     text="Login"
                                 />
                             </Col>
-                        </Row>
+                        </Row> 
                     </Block>
                 </List>
 
@@ -352,6 +353,7 @@ class Login extends React.Component {
                     opened={this.state.popUpStateDaftarPin}
                     onPopupClosed={() => log('pop up Closed')}
                 >
+                    <CustomStatusBar />
                     <DaftarPin
                         onSubmitPIN={this._submitPIN}
                     />
@@ -362,6 +364,7 @@ class Login extends React.Component {
                     opened={this.state.popUpStateLoginPin}
                     onPopupClosed={() => log('pop up Closed')}
                 >
+                    <CustomStatusBar />
                     <DaftarPin
                         onValidatePIN={this._onValidatePIN}
                     />
@@ -374,11 +377,14 @@ class Login extends React.Component {
 
                     {
                         this.state.resultLogin.length > 0 ?
-                            <Check
-                                backLink={(e) => this._setLoginResult()}
-                                title={"Gagal Login"}
-                                loginResult={this.state.resultLogin}
-                            />
+                            <>
+                                <CustomStatusBar />
+                                <Check
+                                    backLink={(e) => this._setLoginResult()}
+                                    title={"Gagal Login"}
+                                    loginResult={this.state.resultLogin}
+                                />
+                            </>
                             :
                             <></>
                     }

@@ -11,9 +11,10 @@ import {
 } from '../../../config/redux/actions';
 import { useDispatch, useSelector } from "react-redux";
 import region from '../../../data/region.json';
-import { log, SQLite, SQLiteTypes, Connection, POST, Device } from '../../../utils/';
+import { log, SQLite, SQLiteTypes, Connection, POST, Device as Perangkat } from '../../../utils/';
 import PropTypes from 'prop-types';
 import { setUser, setDetailCustomer, setActivityHistory, setPaymetHistory, setDevice, setPin, setCallResult, setContactMode, setContactPerson, setPlaceContacted } from '../../../config/redux/actions/';
+import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 const {
     PIN,
     DEVICE_INFO,
@@ -27,12 +28,14 @@ const {
 } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
+        f7.preloader.show();
         log('MOUNT OR UPDATE SplashScreen');
         Promise.all([
             _getRegion(),
             SQLite.initDB(),
             _getLocalData(),
             _getReference(),
+            _getDevice(),
             //.... another promise
         ]).then(res => {
             setTimeout(() =>
@@ -48,6 +51,7 @@ const SplashScreen = (props) => {
                 , 2000)
         });
         return () => {
+            f7.preloader.hide();
             log('UNMOUNT SplashScreen');
         }
     }, [])
@@ -63,7 +67,7 @@ const SplashScreen = (props) => {
             dispatch(setDistrict(region.filter(item => { return item.level == 2 }))),
             dispatch(setSubDistrict(region.filter(item => { return item.level == 3 }))),
         ]);
-    }   
+    }
     const _getReference = async () => {
         try {
             let date = new Date();
@@ -136,6 +140,16 @@ const SplashScreen = (props) => {
                     }
                 })
             ).catch(err => log(err));
+    }
+    const _getDevice = async () => {
+        let dvc = (!Device.android && !Device.ios) ? false : true;
+        let dvcInfo = {};
+        if (dvc) {
+            dvcInfo = await Perangkat.getInformation();
+        } else {
+            dvcInfo = { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' };
+        }
+        dispatch(setDevice(dvcInfo));
     }
     return (
         <Page noToolbar noNavbar noSwipeback name="SplashScreen">

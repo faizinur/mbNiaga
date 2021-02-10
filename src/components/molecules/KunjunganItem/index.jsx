@@ -23,15 +23,16 @@ const KunjunganItem = (props) => {
             {
                 props.item.map((item, key) => (
                     <div
+                        key={key}
                         onClick={(e) => props.onItemClick(item.data)}
                         style={styles.container}>
                         <div
                             style={styles.imgContainer}>
-                            <img src={require(`../../../assets/img/person-at-home.png`).default}/>
+                            <img width="50" height="50" src={require(`../../../assets/img/person-at-home.png`).default}/>
                         </div>
                         <div
                             style={styles.itemContainer}>
-                            <p style={[styles.itemText, { fontWeight: 'bold' }]}>{item.namaDebitur}</p>
+                            <p style={{...styles.itemText, ...{ fontWeight : 'bold'}}}>{item.namaDebitur}</p>
                             <p style={styles.itemText}>{item.nomorKartu}</p>
                             <p style={styles.itemText}>{item.alamat}</p>
                             <p style={styles.itemText}>{item.tagihan}</p>
@@ -54,7 +55,7 @@ const styles = {
     imgContainer: {
         display: 'flex',
         flex: 1,
-        backgroundColor: 'red',
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
     },

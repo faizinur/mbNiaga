@@ -15,9 +15,9 @@ const ListMenu = (props) => {
                                 style={styles.container}
                                 onClick={() => item.onClick()}
                             >
-                                <div style={styles.badgeContainer}>
+                                {/* <div style={styles.badgeContainer}>
                                     <p style={styles.badgeitem}>5</p>
-                                </div>
+                                </div> */}
                                 <img style={styles.logo} src={require(`../../../assets/img/${item.image}`).default} />
                                 <p style={styles.text}>{item.label}</p>
                             </div>

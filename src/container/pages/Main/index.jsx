@@ -61,7 +61,7 @@ class Main extends React.Component {
                         {
                             onClick: (e) => this.props.navigate('/VisitedList/'),
                             label: "Daftar Dikunjungi",
-                            image: "list_debitur.png",
+                            image: "list_kunjungan.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/DeviceInfo/'),
