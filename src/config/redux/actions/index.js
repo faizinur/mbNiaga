@@ -34,6 +34,10 @@ import {
     setContactMode,
     setContactPerson,
     setPlaceContacted,
+    setRefreshCoordinate,
+    setIdleTime,
+    setBedaJam,
+    setMaxBedaJam,
 } from './referenceActions';
 
 
@@ -58,4 +62,8 @@ export {
     setContactPerson,
     setPlaceContacted,
     setGeolocation,
+    setRefreshCoordinate,
+    setIdleTime,
+    setBedaJam,
+    setMaxBedaJam,
 }

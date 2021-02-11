@@ -24,7 +24,6 @@ let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
 let idleTime = 60;
 let idleTimeGeo = 0;
-let max_beda_jam = 300;
 class Root extends React.Component {
 	constructor(props) {
 		super(props);
@@ -56,6 +55,8 @@ class Root extends React.Component {
 			popUpStateIdle: false,
 			mountPoint: '/',
 			blockTimeout: false,
+			max_beda_jam: 0,
+			beda_jam: 0,
 		}
 	}
 	componentDidMount() {
@@ -152,16 +153,17 @@ class Root extends React.Component {
 								idleTime: e.idleTime,
 								mountPoint: e.mount_point,
 							});
-							idleTimeGeo = e.refesh_coordinate;
-							idleTime = e.idle_time;
-							// e.beda_jam;
-							if (!(!Device.android && !Device.ios)) {
-								if (e.beda_jam > e.max_beda_jam) {
-									this.setState({ blockTimeout: true });
-								} else {
-									this.setState({ blockTimeout: false });
-								}
-							}
+							idleTimeGeo = this.props.refeshCoordinate;
+							idleTime = this.props.idleTime;
+							// alert(`onFinish SplashScreen bedaJam : ${this.props.bedaJam},  maxBedaJam : ${this.props.maxBedaJam}`);
+							// if (!(!Device.android && !Device.ios)) {
+								this.setState({ blockTimeout: (this.props.bedaJam > this.props.maxBedaJam) ? true : false });
+							// 	if (this.props.bedaJam > this.props.maxBedaJam) {
+									// this.setState({ blockTimeout: true });
+							// 	} else {
+							// 		this.setState({ blockTimeout: false });
+							// 	}
+							// }
 						}}
 					/>
 				</App>
@@ -208,6 +210,10 @@ const mapStateToProps = (state) => {
 		profile: state.user.profile,
 		pin: state.user.pin,
 		geo: state.main.geolocation,
+		refeshCoordinate: state.reference.refeshCoordinate,
+		idleTime: state.reference.idleTime,
+		bedaJam: state.reference.bedaJam,
+		maxBedaJam: state.reference.maxBedaJam,
 	};
 };
 

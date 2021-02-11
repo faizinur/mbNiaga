@@ -3,6 +3,10 @@ import {
     SET_CONTACT_PERSON,
     SET_PLACE_CONTACTED,
     SET_CALL_RESULT,
+    SET_REFRESH_COORDINATE,
+    SET_IDLE_TIME,
+    SET_BEDA_JAM,
+    SET_MAX_BEDA_JAM,
 } from '../../actions/types'
 
 const initialState = {
@@ -10,6 +14,10 @@ const initialState = {
     contactPerson: [],
     placeContacted: [],
     callResult: [],
+    refeshCoordinate: 60,
+    idleTime: 60,
+    bedaJam: 0,
+    maxBedaJam: 900,
 };
 
 const referenceReducers = (state = initialState, action) => {
@@ -33,6 +41,26 @@ const referenceReducers = (state = initialState, action) => {
             return {
                 ...state,
                 callResult: action.payload,
+            }
+        case SET_REFRESH_COORDINATE:
+            return {
+                ...state,
+                refeshCoordinate: action.payload,
+            }
+        case SET_IDLE_TIME:
+            return {
+                ...state,
+                idleTime: action.payload,
+            }
+        case SET_BEDA_JAM:
+            return {
+                ...state,
+                bedaJam: action.payload,
+            }
+        case SET_MAX_BEDA_JAM:
+            return {
+                ...state,
+                maxBedaJam: action.payload,
             }
         default:
             return state;
