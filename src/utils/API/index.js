@@ -32,7 +32,7 @@ const POST = (...params) => {
 				f7.preloader.show();
 				API.post(url, data)
 					.then(result => {
-						// alert(JSON.stringify(result));
+						log('API RESULT ', params[0], params[1]);
 						if (result.data.status == "error" || result.status != 200) {
 							f7.preloader.hide();
 							f7.dialog.alert(result.data.message);
@@ -42,7 +42,7 @@ const POST = (...params) => {
 							resolve(result.data);
 						}
 					}).catch(err => {
-						// alert('keisini gak ya?');
+						log('API CATCH ', params[0], err);
 						f7.preloader.hide();
 						reject(err)
 					});

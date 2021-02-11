@@ -343,7 +343,7 @@ class Login extends React.Component {
                                             inputPasswordType: this.state.inputPasswordType == 'password' ? 'text' : 'password'
                                         })
                                 }
-                                style={{ marginTop: 5, borderRadius: 25, }}>
+                                style={{ marginTop: 20, borderRadius: 25, }}>
                                 <Icon
                                     style={{ color: '#c0392b' }}
                                     f7={this.state.inputPasswordType == 'password' ? 'eye_slash' : 'eye'}
