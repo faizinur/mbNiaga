@@ -38,6 +38,7 @@ import {
     setIdleTime,
     setBedaJam,
     setMaxBedaJam,
+	setMountPoint,
 } from './referenceActions';
 
 
@@ -66,4 +67,5 @@ export {
     setIdleTime,
     setBedaJam,
     setMaxBedaJam,
+	setMountPoint,
 }

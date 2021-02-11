@@ -3,17 +3,16 @@ import {
     Page,
     f7,
 } from 'framework7-react';
-import {
-    setProvince,
-    setRegency,
-    setDistrict,
-    setSubDistrict,
-} from '../../../config/redux/actions';
 import { useDispatch, useSelector } from "react-redux";
 import region from '../../../data/region.json';
 import { log, SQLite, SQLiteTypes, Connection, POST, Device as Perangkat } from '../../../utils/';
 import PropTypes from 'prop-types';
 import {
+    setProvince,
+    setRegency,
+    setDistrict,
+    setSubDistrict,
+    setMountPoint,
     setUser,
     setDetailCustomer,
     setActivityHistory,
@@ -55,8 +54,8 @@ const SplashScreen = (props) => {
             setTimeout(() =>
                 props.onFinish({
                     realApp: true,
-                    mount_point: mount_point,
-                    shownToolbar: mount_point == '/' ? false : true,
+                    mount_point: mountPoint,
+                    shownToolbar: mountPoint == '/' ? false : true,
                 })
                 , 2000)
         });
@@ -70,8 +69,7 @@ const SplashScreen = (props) => {
     let idleTime = useSelector(state => state.reference.idleTime);
     let bedaJam = useSelector(state => state.reference.bedaJam);
     let maxBedaJam = useSelector(state => state.reference.maxBedaJam);
-
-    let mount_point = '/';
+    let mountPoint = useSelector(state => state.reference.mountPoint);
 
     const _getRegion = () => {
         // const promises = [
@@ -139,11 +137,16 @@ const SplashScreen = (props) => {
     const _getLocalData = () => {
         SQLite.fetchAll()
             .then(res => {
-                res.map(item => {
+                let [data, dec] = res;
+                data.map(item => {
+                    item.value = dec(item.value);
+                    alert(`${JSON.stringify(item.key)} => ${JSON.stringify(item.value)}`)
                     switch (item.key) {
                         case PIN: dispatch(setPin(item.value));
                             break;
-                        case LIST_ACCOUNT: dispatch(setUser(item.value)); mount_point = (item.value.is_login == true && item.value.PIN != '') ? '/Main/' : '/';
+                        case LIST_ACCOUNT:
+                            dispatch(setUser(item.value));
+                            dispatch(setMountPoint(item.value.is_login == true && item.value.PIN != '') ? '/Main/' : '/');
                             break;
                         case DEVICE_INFO: dispatch(setDevice(item.value));
                             break;

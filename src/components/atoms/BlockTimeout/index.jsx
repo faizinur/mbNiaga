@@ -20,7 +20,7 @@ const BlockTimeout = (props) => {
             onClick={() => {
                 Toast(`Beda Jam Mobile dan Server lebih dari ${maxBedaJam / 60} menit`, 4000).open();
                 alert(`MAKSIMAL BEDA JAM: ${maxBedaJam} \n HASIL date_diff() di PHP : ${bedaJam} \n (semua dalam satuan detik)`)
-            }}//f7.dialog.alert('waktu server dan mobile lebih dari 5 menit')}
+            }}
             style={{
                 position: 'absolute',
                 zIndex: 99999,

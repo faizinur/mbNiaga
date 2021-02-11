@@ -9,6 +9,7 @@ import { Geolocation } from './Geolocation';
 import { SQLite, SQLiteTypes } from './SQLite';
 import ClockTick from './ClockTick';
 import Filter from './Filter';
+import { Decrypt, selfDecrypt, Encrypt } from './Encryption';
 
 export {
     POST,
@@ -25,4 +26,7 @@ export {
     SQLiteTypes,
     ClockTick,
     Filter,
+    Decrypt,
+    selfDecrypt,
+    Encrypt
 }

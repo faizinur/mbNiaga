@@ -94,12 +94,12 @@ class SQLModules extends Component {
                         tx.executeSql('SELECT * from COLLECTION', [],
                             (tx, rs) => {
                                 if (!this.isset(() => rs.insertId)) {
-                                    var data = [];
-                                    for (var i = 0; i < rs.rows.length; i++) {
-                                        var tmp = { key: rs.rows.item(i).key, value: selfDecrypt(rs.rows.item(i).value) }
-                                        data.push(tmp)
-                                    }
-                                    resolve(data)
+                                    // var data = [];
+                                    // for (var i = 0; i < rs.rows.length; i++) {
+                                    //     var tmp = { key: rs.rows.item(i).key, value: selfDecrypt(rs.rows.item(i).value) }
+                                    //     data.push(tmp)
+                                    // }
+                                    resolve([Object.values(rs.rows), selfDecrypt])
                                     // log('fetchAll : ',Object.values(rs.rows)[0].key)
                                     // resolve(Object.values(rs.rows)
                                     // .reduce((acc, val) => {

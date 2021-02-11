@@ -7,6 +7,7 @@ import {
     SET_IDLE_TIME,
     SET_BEDA_JAM,
     SET_MAX_BEDA_JAM,
+    SET_MOUNT_POINT,
 } from '../../actions/types'
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
     idleTime: 60,
     bedaJam: 0,
     maxBedaJam: 900,
+    mountPoint : '/',
 };
 
 const referenceReducers = (state = initialState, action) => {
@@ -61,6 +63,11 @@ const referenceReducers = (state = initialState, action) => {
             return {
                 ...state,
                 maxBedaJam: action.payload,
+            }
+        case SET_MOUNT_POINT:
+            return {
+                ...state,
+                mountPoint: action.payload,
             }
         default:
             return state;
