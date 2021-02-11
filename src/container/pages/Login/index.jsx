@@ -11,6 +11,7 @@ import {
     f7,
     Popup,
     ListGroup,
+    Icon,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -30,7 +31,7 @@ import {
 } from '../../../config/redux/actions/';
 import { POST, Device as Perangkat, log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
-import { DaftarPin, Check } from '../../pages/';
+import { DaftarPin, Check, DeviceInfo } from '../../pages/';
 import { CustomStatusBar } from '../../../components/atoms/';
 const {
     PIN,
@@ -51,17 +52,19 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: 'TEST',
-            password: '1234',
+            username: (!Device.android && !Device.ios) ? 'TEST' : '',
+            password: (!Device.android && !Device.ios) ? '1234' : '',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
+            popUpStateDeviceInfo: false,
             resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
-            user: {}
+            user: {},
+            inputPasswordType: 'password',
         };
         // props.setUser({});
     }
     componentDidMount() {
-        log('componentDidMount LOGIN : ');
+        log('componentDidMount LOGIN : ', this.props.device);
         if (this.props.pin != "" && this.props.profile.is_login == true) {
             // log('TAMPILKAN POPUP!');
             this.setState({ popUpStateLoginPin: true })
@@ -157,7 +160,17 @@ class Login extends React.Component {
             f7.dialog.alert(err);
         }
     }
-    _submitPIN = (PIN) => {
+    _submitPIN = async (PIN) => {
+        let dvcInfo = (!Device.android && !Device.ios) ?
+            { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' }
+            :
+            {
+                ...await Perangkat.getInformation(),
+                ...{
+                    serial: cordova.plugins.uid.ICCID
+                }
+            };
+        this.props.setDevice(dvcInfo);
         let userTmp = {
             ...Object.assign({}, this.state.user),
             ...{ PIN: PIN }
@@ -166,18 +179,17 @@ class Login extends React.Component {
         this._getUserInfo(userTmp);
     }
     _onValidatePIN = async (inputPIN) => {
-        let dvc = (!Device.android && !Device.ios) ? false : true;
-        let dvcInfo = {};
-        if (dvc) {
-            dvcInfo = {
+
+        let dvcInfo = (!Device.android && !Device.ios) ?
+            { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' }
+            :
+            {
                 ...await Perangkat.getInformation(),
                 ...{
                     serial: cordova.plugins.uid.ICCID
                 }
-            }
-        } else {
-            dvcInfo = { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' };
-        }
+            };
+
         log('_onValidatePIN : ', inputPIN)
         SQLite.query('select value from COLLECTION where key=?', [PIN])
             .then(res => {
@@ -189,8 +201,6 @@ class Login extends React.Component {
                             this.setState({ popUpStateLoginPin: false });
                             this.props.navigate('/Main/');
                         }).catch(err => log(err));
-
-                    // this._setReference();
                 } else {
                     f7.dialog.alert('PIN belum benar!');
                 }
@@ -284,55 +294,64 @@ class Login extends React.Component {
             this.setState({ resultLogin: [] });
         }
     }
-    _getReference = () => {
-        POST(`Get_all_refs`, [])
-            .then(res => {
-                // SQLite.query('SELECT value from Collection where key=?', [REFERENCE])
-                //     .then(select => {
-                SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-                    .then(insert => this._setReference())
-                    .catch(err => log(err));
-            }).catch(err => log(err));
-        // })
-        // .catch(err => log(err));
-    }
-    _setReference = () => {
-        SQLite.query('SELECT value FROM Collection WHERE key=?', [REFERENCE])
-            .then(select => {
-                if (select.length > 0) {
-                    let [reference] = select;
-                    this.props.setCallResult(reference.call_result)
-                    this.props.setContactMode(reference.contact_mode)
-                    this.props.setContactPerson(reference.contact_person)
-                    this.props.setPlaceContacted(reference.place_contacted)
-                }
-            })
-            .catch(err => log(err));
+    _onClickDeviceInfo = async () => {
+        this.setState({ popUpStateDeviceInfo: true })
+        this.props.setDevice({
+            ...await Perangkat.getInformation(),
+            ...{
+                serial: cordova.plugins.uid.ICCID
+            }
+        });
     }
     render() {
         return (
             <Page noToolbar noNavbar noSwipeback loginScreen name="Login">
-                <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
-                <List inlineLabels noHairlinesMd>
+                <center>
+                    <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
+                </center>
+                <LoginScreenTitle style={{ ...stylesheet.LoginScreenTitle, ...{ marginTop: 0, fontSize: 'larger' } }}>Mobile Application Interaction</LoginScreenTitle>
+                <List style={{ margin: 0, width: '100%' }}>
                     <ListInput
                         outline
-                        label="Username :"
                         type="text"
+                        label="Username"
                         value={this.state.username}
                         onInput={(e) => {
                             this.setState({ username: e.target.value });
                         }}
                     />
-                    <ListInput
-                        outline
-                        label="Password :"
-                        type="password"
-                        value={this.state.password}
-                        onInput={(e) => {
-                            this.setState({ password: e.target.value });
-                        }}
-                    />
                 </List>
+                <div style={{ display: 'flex', flex: 1 }}>
+                    <List style={{ margin: 0, width: '100%' }}>
+                        <ListInput
+                            outline
+                            type={this.state.inputPasswordType}
+                            label="Password"
+                            value={this.state.password}
+                            onInput={(e) => {
+                                this.setState({ password: e.target.value });
+                            }}
+                        />
+                    </List>
+                    {
+                        this.state.password.length > 0 &&
+                        <div style={{ position: 'absolute', height: 63, width: 40, right: '5%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+                            <div
+                                onClick={
+                                    () =>
+                                        this.setState({
+                                            inputPasswordType: this.state.inputPasswordType == 'password' ? 'text' : 'password'
+                                        })
+                                }
+                                style={{ marginTop: 5, borderRadius: 25, }}>
+                                <Icon
+                                    style={{ color: '#c0392b' }}
+                                    f7={this.state.inputPasswordType == 'password' ? 'eye_slash' : 'eye'}
+                                />
+                            </div>
+                        </div>
+                    }
+                </div>
                 <List noHairlinesMd>
                     <Block>
                         <Row>
@@ -344,7 +363,19 @@ class Login extends React.Component {
                                     text="Login"
                                 />
                             </Col>
-                        </Row> 
+                        </Row>
+                    </Block>
+                    <Block>
+                        <Row>
+                            <Col width="100">
+                                <Button
+                                    onClick={() => this._onClickDeviceInfo()}
+                                    round
+                                    style={{ backgroundColor: 'transparent', color: '#c0392b' }}
+                                    text="Device Info"
+                                />
+                            </Col>
+                        </Row>
                     </Block>
                 </List>
 
@@ -388,6 +419,15 @@ class Login extends React.Component {
                             :
                             <></>
                     }
+                </Popup>
+                <Popup
+                    className="deviceInfo-popup"
+                    opened={this.state.popUpStateDeviceInfo}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
+                    <DeviceInfo
+                        backLink={(e) => this.setState({ popUpStateDeviceInfo: false })}
+                    />
                 </Popup>
             </Page>
         );

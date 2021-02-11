@@ -3,7 +3,8 @@ import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
 import { log } from '../../utils/';
 const API = axios.create({
-	baseURL: `https://app56.ecentrix.net/niaga_api_coll/`,
+	// baseURL: `https://app56.ecentrix.net/niaga_api_coll2/`,
+	baseURL: `https://bssdev.ecentrix.net/niaga_mobcoll_api/index.php/`,
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 	},
@@ -20,7 +21,7 @@ const API = axios.create({
 		let response = JSON.parse(Decrypt(data));
 		// log('transformResponse', response.data);
 		return response;
-	}],
+	}]
 });
 
 const POST = (...params) => {

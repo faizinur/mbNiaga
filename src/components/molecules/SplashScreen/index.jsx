@@ -142,13 +142,9 @@ const SplashScreen = (props) => {
             ).catch(err => log(err));
     }
     const _getDevice = async () => {
-        let dvc = (!Device.android && !Device.ios) ? false : true;
-        let dvcInfo = {};
-        if (dvc) {
-            dvcInfo = await Perangkat.getInformation();
-        } else {
-            dvcInfo = { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' };
-        }
+        let dvcInfo = (!Device.android && !Device.ios) ? 
+        { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' } 
+        : await Perangkat.getInformation();
         dispatch(setDevice(dvcInfo));
     }
     return (

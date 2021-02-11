@@ -26,7 +26,7 @@ const DeviceInfo = (props) => {
         <Page noToolbar noNavbar>
             <DefaultNavbar
                 mode={'info'}
-                backLink={(e)=> dispatch(navigate('/Main/'))}
+                backLink={(e) => 'backLink' in props ? props.backLink(e) : dispatch(navigate('/Main/'))}
                 title={'DEVICE INFORMATION'}
             />
             <List noHairlinesMd style={{ fontSize: 1 }}>
