@@ -47,6 +47,7 @@ const SplashScreen = (props) => {
                     mount_point: mount_point,
                     shownToolbar: mount_point == '/' ? false : true,
                     beda_jam: beda_jam,
+                    max_beda_jam : max_beda_jam,
                 })
                 , 2000)
         });
@@ -60,6 +61,7 @@ const SplashScreen = (props) => {
     let idle_time = 60;
     let mount_point = '/';
     let beda_jam = 300;
+    let max_beda_jam = 300;
     const _getRegion = () => {
         Promise.all([
             dispatch(setProvince(region.filter(item => { return item.level == 0 }))),
@@ -129,6 +131,7 @@ const SplashScreen = (props) => {
                             refesh_coordinate = 'refesh_coordinate' in item.value ? item.value.refesh_coordinate : 60;
                             idle_time = 'idle_time' in item.value ? item.value.idle_time : 60;
                             beda_jam = 'beda_jam' in item.value ? item.value.beda_jam : 300;
+                            max_beda_jam = 'max_beda_jam' in item.value ? item.value.max_beda_jam : 300;
                             break;
                         case RENCANA_KUNJUNGAN:
                             log(`handle ${RENCANA_KUNJUNGAN}`)
