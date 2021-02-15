@@ -52,8 +52,8 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: (!Device.android && !Device.ios) ? 'TEST' : '',
-            password: (!Device.android && !Device.ios) ? '1234' : '',
+            username: 'TEST',
+            password: '1234',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             popUpStateDeviceInfo: false,
@@ -113,10 +113,9 @@ class Login extends React.Component {
                 username: username,
                 password: password,
                 imei: JSON.stringify(uuid),
-                iccd: JSON.stringify(serial),
+                iccd: JSON.stringify(serial) || cordova.plugins.uid.ICCID,
                 jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
             }
-
             const userPIN = await SQLite.query('SELECT value from COLLECTION where key=?', [PIN]);
             POST(`Login`, data)
                 .then(res => {
@@ -305,7 +304,7 @@ class Login extends React.Component {
     }
     render() {
         return (
-            <Page noToolbar noNavbar noSwipeback loginScreen name="Login">
+            <Page loginScreen name="Login">
                 <center>
                     <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
                 </center>

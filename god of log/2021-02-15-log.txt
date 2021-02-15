@@ -1,0 +1,48 @@
+2021-02-15 11:28:18 | INFO | login param {"username":"","password":"","imei":"\"6fa9a3f25879d439\"","iccd":"\"8962100754901997712f\"","jam_mobile":"2021-02-15 11:37:7"}
+2021-02-15 11:28:54 | INFO | get_all_refs param {"jam_mobile":"2021-02-15 11:33:16"}
+2021-02-15 11:29:04 | INFO | login param {"username":"test","password":"1234","imei":"\"39408fd4c871ae4c\"","iccd":"\"89620160002375789865\"","jam_mobile":"2021-02-15 11:33:28"}
+2021-02-15 11:29:05 | INFO | get_payment_history param {"agent":"test"}
+2021-02-15 11:29:05 | INFO | get_activity_history param {"agent":"test"}
+2021-02-15 11:29:05 | INFO | get_detail_cust param {"agent":"test"}
+2021-02-15 11:29:05 | INFO | get_update_history param {"agent":"test"}
+2021-02-15 11:30:40 | INFO | logout param {"username":"TEST"}
+2021-02-15 11:31:08 | INFO | login param {"username":"test","password":"1234","imei":"\"39408fd4c871ae4c\"","iccd":"\"89620160002375789865\"","jam_mobile":"2021-02-15 11:35:32"}
+2021-02-15 11:31:13 | INFO | get_detail_cust param {"agent":"test"}
+2021-02-15 11:31:13 | INFO | get_activity_history param {"agent":"test"}
+2021-02-15 11:31:13 | INFO | get_payment_history param {"agent":"test"}
+2021-02-15 11:31:13 | INFO | get_update_history param {"agent":"test"}
+2021-02-15 11:33:03 | INFO | login param {"username":"test","password":"1234","imei":"\"39408fd4c871ae4c\"","iccd":"\"89620160002375789865\"","jam_mobile":"2021-02-15 11:37:26"}
+2021-02-15 11:33:03 | INFO | get_detail_cust param {"agent":"test"}
+2021-02-15 11:33:04 | INFO | get_activity_history param {"agent":"test"}
+2021-02-15 11:33:04 | INFO | get_payment_history param {"agent":"test"}
+2021-02-15 11:33:04 | INFO | get_update_history param {"agent":"test"}
+2021-02-15 11:33:25 | INFO | login param {"username":"Test","password":"1234","imei":"\"6fa9a3f25879d439\"","iccd":"\"8962100754901997712f\"","jam_mobile":"2021-02-15 11:42:14"}
+2021-02-15 11:33:25 | INFO | get_detail_cust param {"agent":"Test"}
+2021-02-15 11:33:26 | INFO | get_activity_history param {"agent":"Test"}
+2021-02-15 11:33:26 | INFO | get_payment_history param {"agent":"Test"}
+2021-02-15 11:33:26 | INFO | get_update_history param {"agent":"Test"}
+2021-02-15 11:33:35 | INFO | logout param {"username":"Tets"}
+2021-02-15 11:33:43 | INFO | login param {"username":"Test","password":"hshshshsh","imei":"\"6fa9a3f25879d439\"","iccd":"\"8962100754901997712f\"","jam_mobile":"2021-02-15 11:42:32"}
+2021-02-15 11:34:28 | INFO | login param {"username":"TEST","password":"1234","imei":"\"39408fd4c871ae4c\"","iccd":"\"89620160002375789865\"","jam_mobile":"2021-02-15 11:38:51"}
+2021-02-15 11:34:28 | INFO | get_detail_cust param {"agent":"TEST"}
+2021-02-15 11:34:28 | INFO | get_payment_history param {"agent":"TEST"}
+2021-02-15 11:34:28 | INFO | get_update_history param {"agent":"TEST"}
+2021-02-15 11:34:28 | INFO | get_activity_history param {"agent":"TEST"}
+2021-02-15 11:37:45 | INFO | get_all_refs param {"jam_mobile":"2021-02-15 11:46:34"}
+2021-02-15 11:37:58 | INFO | login param {"username":"TEST","password":"1234","imei":"\"1bb9c549939b1b1e\"","iccd":"\"unknown\"","jam_mobile":"2021-02-15 11:46:47"}
+2021-02-15 11:38:05 | INFO | get_detail_cust param {"agent":"TEST"}
+2021-02-15 11:38:05 | INFO | get_activity_history param {"agent":"TEST"}
+2021-02-15 11:38:05 | INFO | get_payment_history param {"agent":"TEST"}
+2021-02-15 11:38:05 | INFO | get_update_history param {"agent":"TEST"}
+2021-02-15 11:44:06 | INFO | login param {"username":"Test","password":"1234","imei":"\"675ce2087fe35648\"","jam_mobile":"2021-02-15 11:52:54"}
+2021-02-15 11:44:06 | INFO | Login error {"data":"Incomplete parameters: iccd","message":"Maaf, ada kesalahan pada sitem kami.","status":"error"}
+2021-02-15 11:49:37 | INFO | login param {"username":"TEST","password":"1234","imei":"\"39408fd4c871ae4c\"","iccd":"\"89620160002375789865\"","jam_mobile":"2021-02-15 11:54:1"}
+2021-02-15 11:49:38 | INFO | get_update_history param {"agent":"TEST"}
+2021-02-15 11:49:38 | INFO | get_payment_history param {"agent":"TEST"}
+2021-02-15 11:49:38 | INFO | get_activity_history param {"agent":"TEST"}
+2021-02-15 11:49:38 | INFO | get_detail_cust param {"agent":"TEST"}
+2021-02-15 11:51:51 | INFO | login param {"username":"TEST","password":"1234","imei":"\"6fa9a3f25879d439\"","iccd":"\"8962100754901997712f\"","jam_mobile":"2021-02-15 12:00:39"}
+2021-02-15 11:51:57 | INFO | get_detail_cust param {"agent":"TEST"}
+2021-02-15 11:51:57 | INFO | get_activity_history param {"agent":"TEST"}
+2021-02-15 11:51:57 | INFO | get_payment_history param {"agent":"TEST"}
+2021-02-15 11:51:57 | INFO | get_update_history param {"agent":"TEST"}
