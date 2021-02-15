@@ -52,14 +52,13 @@ const SplashScreen = (props) => {
             _getDevice(),
             //.... another promise
         ]).then(res => {
-            // _getLocalData();
-            // setTimeout(() =>
-            //     props.onFinish({
-            //         realApp: true,
-            //         mount_point: mountPoint,
-            //         shownToolbar: mountPoint == '/' ? false : true,
-            //     })
-            //     , 2000)
+            setTimeout(() =>
+                props.onFinish({
+                    realApp: true,
+                    mount_point: mountPoint,
+                    shownToolbar: mountPoint == '/' ? false : true,
+                })
+                , 2000)
         });
         return () => {
             f7.preloader.hide();
@@ -100,13 +99,20 @@ const SplashScreen = (props) => {
             .then(select => {
                 if (select.length == 0) {
                     return POST(`Get_all_refs`, { jam_mobile: jam_mobile })
-                }else{
-                    alert('getLocalData');
+                } else {
+                    _getLocalData()
                     return false;
                 }
             })
             .then(ref => {
-                log('get all ref', ref)
+                if (ref && ref.status == 'success') {
+                    return SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, ref.data])
+                } else {
+                    return false;
+                }
+            })
+            .then(insert => {
+                if(insert) _getLocalData()
             })
 
         /*
@@ -138,6 +144,7 @@ const SplashScreen = (props) => {
         */
     }
     const _getLocalData = () => {
+        log('_getLocalData')
         SQLite.fetchAll()
             .then(res => {
                 if (REFERENCE in res) {
@@ -145,10 +152,12 @@ const SplashScreen = (props) => {
                     let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];
                     let contact_person = 'contact_person' in res.REFERENCE ? res.REFERENCE.contact_person : [];
                     let place_contacted = 'place_contacted' in res.REFERENCE ? res.REFERENCE.place_contacted : [];
-                    alert(JSON.stringify(call_result))
-                    alert(JSON.stringify(contact_mode))
-                    alert(JSON.stringify(contact_person))
-                    alert(JSON.stringify(place_contacted))
+
+                    // alert(JSON.stringify(call_result))
+                    // alert(JSON.stringify(contact_mode))
+                    // alert(JSON.stringify(contact_person))
+                    // alert(JSON.stringify(place_contacted))
+
                     dispatch(setCallResult(call_result));
                     dispatch(setContactMode(contact_mode));
                     dispatch(setContactPerson(contact_person));
@@ -192,7 +201,8 @@ const SplashScreen = (props) => {
                 if (GEOLOCATION in res) {
                     log(`handle ${GEOLOCATION}`)
                 }
-            }).catch(err => log(err));
+            })
+            .catch(err => log(err));
     }
     const _getDevice = async () => {
         let dvcInfo = (!Device.android && !Device.ios) ?

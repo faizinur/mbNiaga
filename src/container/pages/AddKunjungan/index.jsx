@@ -158,11 +158,6 @@ class AddKunjungan extends React.Component {
                 <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} />
                 <CustomerInfo />
                 <CustomBlockTitle title="Metode Kontak" />
-                <p>{JSON.stringify(this.state.detailCust)}</p>
-                <p>contactMode : {JSON.stringify(this.props.contactMode)}</p>
-                <p>contactPerson : {JSON.stringify(this.props.contactPerson)}</p>
-                <p>placeContacted : {JSON.stringify(this.props.placeContacted)}</p>
-                <p>callResult : {JSON.stringify(this.props.callResult)}</p>
                 <List>
                     <ListInput
                         outline
