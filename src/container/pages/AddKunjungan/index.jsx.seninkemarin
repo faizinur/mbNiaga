@@ -14,7 +14,6 @@ import {
 import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { DefaultNavbar, CustomBlockTitle, Maps } from '../../../components/atoms';
-import { CustomerInfo } from '../../../components/molecules/';
 import { Connection, log, SQLite, SQLiteTypes, Filter, Camera, POST } from '../../../utils';
 const { REKAP_TERTUNDA, REKAP_TERKIRIM, DAFTAR_DIKUNJUNGI } = SQLiteTypes;
 
@@ -25,33 +24,28 @@ class AddKunjungan extends React.Component {
             ptp: 'PTP',
             maxDayPtp: 3,
             online: true,
-            detailCust: props.detailCust,
-            contactMode: props.contactMode,
-            contactPerson: props.contactPerson,
-            placeContacted: props.placeContacted,
-            callResult: props.callResult,
+            detailCust: this.props.detailCust,
+            contactMode: this.props.contactMode,
+            contactPerson: this.props.contactPerson,
+            placeContacted: this.props.placeContacted,
+            callResult: this.props.callResult,
             formData: {
-                card_no: props.detailCust.card_no,
-                name: props.detailCust.name,
-                account_number: props.detailCust.account_number,
+                card_no : this.props.detailCust.card_no,
+                name : this.props.detailCust.name,
+                account_number: this.props.detailCust.account_number,
                 overdue_days: '',//GATAU DARIMANA
-                phone_number: props.detailCust.handphone,
+                phone_number: this.props.detailCust.handphone,
                 dial_result: 'MT1',
                 call_result: '',
                 contact_person: '',
                 notepad: '',
-                user_id: props.user.user_id,
+                user_id: this.props.user.user_id,
                 contact_mode: '',
                 place_contacted: '',
-                gambar: [
-                    '',
-                    '',
-                    '',
-                    ''
-                ],
-                longitude: props.geolocation.longitude,
-                latitude: props.geolocation.latitude,
-                created_time: props.user.mobileTime,
+                gambar: ['', '', '', ''],
+                longitude: this.props.geolocation.longitude,
+                latitude: this.props.geolocation.latitude,
+                created_time: this.props.user.mobileTime,
                 ptp_date: '',
                 ptp_amount: '',
                 transaction_type: 'KUNJUNGAN'
@@ -59,37 +53,33 @@ class AddKunjungan extends React.Component {
         }
     }
     _kirim() {
-        f7.dialog.confirm('Apakah anda akan menyimpan hasil kunjungan ?.',
-            () => {
-                var { formData, ptp } = this.state;
-                log(formData)
-                var mandatoryField = ['contact_mode', 'contact_person', 'place_contacted', 'call_result', 'notepad', 'gambar'];
-                if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
-                for (var item in formData) {
-                    if (mandatoryField.includes(item)) {
-                        if (typeof (formData[item]) == 'string') {
-                            if (formData[item].toString() == "") {
-                                f7.dialog.alert("Harap Isi Semua Input. 0");
-                                return false;
-                            }
-                        } else {
-                            var gambar = formData[item].filter(item => item != '');
-                            if (gambar.length == 0) {
-                                f7.dialog.alert("Harap Isi Semua Input. 1");
-                                return false;
-                            }
-                        }
+        var { formData, ptp } = this.state;
+        log(formData)
+        var mandatoryField = ['contact_mode', 'contact_person', 'place_contacted', 'call_result', 'notepad', 'gambar'];
+        if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
+        for (var item in formData) {
+            if (mandatoryField.includes(item)) {
+                if (typeof (formData[item]) == 'string') {
+                    if (formData[item].toString() == "") {
+                        f7.dialog.alert("Harap Isi Semua Input.");
+                        return false;
+                    }
+                } else {
+                    var gambar = formData[item].filter(item => item != '');
+                    if (gambar.length == 0) {
+                        f7.dialog.alert("Harap Isi Semua Input.");
+                        return false;
                     }
                 }
-                if (Connection() != "OFFLINE") {
-                    POST('save_visit_history', formData)
-                        .then(res => res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
-                        ).catch(err => log(err));
-                } else {
-                    this._saveRekapTertunda();
-                }
             }
-        );
+        }
+        if (Connection() != "OFFLINE") {
+            POST('save_visit_history', formData)
+                .then(res => res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
+                ).catch(err => log(err));
+        } else {
+            this._saveRekapTertunda();
+        }
     }
     _saveRekapTerkirim() {
         SQLite.query('SELECT value from Collection where key=?', [REKAP_TERKIRIM])
@@ -112,8 +102,8 @@ class AddKunjungan extends React.Component {
     _saveDaftarDikunjungi() {
         SQLite.query('SELECT value from Collection where key=?', [DAFTAR_DIKUNJUNGI])
             .then(select => {
-                var data = select.length != 0 ? select[0] : [];
-                data.push({ ...this.state.formData, detailCust: this.state.detailCust });
+                var data = select.length != 0 ? select[0] : [];            
+                data.push({...this.state.formData, detailCust : this.state.detailCust });
                 SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [DAFTAR_DIKUNJUNGI, data])
                     .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
             }).catch(err => log(err));
@@ -156,13 +146,30 @@ class AddKunjungan extends React.Component {
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
                 <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} />
-                <CustomerInfo />
+                <List noHairlinesMd style={{ fontSize: 1 }}>
+                    <ListInput
+                        outline
+                        label="Nomor Kartu"
+                        type="text"
+                        disabled={true}
+                        value={detailCust.card_no}
+                    />
+                    <ListInput
+                        outline
+                        label="Nama"
+                        type="text"
+                        disabled={true}
+                        value={detailCust.name}
+                    />
+                    <ListInput
+                        outline
+                        label="Alamat"
+                        type="text"
+                        disabled={true}
+                        value={detailCust.home_address_1}
+                    />
+                </List>
                 <CustomBlockTitle title="Metode Kontak" />
-                <p>{JSON.stringify(this.state.detailCust)}</p>
-                <p>contactMode : {JSON.stringify(this.props.contactMode)}</p>
-                <p>contactPerson : {JSON.stringify(this.props.contactPerson)}</p>
-                <p>placeContacted : {JSON.stringify(this.props.placeContacted)}</p>
-                <p>callResult : {JSON.stringify(this.props.callResult)}</p>
                 <List>
                     <ListInput
                         outline
@@ -270,7 +277,7 @@ class AddKunjungan extends React.Component {
                                 type="datepicker"
                                 defaultValue=""
                                 onCalendarChange={(val) => {
-                                    log("KALENDER", typeof (val[0]), JSON.stringify(val[0]).substr(1, 10))
+                                    log("KALENDER", typeof(val[0]), JSON.stringify(val[0]).substr(1, 10))
                                     // log("KALENDER", `${val.getFullYear()}-${val.getMonth+1 < 10 ? `0${val.getMonth()}` : val.getMonth()}-${val.getDate() < 10 ? `0${val.getDate()}` : val.getDate()}`)
                                     this.setState(prevState => ({
                                         formData: {
@@ -305,8 +312,8 @@ class AddKunjungan extends React.Component {
                                         }
                                     }))
                                 }}
-                            />
-                        </List>
+                        />
+                    </List>
                     </>
                 ) : null}
                 <CustomBlockTitle noGap title="Foto Dokumendasi" />

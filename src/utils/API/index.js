@@ -36,7 +36,7 @@ const POST = (...params) => {
 						log('API RESULT ', params[0], params[1]);
 						if (result.data.status == "error" || result.status != 200) {
 							f7.preloader.hide();
-							f7.dialog.alert(`${result.data.message} ${result.data.data}`);
+							f7.dialog.alert(`${result.data.message} ${'data' in result.data ? result.data.data : ''}`);
 							reject(result.data.message);
 						} else {
 							f7.preloader.hide();

@@ -36,7 +36,10 @@ class InfoDebitur extends React.Component {
 	componentDidMount() {
 		var arrDetailCust = [];
 		for (const key in this.state.detailCust) {
-			arrDetailCust.push({ 'key': key, 'value': this.state.detailCust[key] })
+			if(!key.includes('option_payment_')){
+				log('option_payment_ tidak di tampilkan')
+				arrDetailCust.push({ 'key': key, 'value': this.state.detailCust[key] })
+			}
 		}
 		this.setState({ arrDetailCust: arrDetailCust })
 		SQLite.query('SELECT * FROM collection where key = ?', [ACTIVITY_HISTORY])
@@ -119,41 +122,6 @@ class InfoDebitur extends React.Component {
 						<p><b>DOB:</b> {detailCust.date_of_birth}</p>
 					</CardContent>
 				</Card>
-				{/* <CustomBlockTitle center title="INFO DEBITUR" />
-				<List noHairlinesMd style={{ fontSize: 1 }}>
-					<ListInput
-						outline
-						disabled={true}
-						label="Customer Name"
-						type="text"
-						value={detailCust.name}
-					>
-					</ListInput>
-					<ListInput
-						outline
-						disabled={true}
-						label="Card Number"
-						type="text"
-						value={detailCust.card_no}
-					>
-					</ListInput>
-					<ListInput
-						outline
-						disabled={true}
-						label="Jenis Kelamin"
-						type="text"
-						value={detailCust.sex}
-					>
-					</ListInput>
-					<ListInput
-						outline
-						disabled={true}
-						label="DOB"
-						type="text"
-						value={detailCust.date_of_birth}
-					>
-					</ListInput>
-				</List> */}
 				<Block>
 					<Row>
 						<Col width="50">

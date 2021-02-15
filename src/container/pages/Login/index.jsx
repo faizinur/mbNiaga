@@ -52,6 +52,8 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
+            // username: (!Device.android && !Device.ios) ? 'TEST' : '',
+            // password: (!Device.android && !Device.ios) ? '1234' : '',
             username: 'TEST',
             password: '1234',
             popUpStateDaftarPin: false,
@@ -95,7 +97,7 @@ class Login extends React.Component {
                 this.props.setDevice({
                     ...await Perangkat.getInformation(),
                     ...{
-                        serial: cordova.plugins.uid.ICCID
+                        serial: cordova.plugins.uid.ICCID === undefined ? 'undefined' : cordova.plugins.uid.ICCID
                     }
                 });
                 if (Connection() == 'OFFLINE') {
@@ -113,7 +115,7 @@ class Login extends React.Component {
                 username: username,
                 password: password,
                 imei: JSON.stringify(uuid),
-                iccd: JSON.stringify(serial) || cordova.plugins.uid.ICCID,
+                iccd: JSON.stringify(serial),
                 jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
             }
             const userPIN = await SQLite.query('SELECT value from COLLECTION where key=?', [PIN]);

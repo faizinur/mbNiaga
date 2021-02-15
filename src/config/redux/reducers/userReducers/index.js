@@ -14,6 +14,7 @@ const initialState = {
     activityHistory: [],
     paymentHistory: [],
     pin : '',
+    geolocation : '',
 };
 import { log } from '../../../../utils/';
 

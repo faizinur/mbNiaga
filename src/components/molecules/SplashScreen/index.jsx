@@ -38,7 +38,8 @@ const {
     PAYMENT_HISTORY,
     REFERENCE,
     RENCANA_KUNJUNGAN,
-    GEOLOCATION
+    GEOLOCATION,
+    UPDATE_HISTORY
 } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
@@ -51,13 +52,14 @@ const SplashScreen = (props) => {
             _getDevice(),
             //.... another promise
         ]).then(res => {
-            setTimeout(() =>
-                props.onFinish({
-                    realApp: true,
-                    mount_point: mountPoint,
-                    shownToolbar: mountPoint == '/' ? false : true,
-                })
-                , 2000)
+            // _getLocalData();
+            // setTimeout(() =>
+            //     props.onFinish({
+            //         realApp: true,
+            //         mount_point: mountPoint,
+            //         shownToolbar: mountPoint == '/' ? false : true,
+            //     })
+            //     , 2000)
         });
         return () => {
             f7.preloader.hide();
@@ -93,93 +95,103 @@ const SplashScreen = (props) => {
         let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`;
         let dvc = (!Device.android && !Device.ios) ? false : true;
 
+
+        SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
+            .then(select => {
+                if (select.length == 0) {
+                    return POST(`Get_all_refs`, { jam_mobile: jam_mobile })
+                }else{
+                    alert('getLocalData');
+                    return false;
+                }
+            })
+            .then(ref => {
+                log('get all ref', ref)
+            })
+
+        /*
         // if (dvc) {
-        //     if (Connection() != "OFFLINE") {
-        //         log('_getReference');
-        //         SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
-        //             .then(select => {
-        //                 if (select.length == 0) {
-        //                     POST(`Get_all_refs`, { jam_mobile: jam_mobile })
-        //                         .then(res => {
-        //                             SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-        //                                 .then(insert => {
-        //                                     _getLocalData()
-        //                                 })
-        //                                 .catch(err => log(err));
-        //                         }).catch(err => log(err));
-        //                 } else {
-        //                     _getLocalData();
-        //                 }
-        //             })
-        //             .catch(err => log(err));
-        //     } else {
-        //         // _getLocalData();
-        //     }
-        // } else {
-            log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
-            SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
-                .then(select => {
-                    if (select.length == 0) {
-                        POST(`Get_all_refs`, { jam_mobile: jam_mobile })
-                            .then(res => {
-                                log(res.data)
-                                SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-                                    .then(insert => _getLocalData())
-                                    .catch(err => log(err));
-                            }).catch(err => log(err));
-                    } else {
-                        _getLocalData();
-                    }
-                })
-                .catch(err => log(err));
+        // if (Connection() != "OFFLINE") {
+        log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
+        SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
+            .then(select => {
+                if (select.length == 0) {
+                    POST(`Get_all_refs`, { jam_mobile: jam_mobile })
+                        .then(res => {
+                            log(res.data)
+                            SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
+                                // .then(insert => _getLocalData())
+                                .then(insert => log('_getLocalData()'))
+                                .catch(err => log(err));
+                        }).catch(err => log(err));
+                }
+                // else {
+                // _getLocalData();
+                // }
+            })
+            .catch(err => log(err));
         // }
+        // else {
+        //     _getLocalData();
+        // }
+        // }
+        */
     }
     const _getLocalData = () => {
         SQLite.fetchAll()
             .then(res => {
-                let [data, dec] = res;
-                data.map(item => {
-                    item.value = dec(item.value);
-                    switch (item.key) {
-                        case PIN: dispatch(setPin(item.value));
-                            break;
-                        case LIST_ACCOUNT:
-                            dispatch(setUser(item.value));
-                            dispatch(setMountPoint(item.value.is_login == true && item.value.PIN != '') ? '/Main/' : '/');
-                            break;
-                        case DEVICE_INFO: dispatch(setDevice(item.value));
-                            break;
-                        case DETAIL_COSTUMER: dispatch(setDetailCustomer(item.value));
-                            break;
-                        case ACTIVITY_HISTORY: dispatch(setActivityHistory(item.value));
-                            break;
-                        case PAYMENT_HISTORY: dispatch(setPaymetHistory(item.value));
-                            break;
-                        case REFERENCE:
-                            dispatch(setCallResult('call_result' in item.value ? item.value.call_result : {}));
-                            dispatch(setContactMode('contact_mode' in item.value ? item.value.contact_mode : {}));
-                            dispatch(setContactPerson('contact_person' in item.value ? item.value.contact_person : {}));
-                            dispatch(setPlaceContacted('place_contacted' in item.value ? item.value.place_contacted : {}));
+                if (REFERENCE in res) {
+                    let call_result = 'call_result' in res.REFERENCE ? res.REFERENCE.call_result : [];
+                    let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];
+                    let contact_person = 'contact_person' in res.REFERENCE ? res.REFERENCE.contact_person : [];
+                    let place_contacted = 'place_contacted' in res.REFERENCE ? res.REFERENCE.place_contacted : [];
+                    alert(JSON.stringify(call_result))
+                    alert(JSON.stringify(contact_mode))
+                    alert(JSON.stringify(contact_person))
+                    alert(JSON.stringify(place_contacted))
+                    dispatch(setCallResult(call_result));
+                    dispatch(setContactMode(contact_mode));
+                    dispatch(setContactPerson(contact_person));
+                    dispatch(setPlaceContacted(place_contacted));
 
-                            let refesh_coordinate = 'refesh_coordinate' in item.value ? item.value.refesh_coordinate : refeshCoordinate;
-                            let idle_time = 'idle_time' in item.value ? item.value.idle_time : idleTime;
-                            let beda_jam = 'beda_jam' in item.value ? item.value.beda_jam : bedaJam;
-                            let max_beda_jam = 'max_beda_jam' in item.value ? item.value.max_beda_jam : maxBedaJam;
+                    let refesh_coordinate = 'refesh_coordinate' in res.REFERENCE ? res.REFERENCE.refesh_coordinate : refeshCoordinate;
+                    let idle_time = 'idle_time' in res.REFERENCE ? res.REFERENCE.idle_time : idleTime;
+                    let beda_jam = 'beda_jam' in res.REFERENCE ? res.REFERENCE.beda_jam : bedaJam;
+                    let max_beda_jam = 'max_beda_jam' in res.REFERENCE ? res.REFERENCE.max_beda_jam : maxBedaJam;
 
-                            dispatch(setRefreshCoordinate(parseInt(refesh_coordinate)));
-                            dispatch(setIdleTime(parseInt(idle_time)));
-                            dispatch(setBedaJam(parseInt(beda_jam)));
-                            dispatch(setMaxBedaJam(parseInt(max_beda_jam)));
-                            break;
-                        case RENCANA_KUNJUNGAN:
-                            log(`handle ${RENCANA_KUNJUNGAN}`)
-                            break;
-                        case GEOLOCATION:
-                            log(`handle ${GEOLOCATION}`)
-                            break;
-                        default: log('_getLocalData default', item.key);
-                    }
-                })
+                    dispatch(setRefreshCoordinate(parseInt(refesh_coordinate)));
+                    dispatch(setIdleTime(parseInt(idle_time)));
+                    dispatch(setBedaJam(parseInt(beda_jam)));
+                    dispatch(setMaxBedaJam(parseInt(max_beda_jam)));
+                }
+                if (PIN in res) {
+                    dispatch(setPin(res.PIN))
+                }
+                if (DEVICE_INFO in res) {
+                    dispatch(setDevice(res.DEVICE_INFO))
+                }
+                if (LIST_ACCOUNT in res) {
+                    dispatch(setUser(res.LIST_ACCOUNT));
+                    dispatch(setMountPoint((res.LIST_ACCOUNT.is_login == true && res.LIST_ACCOUNT.PIN != '') ? '/Main/' : '/'));
+                }
+                if (DETAIL_COSTUMER in res) {
+                    dispatch(setDetailCustomer(res.DETAIL_COSTUMER));
+                }
+                if (ACTIVITY_HISTORY in res) {
+                    dispatch(setActivityHistory(res.ACTIVITY_HISTORY));
+                }
+                if (PAYMENT_HISTORY in res) {
+                    dispatch(setPaymetHistory(res.PAYMENT_HISTORY));
+                }
+                if (UPDATE_HISTORY in res) {
+                    log(`handle ${UPDATE_HISTORY}`)
+                }
+                if (RENCANA_KUNJUNGAN in res) {
+                    log(`handle ${RENCANA_KUNJUNGAN}`)
+                }
+                if (GEOLOCATION in res) {
+                    log(`handle ${GEOLOCATION}`)
+                }
             }).catch(err => log(err));
     }
     const _getDevice = async () => {
