@@ -99,13 +99,15 @@ class SQLModules extends Component {
                                     //     var tmp = { key: rs.rows.item(i).key, value: selfDecrypt(rs.rows.item(i).value) }
                                     //     data.push(tmp)
                                     // }
+                                    // resolve(Object.values(rs.rows))
+
                                     resolve([Object.values(rs.rows), selfDecrypt])
                                     // log('fetchAll : ',Object.values(rs.rows)[0].key)
                                     // resolve(Object.values(rs.rows)
-                                    // .reduce((acc, val) => {
+                                    //     .reduce((acc, val) => {
                                     //         return [
                                     //             ...acc,
-                                    //             { key: val.key, value: selfDecrypt(val.value) }
+                                    //             { [val.key]: selfDecrypt(val.value) }
                                     //         ]
                                     //     }, []))
                                 } else {

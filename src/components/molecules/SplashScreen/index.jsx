@@ -93,29 +93,29 @@ const SplashScreen = (props) => {
         let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`;
         let dvc = (!Device.android && !Device.ios) ? false : true;
 
-        if (dvc) {
-            if (Connection() != "OFFLINE") {
-                log('_getReference');
-                SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
-                    .then(select => {
-                        if (select.length == 0) {
-                            POST(`Get_all_refs`, { jam_mobile: jam_mobile })
-                                .then(res => {
-                                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-                                        .then(insert => {
-                                            _getLocalData()
-                                        })
-                                        .catch(err => log(err));
-                                }).catch(err => log(err));
-                        } else {
-                            _getLocalData();
-                        }
-                    })
-                    .catch(err => log(err));
-            } else {
-                // _getLocalData();
-            }
-        } else {
+        // if (dvc) {
+        //     if (Connection() != "OFFLINE") {
+        //         log('_getReference');
+        //         SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
+        //             .then(select => {
+        //                 if (select.length == 0) {
+        //                     POST(`Get_all_refs`, { jam_mobile: jam_mobile })
+        //                         .then(res => {
+        //                             SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
+        //                                 .then(insert => {
+        //                                     _getLocalData()
+        //                                 })
+        //                                 .catch(err => log(err));
+        //                         }).catch(err => log(err));
+        //                 } else {
+        //                     _getLocalData();
+        //                 }
+        //             })
+        //             .catch(err => log(err));
+        //     } else {
+        //         // _getLocalData();
+        //     }
+        // } else {
             log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
             SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
                 .then(select => {
@@ -132,7 +132,7 @@ const SplashScreen = (props) => {
                     }
                 })
                 .catch(err => log(err));
-        }
+        // }
     }
     const _getLocalData = () => {
         SQLite.fetchAll()
@@ -140,7 +140,6 @@ const SplashScreen = (props) => {
                 let [data, dec] = res;
                 data.map(item => {
                     item.value = dec(item.value);
-                    alert(`${JSON.stringify(item.key)} => ${JSON.stringify(item.value)}`)
                     switch (item.key) {
                         case PIN: dispatch(setPin(item.value));
                             break;
@@ -167,7 +166,6 @@ const SplashScreen = (props) => {
                             let beda_jam = 'beda_jam' in item.value ? item.value.beda_jam : bedaJam;
                             let max_beda_jam = 'max_beda_jam' in item.value ? item.value.max_beda_jam : maxBedaJam;
 
-                            // alert(`_getLocalData SplashScreen bedaJam : ${beda_jam},  maxBedaJam : ${max_beda_jam}`);
                             dispatch(setRefreshCoordinate(parseInt(refesh_coordinate)));
                             dispatch(setIdleTime(parseInt(idle_time)));
                             dispatch(setBedaJam(parseInt(beda_jam)));

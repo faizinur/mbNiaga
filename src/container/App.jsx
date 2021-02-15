@@ -157,7 +157,7 @@ class Root extends React.Component {
 							idleTime = this.props.idleTime;
 							// alert(`onFinish SplashScreen bedaJam : ${this.props.bedaJam},  maxBedaJam : ${this.props.maxBedaJam}`);
 							// if (!(!Device.android && !Device.ios)) {
-								this.setState({ blockTimeout: (this.props.bedaJam > this.props.maxBedaJam) ? true : false });
+								// this.setState({ blockTimeout: (this.props.bedaJam > this.props.maxBedaJam) ? true : false });
 							// 	if (this.props.bedaJam > this.props.maxBedaJam) {
 									// this.setState({ blockTimeout: true });
 							// 	} else {

@@ -17,9 +17,9 @@ const BlockTimeout = (props) => {
     let maxBedaJam = useSelector(state => state.reference.maxBedaJam);
     return (
         <div
-            onClick={() => {
+            onClick={() => { 
                 Toast(`Beda Jam Mobile dan Server lebih dari ${maxBedaJam / 60} menit`, 4000).open();
-                alert(`MAKSIMAL BEDA JAM: ${maxBedaJam} \n HASIL date_diff() di PHP : ${bedaJam} \n (semua dalam satuan detik)`)
+                // alert(`MAKSIMAL BEDA JAM: ${maxBedaJam} \n HASIL date_diff() di PHP : ${bedaJam} \n (semua dalam satuan detik)`)
             }}
             style={{
                 position: 'absolute',
