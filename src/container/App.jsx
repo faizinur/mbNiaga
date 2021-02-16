@@ -19,7 +19,7 @@ import { CustomToolbar, SplashScreen } from '../components/molecules/';
 import { CustomStatusBar, BlockTimeout } from '../components/atoms';
 import { Idle } from '../container/pages/';
 
-const { GEOLOCATION } = SQLiteTypes;
+const { GEOLOCATION, LIST_ACCOUNT } = SQLiteTypes;
 let INTERVAL_LENGTH = 1000;
 let INTERVAL_ID = 0;
 let idleTime = 60;
@@ -105,6 +105,10 @@ class Root extends React.Component {
 						jam_server: ClockTick(this.props.profile.jam_server),
 					}
 				});
+
+				if (this.state.idleCounter % 300 == 0) {
+					// this._saveTime();
+				}
 			}
 			//idle counter kalo udah login
 			this.setState({ idleCounter: this.state.idleCounter + 1 });
@@ -122,6 +126,21 @@ class Root extends React.Component {
 
 		}, INTERVAL_LENGTH);
 	}
+	_saveTime = () => {
+		SQLite.query('SELECT * FROM COLLECTION WHERE KEY=?', [LIST_ACCOUNT])
+			.then(res => SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)',
+				[
+					LIST_ACCOUNT,
+					{
+						...res[0],
+						...{
+							mobileTime: this.props.profile.mobileTime,
+							jam_server: this.props.profile.jam_server,
+						}
+					}
+				])
+			).catch(err => log(err))
+	}
 	_getGeo = () => {
 		Geolocation.currentLocation()
 			.then(res => {
@@ -137,6 +156,7 @@ class Root extends React.Component {
 	}
 	componentWillUnmount() {
 		log('CLEAR INTERVAL')
+		this._saveTime();
 		clearInterval(INTERVAL_ID);
 	}
 	render() {

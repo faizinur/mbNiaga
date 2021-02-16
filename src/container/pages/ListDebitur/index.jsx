@@ -57,6 +57,7 @@ class ListDebitur extends React.Component {
 	}
 	componentDidMount() {
 		this._tambahParameter()
+
 	}
 	_next(data) {
 		this.props.setDetailCustomer(data);
@@ -64,6 +65,7 @@ class ListDebitur extends React.Component {
 	}
 	_search = async () => {
 		var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");
+		// var param = JSON.parse('[{"column":"name","operator":"DOES_NOT_EQUAL","value":""}]');
 		if (param.length == 0) return false;
 		SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.DETAIL_COSTUMER])
 			.then(res => {

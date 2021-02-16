@@ -23,7 +23,7 @@ class InfoDebitur extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			detailCust: this.props.detailCust,
+			// detailCust: props.detailCust,
 			arrDetailCust: [],
 			history: [],
 			infoUpdateData: [
@@ -35,16 +35,17 @@ class InfoDebitur extends React.Component {
 	}
 	componentDidMount() {
 		var arrDetailCust = [];
-		for (const key in this.state.detailCust) {
-			if(!key.includes('option_payment_')){
-				log('option_payment_ tidak di tampilkan')
-				arrDetailCust.push({ 'key': key, 'value': this.state.detailCust[key] })
-			}
+		var hiddenKey = ['account_number', 'outstanding_balance', 'due_date', 'last_payment_date', 'last_payment_amount', 'charge_off_date', 'current_bucket', 'day_past_due', 'over_limit_flag', 'total_due', 'total_curr_due', 'minimum_payment', 'dpd_cur_days', 'dpd_x_days', 'dpd_30_days', 'dpd_60_days', 'dpd_90_days', 'dpd_120_days', 'dpd_150_days', 'dpd_180_days', 'dpd_210_days', 'total_overdue_amount', 'last_puchase_date', 'last_purchase_amount', 'last_transaction_code', 'loan_type', 'card_type', 'open_date', 'cycle_date', 'princple_os', 'princple_amount_due', 'reason_code', 'maturity_date', 'tenor', 'installment_number', 'bill_amount'];
+		var aliasKey = ['Account_no', 'OS_Biling', 'PAYMENT_DUE_DATE', 'LAST_PAYMENT_DATE', 'LAST_PAYMENT_AMT', 'CHARGE_OFF_DATE', 'BUCKET', 'DPD', 'OVER_LIMIT_FLAG', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_DATE', 'LAST_PURCH_AMT', 'Last Transaction Type', 'PRODUCT_TYPE', 'CARD_TYPE', 'MOB', 'COLLECTION_CYCLE', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'REASON_CODE', 'Maturity_Date', 'Tenor', 'No_of_Installment_Due', 'Total_Billed_Amount'];
+		//gak ada zip code
+		for (const key in this.props.detailCust) {
+			if (hiddenKey.includes(key)) arrDetailCust = [...arrDetailCust, { 'key': aliasKey[hiddenKey.indexOf(key)], 'value': this.props.detailCust[key] }]
 		}
+
 		this.setState({ arrDetailCust: arrDetailCust })
 		SQLite.query('SELECT * FROM collection where key = ?', [ACTIVITY_HISTORY])
 			.then(res => {
-				Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.state.detailCust.account_number }]).then((resFilter) => {
+				Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number }]).then((resFilter) => {
 					log("HASIL FILTER", resFilter)
 					// resFilter.slice(0, 5);
 					this.setState({ history: resFilter });
@@ -55,7 +56,7 @@ class InfoDebitur extends React.Component {
 			.then(res => {
 				log("UPDATE_HITORY", res)
 				Filter.select(res, [
-					{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.state.detailCust.account_number },
+					{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number },
 					{ 'column': 'home_address_1', 'operator': 'DOES_NOT_EQUAL', 'value': '' }
 				]).then((resFilter) => {
 					resFilter.slice(0, 3);
@@ -65,7 +66,7 @@ class InfoDebitur extends React.Component {
 				}).catch(err => log(err))
 
 				Filter.select(res, [
-					{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.state.detailCust.account_number },
+					{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number },
 					{ 'column': 'office_address_1', 'operator': 'DOES_NOT_EQUAL', 'value': '' }
 				]).then((resFilter) => {
 					resFilter.slice(0, 3);
@@ -75,7 +76,7 @@ class InfoDebitur extends React.Component {
 				}).catch(err => log(err))
 
 				Filter.select(res, [
-					{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.state.detailCust.account_number },
+					{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number },
 					{ 'column': 'refferal_address_1', 'operator': 'DOES_NOT_EQUAL', 'value': '' }
 				]).then((resFilter) => {
 					resFilter.slice(0, 3);
@@ -93,10 +94,10 @@ class InfoDebitur extends React.Component {
 	_rencanaKunjungan() {
 		SQLite.query('SELECT * FROM collection where key = ?', [RENCANA_KUNJUNGAN])
 			.then(res => {
-				Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.state.detailCust.account_number }]).then((resFilter) => {
+				Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number }]).then((resFilter) => {
 					if (resFilter.length != 0) return false;
 					var data = res.length != 0 ? res[0] : res;
-					data.push((this.state.detailCust))
+					data.push((this.props.detailCust))
 					SQLite.query(`INSERT OR REPLACE INTO collection (key, value) VALUES(?,?)`, [RENCANA_KUNJUNGAN, data])
 						.then(insert => {
 							log(insert)
@@ -107,7 +108,10 @@ class InfoDebitur extends React.Component {
 			.catch(err => log(err))
 	}
 	render() {
-		const { detailCust, arrDetailCust, history, infoUpdateData } = this.state;
+		const { arrDetailCust, history, infoUpdateData } = this.state;
+		const { detailCust } = this.props;
+		let [Y, M, D] = detailCust.date_of_birth.split("-");
+		let today = new Date();
 		return (
 			<Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
 				<DefaultNavbar title="DETAIL DEBITUR" network={Connection()} />
@@ -119,7 +123,7 @@ class InfoDebitur extends React.Component {
 						<p><b>Customer Name:</b> {detailCust.name}</p>
 						<p><b>Card Number:</b> {detailCust.card_no}</p>
 						<p><b>Jenis Kelamin:</b> {detailCust.sex}</p>
-						<p><b>DOB:</b> {detailCust.date_of_birth}</p>
+						<p><b>DOB:</b> {Math.abs(today.getFullYear() - Y)} thn {Math.abs((today.getMonth() + 1) - M)} Bln {Math.abs((today.getDate() + 1) - D)} Hr</p>
 					</CardContent>
 				</Card>
 				<Block>
@@ -137,10 +141,10 @@ class InfoDebitur extends React.Component {
 					{arrDetailCust.map((item, key) => (
 						<Row key={key} noGap>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-								<p style={{ margin: 8 }}>{item.key.toUpperCase()}</p>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.key.toUpperCase()}</p>
 							</Col>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-								<p style={{ margin: 8 }}>{item.value}</p>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
 							</Col>
 						</Row>
 					))}

@@ -39,6 +39,7 @@ class AddKunjungan extends React.Component {
                 dial_result: 'MT1',
                 call_result: '',
                 contact_person: '',
+                payment_option: '',
                 notepad: '',
                 user_id: props.user.user_id,
                 contact_mode: '',
@@ -153,6 +154,11 @@ class AddKunjungan extends React.Component {
                 : (lastDay.getDate() - minDate.getDate()) < this.state.maxDayPtp ? (lastDay.getDate() - minDate.getDate())
                     : this.state.maxDayPtp;
         maxDate.setDate(minDate.getDate() + limDayPtp);
+        var optionPayment = [];
+        var hiddenKey = ['option_payment_1', 'option_payment_2', 'option_payment_3', 'option_payment_4', 'option_payment_5', 'option_payment_6', 'option_payment_7', 'option_payment_8', 'option_payment_9'];
+        for (const key in detailCust) {
+            if (hiddenKey.includes(key)) optionPayment = [...optionPayment, { 'value': detailCust[key] }]
+        }
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
                 <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} />
@@ -238,6 +244,27 @@ class AddKunjungan extends React.Component {
                         <option value="" disabled>--PILIH--</option>
                         {callResult.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
+                        ))}
+                    </ListInput>
+                </List>
+                <CustomBlockTitle title='Payment Option' />
+                <List>
+                    <ListInput
+                        outline
+                        type="select"
+                        defaultValue=""
+                        onChange={({ target }) => {
+                            this.setState(prevState => ({
+                                formData: {
+                                    ...prevState.formData,
+                                    payment_option: target.value
+                                }
+                            }))
+                        }}
+                    >
+                        <option value="" disabled>--PILIH--</option>
+                        {optionPayment.map((item, key) => (
+                            <option key={key} value={item.value} > {item.value} </option>
                         ))}
                     </ListInput>
                 </List>

@@ -100,19 +100,20 @@ const SplashScreen = (props) => {
                 if (select.length == 0) {
                     return POST(`Get_all_refs`, { jam_mobile: jam_mobile })
                 } else {
-                    _getLocalData()
+                    _getLocalData();
                     return false;
                 }
             })
             .then(ref => {
                 if (ref && ref.status == 'success') {
+                    log(ref.data);
                     return SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, ref.data])
                 } else {
                     return false;
                 }
             })
             .then(insert => {
-                if(insert) _getLocalData()
+                if(insert) _getLocalData();
             })
 
         /*
@@ -152,11 +153,6 @@ const SplashScreen = (props) => {
                     let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];
                     let contact_person = 'contact_person' in res.REFERENCE ? res.REFERENCE.contact_person : [];
                     let place_contacted = 'place_contacted' in res.REFERENCE ? res.REFERENCE.place_contacted : [];
-
-                    // alert(JSON.stringify(call_result))
-                    // alert(JSON.stringify(contact_mode))
-                    // alert(JSON.stringify(contact_person))
-                    // alert(JSON.stringify(place_contacted))
 
                     dispatch(setCallResult(call_result));
                     dispatch(setContactMode(contact_mode));
