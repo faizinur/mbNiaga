@@ -82,7 +82,7 @@ const Idle = (props) => {
             password: '12345678',
             imei: JSON.stringify(uuid),
             iccd: JSON.stringify(serial),
-            jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+            jam_mobile : `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0'+minutes : minutes}:${seconds < 9 ? '0'+seconds : seconds}`,
         }
         POST(`Login`, data)
             .then(res => {

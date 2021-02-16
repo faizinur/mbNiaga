@@ -111,7 +111,7 @@ class Login extends React.Component {
                 password: password,
                 imei: JSON.stringify(uuid),
                 iccd: JSON.stringify(serial),
-                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`,
+                jam_mobile : `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0'+minutes : minutes}:${seconds < 9 ? '0'+seconds : seconds}`,
             }
             const userPIN = await SQLite.query('SELECT value from COLLECTION where key=?', [PIN]);
             POST(`Login`, data)

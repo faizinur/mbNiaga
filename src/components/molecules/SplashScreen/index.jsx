@@ -113,7 +113,7 @@ const SplashScreen = (props) => {
                 }
             })
             .then(insert => {
-                if(insert) _getLocalData();
+                if (insert) _getLocalData();
             })
 
         /*
@@ -176,6 +176,31 @@ const SplashScreen = (props) => {
                     dispatch(setDevice(res.DEVICE_INFO))
                 }
                 if (LIST_ACCOUNT in res) {
+                    let date = new Date();
+                    let year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+                    let hours = date.getHours();
+                    let minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+                    let seconds = date.getSeconds();
+                    let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes}:${seconds}`
+
+                    let serverDate = new Date(jam_mobile);
+                    serverDate.setSeconds((new Date(res.LIST_ACCOUNT.jam_mobile) - new Date(res.LIST_ACCOUNT.jam_server)) / 1000);
+                    let ServerYear = serverDate.getFullYear();
+                    let ServerMonth = serverDate.getMonth() + 1;
+                    let ServerDay = serverDate.getDate();
+                    let ServerHours = serverDate.getHours();
+                    let ServerMinutes = serverDate.getMinutes() < 10 ? `0${serverDate.getMinutes()}` : serverDate.getMinutes();
+                    let ServerSeconds = serverDate.getSeconds();
+                    let jam_server = `${ServerYear}-${ServerMonth < 9 ? '0' + ServerMonth : ServerMonth}-${ServerDay} ${ServerHours < 9 ? '0' + ServerHours : ServerHours}:${ServerMinutes}:${ServerSeconds}`
+
+                    res.LIST_ACCOUNT = {
+                        ...res.LIST_ACCOUNT, ...{
+                            mobileTime: jam_mobile,
+                            jam_server : jam_server,
+                        }
+                    }
                     dispatch(setUser(res.LIST_ACCOUNT));
                     dispatch(setMountPoint((res.LIST_ACCOUNT.is_login == true && res.LIST_ACCOUNT.PIN != '') ? '/Main/' : '/'));
                 }
