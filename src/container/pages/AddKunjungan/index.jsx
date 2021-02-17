@@ -247,27 +247,6 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title='Payment Option' />
-                <List>
-                    <ListInput
-                        outline
-                        type="select"
-                        defaultValue=""
-                        onChange={({ target }) => {
-                            this.setState(prevState => ({
-                                formData: {
-                                    ...prevState.formData,
-                                    payment_option: target.value
-                                }
-                            }))
-                        }}
-                    >
-                        <option value="" disabled>--PILIH--</option>
-                        {optionPayment.map((item, key) => (
-                            <option key={key} value={item.value} > {this._formatCurrency(item.value)} </option>
-                        ))}
-                    </ListInput>
-                </List>
                 <CustomBlockTitle title="Detail Hasil Kunjungan (Remarks)" />
                 <List>
                     <ListInput
@@ -305,6 +284,27 @@ class AddKunjungan extends React.Component {
                             calendarParams={{ openIn: 'customModal', header: false, footer: true, dateFormat: 'yyyy-mm-dd', minDate: minDate, maxDate: maxDate }
                             }
                         />
+                    </List>
+                    <CustomBlockTitle title='Payment Option' />
+                    <List>
+                        <ListInput
+                            outline
+                            type="select"
+                            defaultValue=""
+                            onChange={({ target }) => {
+                                this.setState(prevState => ({
+                                    formData: {
+                                        ...prevState.formData,
+                                        payment_option: target.value
+                                    }
+                                }))
+                            }}
+                        >
+                            <option value="" disabled>--PILIH--</option>
+                            {optionPayment.map((item, key) => (
+                                <option key={key} value={item.value} > {this._formatCurrency(item.value)} </option>
+                            ))}
+                        </ListInput>
                     </List>
                     <CustomBlockTitle title="PTP Amount" />
                     <List>
