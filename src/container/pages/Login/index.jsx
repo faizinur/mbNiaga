@@ -12,8 +12,6 @@ import {
     Popup,
     ListGroup,
     Icon,
-    LoginScreen,
-    View,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -54,14 +52,14 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            // username: (!Device.android && !Device.ios) ? 'TEST' : '',
-            // password: (!Device.android && !Device.ios) ? '1234' : '',
-            username: 'TEST',
-            password: '1234',
+            username: (!Device.android && !Device.ios) ? 'TEST' : '',
+            password: (!Device.android && !Device.ios) ? '1234' : '',
+            // username: 'TEST',
+            // password: '1234',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             popUpStateDeviceInfo: false,
-            resultLogin: [],
+            resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
             user: {},
             inputPasswordType: 'password',
         };
@@ -108,12 +106,12 @@ class Login extends React.Component {
             }
             const { username, password } = this.state;
             const { uuid, serial } = this.props.device;
-            let data = {
+            var data = {
                 username: username,
                 password: password,
                 imei: JSON.stringify(uuid),
                 iccd: JSON.stringify(serial),
-                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0' + minutes : minutes}:${seconds < 9 ? '0' + seconds : seconds}`,
+                jam_mobile : `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0'+minutes : minutes}:${seconds < 9 ? '0'+seconds : seconds}`,
             }
             const userPIN = await SQLite.query('SELECT value from COLLECTION where key=?', [PIN]);
             POST(`Login`, data)
@@ -303,135 +301,131 @@ class Login extends React.Component {
     }
     render() {
         return (
-            <LoginScreen id="my-login-screen" opened={true}>
-                <View>
-                    <Page loginScreen name="Login">
-                        <center>
-                            <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
-                        </center>
-                        <LoginScreenTitle style={{ ...stylesheet.LoginScreenTitle, ...{ marginTop: 0, fontSize: 'larger' } }}>Mobile Application Interaction</LoginScreenTitle>
-                        <List style={{ margin: 0, width: '100%' }}>
-                            <ListInput
-                                outline
-                                type="text"
-                                label="Username"
-                                value={this.state.username}
-                                onInput={(e) => {
-                                    this.setState({ username: e.target.value });
-                                }}
-                            />
-                        </List>
-                        <div style={{ display: 'flex', flex: 1 }}>
-                            <List style={{ margin: 0, width: '100%' }}>
-                                <ListInput
-                                    outline
-                                    type={this.state.inputPasswordType}
-                                    label="Password"
-                                    value={this.state.password}
-                                    onInput={(e) => {
-                                        this.setState({ password: e.target.value });
-                                    }}
+            <Page loginScreen name="Login">
+                <center>
+                    <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
+                </center>
+                <LoginScreenTitle style={{ ...stylesheet.LoginScreenTitle, ...{ marginTop: 0, fontSize: 'larger' } }}>Mobile Application Interaction</LoginScreenTitle>
+                <List style={{ margin: 0, width: '100%' }}>
+                    <ListInput
+                        outline
+                        type="text"
+                        label="Username"
+                        value={this.state.username}
+                        onInput={(e) => {
+                            this.setState({ username: e.target.value });
+                        }}
+                    />
+                </List>
+                <div style={{ display: 'flex', flex: 1 }}>
+                    <List style={{ margin: 0, width: '100%' }}>
+                        <ListInput
+                            outline
+                            type={this.state.inputPasswordType}
+                            label="Password"
+                            value={this.state.password}
+                            onInput={(e) => {
+                                this.setState({ password: e.target.value });
+                            }}
+                        />
+                    </List>
+                    {
+                        this.state.password.length > 0 &&
+                        <div style={{ position: 'absolute', height: 63, width: 40, right: '5%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+                            <div
+                                onClick={
+                                    () =>
+                                        this.setState({
+                                            inputPasswordType: this.state.inputPasswordType == 'password' ? 'text' : 'password'
+                                        })
+                                }
+                                style={{ marginTop: 20, borderRadius: 25, }}>
+                                <Icon
+                                    style={{ color: '#c0392b' }}
+                                    f7={this.state.inputPasswordType == 'password' ? 'eye_slash' : 'eye'}
                                 />
-                            </List>
-                            {
-                                this.state.password.length > 0 &&
-                                <div style={{ position: 'absolute', height: 63, width: 40, right: '5%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-                                    <div
-                                        onClick={
-                                            () =>
-                                                this.setState({
-                                                    inputPasswordType: this.state.inputPasswordType == 'password' ? 'text' : 'password'
-                                                })
-                                        }
-                                        style={{ marginTop: 20, borderRadius: 25, }}>
-                                        <Icon
-                                            style={{ color: '#c0392b' }}
-                                            f7={this.state.inputPasswordType == 'password' ? 'eye_slash' : 'eye'}
-                                        />
-                                    </div>
-                                </div>
-                            }
+                            </div>
                         </div>
-                        <List noHairlinesMd>
-                            <Block>
-                                <Row>
-                                    <Col width="100">
-                                        <Button
-                                            onClick={() => this._onClickLogin()}
-                                            round
-                                            style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                            text="Login"
-                                        />
-                                    </Col>
-                                </Row>
-                            </Block>
-                            <Block>
-                                <Row>
-                                    <Col width="100">
-                                        <Button
-                                            onClick={() => this._onClickDeviceInfo()}
-                                            round
-                                            style={{ backgroundColor: 'transparent', color: '#c0392b' }}
-                                            text="Device Info"
-                                        />
-                                    </Col>
-                                </Row>
-                            </Block>
-                        </List>
+                    }
+                </div>
+                <List noHairlinesMd>
+                    <Block>
+                        <Row>
+                            <Col width="100">
+                                <Button
+                                    onClick={() => this._onClickLogin()}
+                                    round
+                                    style={{ backgroundColor: '#c0392b', color: 'white' }}
+                                    text="Login"
+                                />
+                            </Col>
+                        </Row>
+                    </Block>
+                    <Block>
+                        <Row>
+                            <Col width="100">
+                                <Button
+                                    onClick={() => this._onClickDeviceInfo()}
+                                    round
+                                    style={{ backgroundColor: 'transparent', color: '#c0392b' }}
+                                    text="Device Info"
+                                />
+                            </Col>
+                        </Row>
+                    </Block>
+                </List>
 
-                        <Popup
-                            className="daftarPin-popup"
-                            opened={this.state.popUpStateDaftarPin}
-                            onPopupClosed={() => log('pop up Closed')}
-                        >
-                            <CustomStatusBar />
-                            <DaftarPin
-                                onSubmitPIN={this._submitPIN}
-                            />
-                        </Popup>
+                <Popup
+                    className="daftarPin-popup"
+                    opened={this.state.popUpStateDaftarPin}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
+                    <CustomStatusBar />
+                    <DaftarPin
+                        onSubmitPIN={this._submitPIN}
+                    />
+                </Popup>
 
-                        <Popup
-                            className="loginPin-popup"
-                            opened={this.state.popUpStateLoginPin}
-                            onPopupClosed={() => log('pop up Closed')}
-                        >
-                            <CustomStatusBar />
-                            <DaftarPin
-                                onValidatePIN={this._onValidatePIN}
-                            />
-                        </Popup>
-                        <Popup
-                            className="failedLogin-popup"
-                            opened={this.state.resultLogin.length > 0 ? true : false}
-                            onPopupClosed={() => log('pop up Closed')}
-                        >
+                <Popup
+                    className="loginPin-popup"
+                    opened={this.state.popUpStateLoginPin}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
+                    <CustomStatusBar />
+                    <DaftarPin
+                        onValidatePIN={this._onValidatePIN}
+                    />
+                </Popup>
+                <Popup
+                    className="failedLogin-popup"
+                    opened={this.state.resultLogin.length > 0 ? true : false}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
 
-                            {
-                                this.state.resultLogin.length > 0 ?
-                                    <>
-                                        <CustomStatusBar />
-                                        <Check
-                                            backLink={(e) => this._setLoginResult()}
-                                            title={"Gagal Login"}
-                                            loginResult={this.state.resultLogin}
-                                        />
-                                    </>
-                                    :
-                                    <></>
-                            }
-                        </Popup>
-                        <Popup
-                            className="deviceInfo-popup"
-                            opened={this.state.popUpStateDeviceInfo}
-                            onPopupClosed={() => log('pop up Closed')}
-                        >
-                            <DeviceInfo
-                                backLink={(e) => this.setState({ popUpStateDeviceInfo: false })}
-                            />
-                        </Popup>
-                    </Page>
-                </View>
-            </LoginScreen>
+                    {
+                        this.state.resultLogin.length > 0 ?
+                            <>
+                                <CustomStatusBar />
+                                <Check
+                                    backLink={(e) => this._setLoginResult()}
+                                    title={"Gagal Login"}
+                                    loginResult={this.state.resultLogin}
+                                />
+                            </>
+                            :
+                            <></>
+                    }
+                </Popup>
+                <Popup
+                    className="deviceInfo-popup"
+                    opened={this.state.popUpStateDeviceInfo}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
+                    <DeviceInfo
+                        backLink={(e) => this.setState({ popUpStateDeviceInfo: false })}
+                    />
+                </Popup>
+            </Page>
         );
     }
 }

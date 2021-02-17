@@ -39,7 +39,7 @@ class AddKunjungan extends React.Component {
                 dial_result: 'MT1',
                 call_result: '',
                 contact_person: '',
-                payment_option: '',
+                payment_option: 0,
                 notepad: '',
                 user_id: props.user.user_id,
                 contact_mode: '',
@@ -140,7 +140,7 @@ class AddKunjungan extends React.Component {
             }
         }))
     }
-
+    _formatCurrency = (number) => { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseFloat(number)) }
     render() {
         var { detailCust, contactMode, contactPerson, placeContacted, callResult } = this.state;
         var [year, month, day] = this.state.detailCust.due_date.split("-")
@@ -264,7 +264,7 @@ class AddKunjungan extends React.Component {
                     >
                         <option value="" disabled>--PILIH--</option>
                         {optionPayment.map((item, key) => (
-                            <option key={key} value={item.value} > {item.value} </option>
+                            <option key={key} value={item.value} > {this._formatCurrency(item.value)} </option>
                         ))}
                     </ListInput>
                 </List>
@@ -283,54 +283,55 @@ class AddKunjungan extends React.Component {
                         }}
                     />
                 </List>
-                {this.state.formData.call_result == this.state.ptp ? (
-                    <>
-                        <CustomBlockTitle title="Tanggal PTP" />
-                        <List>
-                            <ListInput
-                                outline
-                                type="datepicker"
-                                defaultValue=""
-                                onCalendarChange={(val) => {
-                                    log("KALENDER", typeof (val[0]), JSON.stringify(val[0]).substr(1, 10))
-                                    // log("KALENDER", `${val.getFullYear()}-${val.getMonth+1 < 10 ? `0${val.getMonth()}` : val.getMonth()}-${val.getDate() < 10 ? `0${val.getDate()}` : val.getDate()}`)
-                                    this.setState(prevState => ({
-                                        formData: {
-                                            ...prevState.formData,
-                                            ptp_date: JSON.stringify(val[0]).substr(1, 10)
-                                        }
-                                    }))
-                                }}
-                                readonly
-                                calendarParams={{ openIn: 'customModal', header: false, footer: true, dateFormat: 'yyyy-mm-dd', minDate: minDate, maxDate: maxDate }
-                                }
-                            />
-                        </List>
-                        <CustomBlockTitle title="PTP Amount" />
-                        <List>
-                            <ListInput
-                                outline
-                                type="number"
-                                defaultValue=""
-                                info={`Min. ${this.state.detailCust.option_payment_9}`}
-                                onBlur={(e) => {
-                                    log(e.target.value, this.state.detailCust.option_payment_9)
-                                    if (parseInt(e.target.value) < parseInt(this.state.detailCust.option_payment_9)) {
-                                        f7.dialog.alert("Payment Amount Kurang Dari Minimal Payment");
-                                        e.target.value = "";
-                                        return false;
+                {/* {this.state.formData.call_result == this.state.ptp && ( */}
+                <>
+                    <CustomBlockTitle title="Tanggal PTP" />
+                    <List>
+                        <ListInput
+                            outline
+                            type="datepicker"
+                            defaultValue=""
+                            onCalendarChange={(val) => {
+                                log("KALENDER", typeof (val[0]), JSON.stringify(val[0]).substr(1, 10))
+                                // log("KALENDER", `${val.getFullYear()}-${val.getMonth+1 < 10 ? `0${val.getMonth()}` : val.getMonth()}-${val.getDate() < 10 ? `0${val.getDate()}` : val.getDate()}`)
+                                this.setState(prevState => ({
+                                    formData: {
+                                        ...prevState.formData,
+                                        ptp_date: JSON.stringify(val[0]).substr(1, 10)
                                     }
-                                    this.setState(prevState => ({
-                                        formData: {
-                                            ...prevState.formData,
-                                            ptp_amount: e.target.value
-                                        }
-                                    }))
-                                }}
-                            />
-                        </List>
-                    </>
-                ) : null}
+                                }))
+                            }}
+                            readonly
+                            calendarParams={{ openIn: 'customModal', header: false, footer: true, dateFormat: 'yyyy-mm-dd', minDate: minDate, maxDate: maxDate }
+                            }
+                        />
+                    </List>
+                    <CustomBlockTitle title="PTP Amount" />
+                    <List>
+                        <ListInput
+                            outline
+                            disabled
+                            type="text"
+                            value={this._formatCurrency(this.state.formData.payment_option || this.state.detailCust.option_payment_9)}
+                            info={`Min. ${this._formatCurrency(this.state.detailCust.option_payment_9)}`}
+                            onBlur={(e) => {
+                                log(e.target.value, this.state.detailCust.option_payment_9)
+                                if (parseInt(e.target.value) < parseInt(this.state.detailCust.option_payment_9)) {
+                                    f7.dialog.alert("Payment Amount Kurang Dari Minimal Payment");
+                                    e.target.value = "";
+                                    return false;
+                                }
+                                this.setState(prevState => ({
+                                    formData: {
+                                        ...prevState.formData,
+                                        ptp_amount: e.target.value
+                                    }
+                                }))
+                            }}
+                        />
+                    </List>
+                </>
+                {/* )} */}
                 <CustomBlockTitle noGap title="Foto Dokumendasi" />
                 <Block>
                     <Row>

@@ -30,7 +30,7 @@ class Root extends React.Component {
 		this.state = {
 			// Framework7 Parameters
 			f7params: {
-				id: 'io.framework7.myapp', // App bundle ID
+				id: 'com.ecentrix.mobileCollectionNiaga', // App bundle ID
 				name: 'Mobile Collection Niaga', // App name
 				theme: 'auto', // Automatic theme detection
 				// App root data
@@ -80,6 +80,7 @@ class Root extends React.Component {
 						StatusBar.overlaysWebView(true);
 						StatusBar.styleLightContent();
 					}
+					window.screen.orientation.lock('portrait');
 				}, false);
 			}
 			document.addEventListener("click", (e) => {

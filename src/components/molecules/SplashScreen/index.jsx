@@ -148,6 +148,7 @@ const SplashScreen = (props) => {
         log('_getLocalData')
         SQLite.fetchAll()
             .then(res => {
+                log(res);
                 if (REFERENCE in res) {
                     let call_result = 'call_result' in res.REFERENCE ? res.REFERENCE.call_result : [];
                     let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];
