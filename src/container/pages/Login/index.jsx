@@ -67,7 +67,7 @@ class Login extends React.Component {
     }
     componentDidMount() {
         log('componentDidMount LOGIN : ', this.props.device);
-        log('HIDE SHOW POPUP!');
+        // log('HIDE SHOW POPUP!');
         this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
     }
     _onClickLogin = async () => {

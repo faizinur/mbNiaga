@@ -35,13 +35,12 @@ class InfoDebitur extends React.Component {
 	}
 	componentDidMount() {
 		var arrDetailCust = [];
-		var hiddenKey = ['account_number', 'outstanding_balance', 'due_date', 'last_payment_date', 'last_payment_amount', 'charge_off_date', 'current_bucket', 'day_past_due', 'over_limit_flag', 'total_due', 'total_curr_due', 'minimum_payment', 'dpd_cur_days', 'dpd_x_days', 'dpd_30_days', 'dpd_60_days', 'dpd_90_days', 'dpd_120_days', 'dpd_150_days', 'dpd_180_days', 'dpd_210_days', 'total_overdue_amount', 'last_puchase_date', 'last_purchase_amount', 'last_transaction_code', 'loan_type', 'card_type', 'open_date', 'cycle_date', 'princple_os', 'princple_amount_due', 'reason_code', 'maturity_date', 'tenor', 'installment_number', 'bill_amount'];
-		var aliasKey = ['Account_no', 'OS_Biling', 'PAYMENT_DUE_DATE', 'LAST_PAYMENT_DATE', 'LAST_PAYMENT_AMT', 'CHARGE_OFF_DATE', 'BUCKET', 'DPD', 'OVER_LIMIT_FLAG', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_DATE', 'LAST_PURCH_AMT', 'Last Transaction Type', 'PRODUCT_TYPE', 'CARD_TYPE', 'MOB', 'COLLECTION_CYCLE', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'REASON_CODE', 'Maturity_Date', 'Tenor', 'No_of_Installment_Due', 'Total_Billed_Amount'];
+		var hiddenKey = ['account_number', 'outstanding_balance', 'due_date', 'last_payment_date', 'last_payment_amount', 'charge_off_date', 'current_bucket', 'day_past_due', 'over_limit_flag', 'total_due', 'total_curr_due', 'minimum_payment', 'dpd_cur_days', 'dpd_x_days', 'dpd_30_days', 'dpd_60_days', 'dpd_90_days', 'dpd_120_days', 'dpd_150_days', 'dpd_180_days', 'dpd_210_days', 'home_post_code', 'total_overdue_amount', 'last_puchase_date', 'last_purchase_amount', 'last_transaction_code', 'loan_type', 'card_type', 'open_date', 'cycle_date', 'princple_os', 'princple_amount_due', 'reason_code', 'maturity_date', 'tenor', 'installment_number', 'bill_amount'];
+		var aliasKey = ['Account_no', 'OS_Biling', 'PAYMENT_DUE_DATE', 'LAST_PAYMENT_DATE', 'LAST_PAYMENT_AMT', 'CHARGE_OFF_DATE', 'BUCKET', 'DPD', 'OVER_LIMIT_FLAG', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'ZIP CODE', 'AMOUNT_OVERDUE', 'LAST_PURCH_DATE', 'LAST_PURCH_AMT', 'Last Transaction Type', 'PRODUCT_TYPE', 'CARD_TYPE', 'MOB', 'COLLECTION_CYCLE', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'REASON_CODE', 'Maturity_Date', 'Tenor', 'No_of_Installment_Due', 'Total_Billed_Amount'];
 		//gak ada zip code
 		for (const key in this.props.detailCust) {
 			if (hiddenKey.includes(key)) arrDetailCust = [...arrDetailCust, { 'key': aliasKey[hiddenKey.indexOf(key)], 'value': this.props.detailCust[key] }]
 		}
-
 		this.setState({ arrDetailCust: arrDetailCust })
 		SQLite.query('SELECT * FROM collection where key = ?', [ACTIVITY_HISTORY])
 			.then(res => {
@@ -117,7 +116,7 @@ class InfoDebitur extends React.Component {
 				<DefaultNavbar title="DETAIL DEBITUR" network={Connection()} />
 				<Card style={{ border: '2px solid #c0392b' }}>
 					<CardHeader style={{ backgroundColor: "#c0392b", }}>
-						<p style={{ color: 'white', textAlign: 'center' }}>INFO DEBITUR</p>
+						<p style={{ color: 'white', textAlign: 'center' }}>INFO COSTUMER</p>
 					</CardHeader>
 					<CardContent>
 						<p><b>Customer Name:</b> {detailCust.name}</p>
@@ -136,12 +135,12 @@ class InfoDebitur extends React.Component {
 						</Col>
 					</Row>
 				</Block>
-				<CustomBlockTitle noGap title="INFO KONTRAK" rightTitle="HASIL KUNJUNGAN" />
+				<CustomBlockTitle noGap title="INFO AKUN" />
 				<Block>
 					{arrDetailCust.map((item, key) => (
 						<Row key={key} noGap>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.key.toUpperCase()}</p>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.key}</p>
 							</Col>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
 								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
@@ -149,7 +148,35 @@ class InfoDebitur extends React.Component {
 						</Row>
 					))}
 				</Block>
-				<CustomBlockTitle title="HISTORI PENANGANAN" />
+				<CustomBlockTitle title="INFO DEMOGRAFI" />
+				<Block>
+					<Card style={{ border: '2px solid #c0392b' }}>
+						<CardContent>
+							<p><b>CONTACT_ADDRES : </b>{detailCust.contact_address_1}</p>
+							<p><b>HOME_ADRESS : </b>{detailCust.home_address_1}</p>
+							<p><b>OFFICE_ADDRESS : </b>{detailCust.office_address_1}</p>
+							<p><b>ECON_ADDRESS : </b>{detailCust.refferal_address_1}</p>
+							<p><b>MOBILE PHONE : </b>{detailCust.handphone}</p>
+							<p><b>HOME_PHONE : </b>{detailCust.home_phone}</p>
+							<p><b>OFFICE_PHONE : </b>{detailCust.office_phone}</p>
+							<p><b>EMAIL : </b>{detailCust.home_email}</p>
+							<p><b>ECON_NAME : </b>{detailCust.refferal_name}</p>
+						</CardContent>
+					</Card>
+				</Block>
+				<CustomBlockTitle title="INFO FASILITAS LAIN" />
+				<Block>
+					<Card style={{ border: '2px solid #c0392b' }}>
+						<CardContent>
+							<p><b>Card_no : </b>{detailCust.card_type == "CC" ? detailCust.card_no : detailCust.account_number}</p>
+							<p><b>Bucket : </b>{detailCust.current_bucket}</p>
+							<p><b>DPD : </b>{detailCust.day_past_due}</p>
+							<p><b>Outstanding : </b>{detailCust.outstanding_balance}</p>
+							<p><b>amount_due : </b>{detailCust.bill_amount}</p>
+						</CardContent>
+					</Card>
+				</Block>
+				<CustomBlockTitle title="AKTIVITAS HISTORIKAL" />
 				<Block style={{ margin: 0 }}>
 					{history.map((item, key) => (
 						<Card key={key} style={{ border: '2px solid #c0392b' }}>
@@ -157,19 +184,20 @@ class InfoDebitur extends React.Component {
 								<p>HISTORI PENANGANAN</p>
 							</CardHeader>
 							<CardContent>
-								<p><b>TANGGAL:</b> {item.created_time}</p>
+								<p><b>TANGGAL:</b> {item.created_time.slice(0, 10)}</p>
+								<p><b>WAKTU:</b> {item.created_time.slice(11, 19)}</p>
 								<p><b>METODE KONTAK:</b> {item.contact_mode}</p>
-								<p><b>DETAIL METODE:</b> {item.contact_person}</p>
-								<p><b>KONTAK:</b> {item.call_result}</p>
-								<p><b>TEMPAT KUNJUNGAN:</b> {item.place_contacted} </p>
-								<p><b>BERTEMU DENGAN:</b> {item.contact_person}</p>
+								{/* <p><b>DETAIL METODE:</b> {item.call_result}</p> */}
+								<p><b>KONTAK:</b> {item.contact_person}</p>
+								{/* <p><b>TEMPAT KUNJUNGAN:</b> {item.place_contacted} </p> */}
+								{/* <p><b>BERTEMU DENGAN:</b> {item.contact_person}</p> */}
 								<p><b>KETERANGAN:</b> {item.notepad}</p>
-								<p><b>PETUGAS:</b> {item.user_id}</p>
+								{/* <p><b>PETUGAS:</b> {item.user_id}</p> */}
 							</CardContent>
 						</Card>
 					))}
 				</Block>
-				<CustomBlockTitle noGap title="INFORMASI UPDATE DATA" />
+				<CustomBlockTitle noGap title="INFO TAMBAHAN" />
 				<Block>
 					{infoUpdateData.map((item, key) => (
 						<Row key={key} style={{ alignItems: 'center', marginBottom: 16 }}>

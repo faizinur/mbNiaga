@@ -15,7 +15,7 @@ import { navigate, setDetailCustomer } from '../../../config/redux/actions/';
 import { log, Filter, SQLite, SQLiteTypes, Connection } from '../../../utils/';
 import { SystemInfo, KunjunganItem } from '../../../components/molecules';
 import { DefaultNavbar } from '../../../components/atoms'
-
+const { DETAIL_COSTUMER } = SQLiteTypes;
 class ListDebitur extends React.Component {
 	constructor(props) {
 		super(props);
@@ -57,7 +57,7 @@ class ListDebitur extends React.Component {
 	}
 	componentDidMount() {
 		this._tambahParameter()
-
+		// this._search();
 	}
 	_next(data) {
 		this.props.setDetailCustomer(data);
@@ -67,7 +67,7 @@ class ListDebitur extends React.Component {
 		var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");
 		// var param = JSON.parse('[{"column":"name","operator":"DOES_NOT_EQUAL","value":""}]');
 		if (param.length == 0) return false;
-		SQLite.query('SELECT * FROM collection where key = ?', [SQLiteTypes.DETAIL_COSTUMER])
+		SQLite.query('SELECT * FROM collection where key = ?', [DETAIL_COSTUMER])
 			.then(res => {
 				Filter.select(res, param).then((resFilter) => {
 					var arr_result = [];

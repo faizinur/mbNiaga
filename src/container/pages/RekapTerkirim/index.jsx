@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Page } from 'framework7-react';
+import { Page, Card, CardHeader, CardContent } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { log, Connection, SQLite, SQLiteTypes, Filter } from '../../../utils/';

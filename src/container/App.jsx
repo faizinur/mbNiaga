@@ -47,7 +47,11 @@ class Root extends React.Component {
 				// Cordova Statusbar settings
 				statusbar: {
 					iosOverlaysWebView: true,
-					androidOverlaysWebView: true,
+					androidOverlaysWebView: false,
+					androidBackgroundColor: '#c0392b',
+					iosBackgroundColor: '#c0392b',
+					androidTextColor: 'white',
+					iosTextColor: 'white',
 				},
 			},
 			realApp: false,
@@ -77,8 +81,8 @@ class Root extends React.Component {
 					}, false);
 					// document.addEventListener("resume", () => { log('resume') }, false);
 					if (cordova.platformId == 'android') {
-						StatusBar.overlaysWebView(true);
-						StatusBar.styleLightContent();
+						// StatusBar.overlaysWebView(true);
+						// StatusBar.styleLightContent();
 					}
 					window.screen.orientation.lock('portrait');
 				}, false);
@@ -187,7 +191,7 @@ class Root extends React.Component {
 			return (
 				<App params={this.state.f7params}>
 					<BlockTimeout display={this.state.blockTimeout} />
-					<CustomStatusBar />
+					{/* <CustomStatusBar /> */}
 					<CustomToolbar
 						shown={shownToolbar}
 					/>
