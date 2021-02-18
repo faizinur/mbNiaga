@@ -25,6 +25,8 @@ class InfoDebitur extends React.Component {
 		this.state = {
 			// detailCust: props.detailCust,
 			arrDetailCust: [],
+			arrDetailDemo: [],
+			arrOtherFacility: [],
 			history: [],
 			infoUpdateData: [
 				// {kategori : 'ALAMAT RUMAH', perubahan : []},
@@ -35,14 +37,26 @@ class InfoDebitur extends React.Component {
 	}
 	componentDidMount() {
 		var arrDetailCust = [];
-		var hiddenKey = ['account_number', 'outstanding_balance', 'due_date', 'last_payment_date', 'last_payment_amount', 'charge_off_date', 'current_bucket', 'day_past_due', 'over_limit_flag', 'total_due', 'total_curr_due', 'minimum_payment', 'dpd_cur_days', 'dpd_x_days', 'dpd_30_days', 'dpd_60_days', 'dpd_90_days', 'dpd_120_days', 'dpd_150_days', 'dpd_180_days', 'dpd_210_days', 'home_post_code', 'total_overdue_amount', 'last_puchase_date', 'last_purchase_amount', 'last_transaction_code', 'loan_type', 'card_type', 'open_date', 'cycle_date', 'princple_os', 'princple_amount_due', 'reason_code', 'maturity_date', 'tenor', 'installment_number', 'bill_amount'];
-		var aliasKey = ['Account_no', 'OS_Biling', 'PAYMENT_DUE_DATE', 'LAST_PAYMENT_DATE', 'LAST_PAYMENT_AMT', 'CHARGE_OFF_DATE', 'BUCKET', 'DPD', 'OVER_LIMIT_FLAG', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'ZIP CODE', 'AMOUNT_OVERDUE', 'LAST_PURCH_DATE', 'LAST_PURCH_AMT', 'Last Transaction Type', 'PRODUCT_TYPE', 'CARD_TYPE', 'MOB', 'COLLECTION_CYCLE', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'REASON_CODE', 'Maturity_Date', 'Tenor', 'No_of_Installment_Due', 'Total_Billed_Amount'];
+		var arrDetailDemo = [];
+		var arrOtherFacility = [];
+		let hiddenKeyCust = ['account_number', 'outstanding_balance', 'belum_ada', 'due_date', 'last_payment_date', 'last_payment_amount', 'charge_off_date', 'current_bucket', 'day_past_due', 'over_limit_flag', 'total_due', 'total_curr_due', 'minimum_payment', 'dpd_cur_days', 'dpd_x_days', 'dpd_30_days', 'dpd_60_days', 'dpd_90_days', 'dpd_120_days', 'dpd_150_days', 'dpd_180_days', 'dpd_210_days', 'total_overdue_amount', 'last_puchase_date', 'last_purchase_amount', 'last_transaction_code', 'loan_type', 'card_type', 'open_date', 'cycle_date', 'princple_os', 'princple_amount_due', 'reason_code', 'home_post_code', 'maturity_date', 'tenor', 'installment_number', 'bill_amount'];
+		let aliasKeyCust = ['Account_no', 'OS_Biling', 'CURRENT_ACC_BALANCE', 'PAYMENT_DUE_DATE', 'LAST_PAYMENT_DATE', 'LAST_PAYMENT_AMT', 'CHARGE_OFF_DATE', 'BUCKET', 'DPD', 'OVER_LIMIT_FLAG', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_DATE', 'LAST_PURCH_AMT', 'Last', 'PRODUCT_TYPE', 'CARD_TYPE', 'MOB', 'COLLECTION_CYCLE', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'REASON_CODE', 'ZIPCODE', 'Maturity_Date', 'Tenor', 'No_of_Installment_Due', 'Total_Billed_Amount'];
+		let hiddenKeyDemo = ['contact_address_1', 'home_address_1', 'office_address_1', 'refferal_address_1', 'handphone', 'home_phone', 'office_phone', 'home_email', 'refferal_name'];
+		let aliasKeyDemo = ['CONTACT_ADDRES', 'HOME_ADRESS', 'OFFICE_ADDRESS', 'ECON_ADDRESS', 'MOBILE_PHONE', 'HOME_PHONE', 'OFFICE_PHONE', 'EMAIL', 'ECON_NAME'];
+		let hiddenKeyOtherFacility = [this.props.detailCust.card_type == "CC" ? 'card_no' : 'account_number', 'current_bucket', 'day_past_due', 'outstanding_balance', 'bill_amount'];
+		let aliasKeyOtherFacility = ['Card_no', 'Bucket', 'DPD', 'Outstanding', 'amount_due'];
 		//gak ada zip code
 		for (const key in this.props.detailCust) {
-			if (hiddenKey.includes(key)) arrDetailCust = [...arrDetailCust, { 'key': aliasKey[hiddenKey.indexOf(key)], 'value': this.props.detailCust[key] }]
+			if (hiddenKeyCust.includes(key)) arrDetailCust = [...arrDetailCust, { 'key': aliasKeyCust[hiddenKeyCust.indexOf(key)], 'value': this.props.detailCust[key] }]
+			if (hiddenKeyDemo.includes(key)) arrDetailDemo = [...arrDetailDemo, { 'key': aliasKeyDemo[hiddenKeyDemo.indexOf(key)], 'value': this.props.detailCust[key] }]
+			if (hiddenKeyOtherFacility.includes(key)) arrOtherFacility = [...arrOtherFacility, { 'key': aliasKeyOtherFacility[hiddenKeyOtherFacility.indexOf(key)], 'value': this.props.detailCust[key] }]
 		}
-		this.setState({ arrDetailCust: arrDetailCust })
-		SQLite.query('SELECT * FROM collection where key = ?', [ACTIVITY_HISTORY])
+		this.setState({
+			arrDetailCust: arrDetailCust,
+			arrDetailDemo: arrDetailDemo,
+			arrOtherFacility: arrOtherFacility,
+		})
+		SQLite.query('SELECT * FROM COLLECTION where key = ?', [ACTIVITY_HISTORY])
 			.then(res => {
 				Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number }]).then((resFilter) => {
 					log("HASIL FILTER", resFilter)
@@ -51,7 +65,7 @@ class InfoDebitur extends React.Component {
 				}).catch(err => log(err))
 			}).catch(err => log(err))
 
-		SQLite.query('SELECT * FROM collection where key = ?', [UPDATE_HISTORY])
+		SQLite.query('SELECT * FROM COLLECTION where key = ?', [UPDATE_HISTORY])
 			.then(res => {
 				log("UPDATE_HITORY", res)
 				Filter.select(res, [
@@ -87,6 +101,14 @@ class InfoDebitur extends React.Component {
 
 			}).catch(err => log(err))
 	}
+
+	_capitalize = (sentence = '') => {
+		if (sentence == '') return null;
+		const words = sentence.toLowerCase().replaceAll('_', ' ').split(' ');
+		words.map((item, index) => words[index] = item[0].toUpperCase() + item.slice(1, item.length))
+		return words.join(" ");
+	}
+
 	_updateData() {
 		this.props.navigate('/UpdateDebitur/');
 	}
@@ -107,7 +129,7 @@ class InfoDebitur extends React.Component {
 			.catch(err => log(err))
 	}
 	render() {
-		const { arrDetailCust, history, infoUpdateData } = this.state;
+		const { arrDetailCust, history, infoUpdateData, arrDetailDemo, arrOtherFacility } = this.state;
 		const { detailCust } = this.props;
 		let [Y, M, D] = detailCust.date_of_birth.split("-");
 		let today = new Date();
@@ -140,7 +162,7 @@ class InfoDebitur extends React.Component {
 					{arrDetailCust.map((item, key) => (
 						<Row key={key} noGap>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.key}</p>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
 							</Col>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
 								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
@@ -150,31 +172,29 @@ class InfoDebitur extends React.Component {
 				</Block>
 				<CustomBlockTitle title="INFO DEMOGRAFI" />
 				<Block>
-					<Card style={{ border: '2px solid #c0392b' }}>
-						<CardContent>
-							<p><b>CONTACT_ADDRES : </b>{detailCust.contact_address_1}</p>
-							<p><b>HOME_ADRESS : </b>{detailCust.home_address_1}</p>
-							<p><b>OFFICE_ADDRESS : </b>{detailCust.office_address_1}</p>
-							<p><b>ECON_ADDRESS : </b>{detailCust.refferal_address_1}</p>
-							<p><b>MOBILE PHONE : </b>{detailCust.handphone}</p>
-							<p><b>HOME_PHONE : </b>{detailCust.home_phone}</p>
-							<p><b>OFFICE_PHONE : </b>{detailCust.office_phone}</p>
-							<p><b>EMAIL : </b>{detailCust.home_email}</p>
-							<p><b>ECON_NAME : </b>{detailCust.refferal_name}</p>
-						</CardContent>
-					</Card>
+					{arrDetailDemo.map((item, key) => (
+						<Row key={key} noGap>
+							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
+							</Col>
+							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
+							</Col>
+						</Row>
+					))}
 				</Block>
 				<CustomBlockTitle title="INFO FASILITAS LAIN" />
 				<Block>
-					<Card style={{ border: '2px solid #c0392b' }}>
-						<CardContent>
-							<p><b>Card_no : </b>{detailCust.card_type == "CC" ? detailCust.card_no : detailCust.account_number}</p>
-							<p><b>Bucket : </b>{detailCust.current_bucket}</p>
-							<p><b>DPD : </b>{detailCust.day_past_due}</p>
-							<p><b>Outstanding : </b>{detailCust.outstanding_balance}</p>
-							<p><b>amount_due : </b>{detailCust.bill_amount}</p>
-						</CardContent>
-					</Card>
+					{arrOtherFacility.map((item, key) => (
+						<Row key={key} noGap>
+							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
+							</Col>
+							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
+							</Col>
+						</Row>
+					))}
 				</Block>
 				<CustomBlockTitle title="AKTIVITAS HISTORIKAL" />
 				<Block style={{ margin: 0 }}>
