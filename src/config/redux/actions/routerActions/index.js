@@ -6,7 +6,6 @@ const navigate = (pageName) => {
     return (dispatch, getState) => {
         log('navigate TO : ', pageName)
         dispatch(navigateTo(pageName));
-        // dispatch(goBack());
     };
 };
 
@@ -30,16 +29,20 @@ const back = () => {
             case 'RekapTertunda':
             case 'VisitedList':
             case 'DeviceInfo':
+                log('navigate TO : /Main/');
                 while (f7.views.main.router.history.length) {
                     f7.views.main.router.history.pop();
                 }
                 dispatch(navigateTo('/Main/'));
                 break;
             case 'InfoDebitur':
+                log('navigate TO : /ListDebitur/');
                 dispatch(navigateTo('/ListDebitur/'));
                 break;
             case 'AddKunjungan':
-                dispatch(navigateTo(f7.views.main.router.history[f7.views.main.router.history.length - 2]));
+                let destinationPage = f7.views.main.router.history[f7.views.main.router.history.length - 2];
+                log('navigate TO : ', destinationPage);
+                dispatch(navigateTo(destinationPage));
                 break;
             default: dispatch(goBack());
         }
