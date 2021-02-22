@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {
 	Page,
-	Navbar,
-	List,
-	ListInput,
+	f7,
 	Block,
 	Row,
 	Col,
@@ -97,7 +95,7 @@ class InfoDebitur extends React.Component {
 						infoUpdateData: [...prevState.infoUpdateData, { kategori: "ALAMAT EMERGENCY", perubahan: resFilter.map(({ refferal_address_1 }) => refferal_address_1) }]
 					}))
 				}).catch(err => log(err))
-				log("STATE", this.state)
+				// log("STATE", this.state)
 
 			}).catch(err => log(err))
 	}
@@ -113,20 +111,28 @@ class InfoDebitur extends React.Component {
 		this.props.navigate('/UpdateDebitur/');
 	}
 	_rencanaKunjungan() {
-		SQLite.query('SELECT * FROM collection where key = ?', [RENCANA_KUNJUNGAN])
-			.then(res => {
-				Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number }]).then((resFilter) => {
-					if (resFilter.length != 0) return false;
-					var data = res.length != 0 ? res[0] : res;
-					data.push((this.props.detailCust))
-					SQLite.query(`INSERT OR REPLACE INTO collection (key, value) VALUES(?,?)`, [RENCANA_KUNJUNGAN, data])
-						.then(insert => {
-							log(insert)
-							this.props.navigate('/Main/');
-						}).catch(err => log(err))
-				}).catch(err => log(err))
-			})
-			.catch(err => log(err))
+		f7.dialog.confirm("Apakah akan dimasukkan ke rencana kunjungan?", () => {
+			SQLite.query('SELECT * FROM collection where key = ?', [RENCANA_KUNJUNGAN])
+				.then(res => {
+					Filter.select(res, [{ 'column': 'account_number', 'operator': 'EQUAL', 'value': this.props.detailCust.account_number }]).then((resFilter) => {
+						if (resFilter.length == 0) {
+							var data = res.length != 0 ? res[0] : res;
+							data.push((this.props.detailCust))
+							SQLite.query(`INSERT OR REPLACE INTO collection (key, value) VALUES(?,?)`, [RENCANA_KUNJUNGAN, data])
+								.then(insert => {
+									log(insert)
+									this.props.navigate('/ListDebitur/');
+								}).catch(err => log(err))
+						} else {
+							this.props.navigate('/ListDebitur/');
+						}
+					}).catch(err => log(err))
+				})
+				.catch(err => log(err))
+		}, () => log("cancel"))
+	}
+	_formatCurrency = (number) => {
+		return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseFloat(number)) 
 	}
 	render() {
 		const { arrDetailCust, history, infoUpdateData, arrDetailDemo, arrOtherFacility } = this.state;
@@ -134,8 +140,8 @@ class InfoDebitur extends React.Component {
 		let [Y, M, D] = detailCust.date_of_birth.split("-");
 		let today = new Date();
 		return (
-			<Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
-				<DefaultNavbar title="DETAIL DEBITUR" network={Connection()} />
+			<Page name="InfoDebitur" noToolbar noNavbar style={{ paddingBottom: 60 }}>
+				<DefaultNavbar title="DETAIL DEBITUR" network={Connection()} backLink />
 				<Card style={{ border: '2px solid #c0392b' }}>
 					<CardHeader style={{ backgroundColor: "#c0392b", }}>
 						<p style={{ color: 'white', textAlign: 'center' }}>INFO COSTUMER</p>
@@ -157,6 +163,13 @@ class InfoDebitur extends React.Component {
 						</Col>
 					</Row>
 				</Block>
+				<Block>
+					<Row>
+						<Col width="100">
+							<Button fill raised onClick={() => this.props.navigate('/AddKunjungan/')} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>INPUT ACTIVITY</Button>
+						</Col>
+					</Row>
+				</Block>
 				<CustomBlockTitle noGap title="INFO AKUN" />
 				<Block>
 					{arrDetailCust.map((item, key) => (
@@ -165,7 +178,7 @@ class InfoDebitur extends React.Component {
 								<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
 							</Col>
 							<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-								<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
+								<p style={{ margin: 8, wordBreak: 'break-word' }}>{['OS_Biling', 'LAST_PAYMENT_AMT', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_AMT', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'Total_Billed_Amount'].includes(item.key) ? this._formatCurrency(item.value == '' ? 0 : item.value) : item.value}</p>
 							</Col>
 						</Row>
 					))}

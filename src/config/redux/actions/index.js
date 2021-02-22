@@ -11,7 +11,8 @@ import {
 } from './mainActions';
 
 import {
-    navigate
+    navigate,
+    back,
 } from './routerActions';
 
 import {
@@ -38,7 +39,7 @@ import {
     setIdleTime,
     setBedaJam,
     setMaxBedaJam,
-	setMountPoint,
+    setMountPoint,
 } from './referenceActions';
 
 
@@ -48,6 +49,7 @@ export {
     updateUser,
     login,
     navigate,
+    back,
     setUser,
     setDevice,
     setProvince,
@@ -67,5 +69,5 @@ export {
     setIdleTime,
     setBedaJam,
     setMaxBedaJam,
-	setMountPoint,
+    setMountPoint,
 }

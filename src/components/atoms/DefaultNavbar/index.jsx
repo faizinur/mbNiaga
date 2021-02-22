@@ -2,13 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { log } from '../../../utils';
 import { Icon } from 'framework7-react';
-
+import { useDispatch, useSelector } from "react-redux";
+import { back } from '../../../config/redux/actions/';
 const DefaultNavbar = (props) => {
     // if('mode' in props){
 
     // }    
     // switch (props.mode) {
     //     case 'info':
+    
+    const dispatch = useDispatch();
     return (
         <div style={
             {
@@ -22,12 +25,12 @@ const DefaultNavbar = (props) => {
                 style={styles.iconContainer} >
                 {
                     'backLink' in props ?
-                        <div
-                            onClick={() => props.backLink()}
-                        >
-                            <Icon style={styles.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
-                        </div>
-                        : <div></div>
+                    <div
+                    onClick={() => dispatch(back())}
+                    >
+                        <Icon style={styles.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
+                    </div>
+                    : <div></div>
                 }
                 {
                     'title' in props ?
@@ -57,7 +60,7 @@ const DefaultNavbar = (props) => {
 DefaultNavbar.propTypes = {
     title: PropTypes.string,
     network: PropTypes.string,
-    backLink: PropTypes.func,
+    backLink: PropTypes.any,
 };
 
 

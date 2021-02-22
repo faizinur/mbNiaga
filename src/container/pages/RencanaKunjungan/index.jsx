@@ -119,8 +119,8 @@ class RencanaKunjungan extends React.Component {
 
     render() {
         return (
-            <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="RENCANA KUNJUNGAN" network={Connection()} />
+            <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="RencanaKunjungan">
+                <DefaultNavbar title="RENCANA KUNJUNGAN" network={Connection()} backLink/>
                 <List noHairlinesMd style={{ marginBottom: 0, padding: 0 }}>
                     <SystemInfo />
                     <Block style={{ margin: 0, padding: 0 }}>

@@ -146,10 +146,13 @@ class RekapTertunda extends React.Component {
         return (
             <Page noToolbar noNavbar
                 style={{ paddingBottom: 60 }}
+                name="RekapTertunda"
+                
             >
                 <DefaultNavbar
                     title="Rekap Tertunda"
                     network={Connection()}
+                    backLink
                 />
                 {this.state.listTertunda.map((item, key) => (
                     <Card key={key} style={{ border: '2px solid #c0392b' }}>

@@ -57,7 +57,22 @@ class ListDebitur extends React.Component {
 	}
 	componentDidMount() {
 		this._tambahParameter()
-		// this._search();
+		SQLite.query('SELECT * FROM collection where key = ?', [DETAIL_COSTUMER])
+			.then(res => {
+				var arr_result = [];
+				(res.length == 0 ? [] : res[0]).map((item, index) => arr_result.push({
+					namaDebitur: item.name,
+					nomorKartu: item.card_no,
+					alamat: item.home_address_1,
+					produk: item.loan_type,
+					tagihan: item.dpd_cur_days,
+					bucket: item.current_bucket,
+					dpd: item.day_past_due,
+					data: item
+				}));
+				this.setState({ searchResult: arr_result });
+			})
+			.catch(err => log(err))
 	}
 	_next(data) {
 		this.props.setDetailCustomer(data);
@@ -102,9 +117,9 @@ class ListDebitur extends React.Component {
 
 	render() {
 		return (
-			<Page noToolbar noNavbar style={{ paddingBottom: 85 }}>
-				<DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} />
-				<List noHairlinesMd style={{ marginBottom: 0, padding: 0 }}>
+			<Page name="ListDebitur" noToolbar noNavbar style={{ paddingBottom: 85 }}>
+				<DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} backLink/>
+				<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
 					<SystemInfo />
 					<Block style={{ margin: 0, padding: 0 }}>
 						{this.state.searchParameter.map((item, key) => (

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {
     Page,
-    List,
-    Block,
-    CardContent,
+    f7,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -30,7 +28,7 @@ class Main extends React.Component {
     }
     render() {
         return (
-            <Page style={{ paddingBottom: 60 }}>
+            <Page style={{ paddingBottom: 60 }} name="Main">
                 <DefaultNavbar
                     title="MOBILE APPLICATION INTERACTION"
                     network={Connection()}

@@ -23,10 +23,10 @@ const DeviceInfo = (props) => {
     const device = useSelector(state => state.main.device);
     const dispatch = useDispatch();
     return (
-        <Page noToolbar noNavbar>
+        <Page noToolbar noNavbar name="DeviceInfo">
             <DefaultNavbar
                 mode={'info'}
-                backLink={(e) => 'backLink' in props ? props.backLink(e) : dispatch(navigate('/Main/'))}
+                backLink
                 title={'DEVICE INFORMATION'}
             />
             <List noHairlinesMd style={{ fontSize: 1 }}>

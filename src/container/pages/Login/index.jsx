@@ -68,7 +68,9 @@ class Login extends React.Component {
     componentDidMount() {
         log('componentDidMount LOGIN : ', this.props.device);
         // log('HIDE SHOW POPUP!');
-        this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
+        if(f7.views.main.router.history.length == 0){ //GARA GARA GOBACK REDUX ini ke load lagi jadi di cek kalo / berarti pertama login
+            this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
+        }
     }
     _onClickLogin = async () => {
         if (this.props.pin != "" && this.props.profile.is_login == true) {

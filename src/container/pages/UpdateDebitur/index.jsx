@@ -176,8 +176,8 @@ class UpdateDebitur extends React.Component {
     render() {
         var {detailCust, tipeAlamat, province, regency, district, subDistrict} = this.state;
         return (
-            <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="UPDATE DATA" network={Connection()} />
+            <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="UpdateDebitur">
+                <DefaultNavbar title="UPDATE DATA" network={Connection()} backLink/>
                 <CustomBlockTitle center title="INFO DEBITUR" />
                 <List noHairlinesMd style={{ fontSize: 1 }}>
                     <ListInput

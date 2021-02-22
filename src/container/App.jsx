@@ -14,7 +14,7 @@ import { store, stateKernel } from '../config/redux/store';
 import { connect } from 'react-redux';
 
 import { log, ClockTick, Connection, Geolocation, SQLite, SQLiteTypes } from '../utils/';
-import { navigate, setUser, setGeolocation } from '../config/redux/actions/';
+import { navigate, back, setUser, setGeolocation } from '../config/redux/actions/';
 import { CustomToolbar, SplashScreen } from '../components/molecules/';
 import { CustomStatusBar, BlockTimeout } from '../components/atoms';
 import { Idle } from '../container/pages/';
@@ -71,22 +71,13 @@ class Root extends React.Component {
 			// Init cordova APIs (see cordova-app.js)
 			if (Device.cordova) {
 				cordovaApp.init(f7);
+				document.addEventListener('backbutton', (e) => {
+					this.props.back();
+					e.preventDefault();
+					return false;
+				})
 				document.addEventListener('deviceready', () => {
-					if (JSON.stringify(cordova.plugins.uid) == '{}') {
-						// alert(`cordova.plugins : ${JSON.stringify(cordova.plugins)}`);
-					}
-					document.addEventListener("pause", () => {
-						// if (this.props.pin != "" && this.props.profile.is_login == true) {
-						// 	if ((this.state.idleCounter % idleTime) == 0 && this.state.popUpStateIdle  == false){
-						// 		this.setState({ popUpStateIdle: true });
-						// 	}
-						// }
-					}, false);
-					// document.addEventListener("resume", () => { log('resume') }, false);
-					if (cordova.platformId == 'android') {
-						// StatusBar.overlaysWebView(true);
-						// StatusBar.styleLightContent();
-					}
+					document.addEventListener("pause", () => { }, false);
 					window.screen.orientation.lock('portrait');
 				}, false);
 			}
@@ -115,7 +106,7 @@ class Root extends React.Component {
 				});
 
 				if (this.state.idleCounter % 300 == 0) {
-					// this._saveTime();
+					this._saveTime();
 				}
 			}
 			//idle counter kalo udah login
@@ -170,7 +161,6 @@ class Root extends React.Component {
 	render() {
 		const { realApp } = this.state;
 		let shownToolbar = (Object.keys(this.props.profile).length > 0 && this.props.profile.is_login == true) ? true : false;
-		// log('shownToolbar', shownToolbar);
 		if (!realApp) {
 			return (
 				<App params={this.state.f7params}>
@@ -194,12 +184,9 @@ class Root extends React.Component {
 			return (
 				<App params={this.state.f7params}>
 					<BlockTimeout display={this.state.blockTimeout} />
-					{/* <CustomStatusBar /> */}
 					<CustomToolbar
 						shown={shownToolbar}
 					/>
-					{/* SHOWN : { JSON.stringify(shownToolbar)} PIN {JSON.stringify(this.props.pin)} LOGGED { JSON.stringify(this.props.profile.is_login)} */}
-					{/* BEDA JAM : { JSON.stringify(this.props.bedaJam)} MAX BEDA JAM {JSON.stringify(this.props.maxBedaJam)} */}
 					<Popup
 						className="idle-popup"
 						opened={this.state.popUpStateIdle}
@@ -244,6 +231,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		setUser: (data) => dispatch(setUser(data)),
 		navigate: (nav) => dispatch(navigate(nav)),
+		back: () => dispatch(back()),
 		setGeolocation: (data) => dispatch(setGeolocation(data))
 	};
 };

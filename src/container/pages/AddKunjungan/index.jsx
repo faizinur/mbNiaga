@@ -160,8 +160,8 @@ class AddKunjungan extends React.Component {
             if (hiddenKey.includes(key)) optionPayment = [...optionPayment, { 'value': detailCust[key] }]
         }
         return (
-            <Page noToolbar noNavbar style={{ paddingBottom: 60 }}>
-                <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} />
+            <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="AddKunjungan">
+                <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} backLink/>
                 <CustomerInfo />
                 <CustomBlockTitle title="Metode Kontak" />
                 <List>

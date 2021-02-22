@@ -26,10 +26,11 @@ const RekapTerkirim = (props) => {
             }).catch(err => log(err))
     }
     return (
-        <Page noToolbar noNavbar>
+        <Page noToolbar noNavbar name="RekapTerkirim" >
             <DefaultNavbar
                 title="Rekap Terkirim"
                 network={Connection()}
+                backLink
             />
             {listTerkirim.map((item, key) => (
                 <Card key={key} style={{ border: '2px solid #c0392b' }}>
