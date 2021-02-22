@@ -30,9 +30,6 @@ const back = () => {
             case 'VisitedList':
             case 'DeviceInfo':
                 log('navigate TO : /Main/');
-                // while (f7.views.main.router.history.length) {
-                //     f7.views.main.router.history.pop();
-                // }
                 dispatch(navigateTo('/Main/'));
                 break;
             case 'InfoDebitur':
@@ -44,6 +41,7 @@ const back = () => {
                 log('navigate TO : ', destinationPage);
                 dispatch(navigateTo(destinationPage));
                 break;
+
             default: dispatch(goBack());
         }
 
