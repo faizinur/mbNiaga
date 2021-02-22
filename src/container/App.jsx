@@ -48,8 +48,8 @@ class Root extends React.Component {
 				statusbar: {
 					iosOverlaysWebView: true,
 					androidOverlaysWebView: false,
-					androidBackgroundColor: '#c0392b',
-					iosBackgroundColor: '#c0392b',
+					androidBackgroundColor: '#890001',
+					iosBackgroundColor: '#890001',
 					androidTextColor: 'white',
 					iosTextColor: 'white',
 				},
@@ -63,6 +63,9 @@ class Root extends React.Component {
 			beda_jam: 0,
 		}
 	}
+	// #c0392b
+	// Light = #f96b55
+	// Dark = #890001
 	componentDidMount() {
 		this.$f7ready((f7) => {
 			// Init cordova APIs (see cordova-app.js)
