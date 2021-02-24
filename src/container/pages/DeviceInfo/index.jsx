@@ -27,6 +27,7 @@ const DeviceInfo = (props) => {
             <DefaultNavbar
                 mode={'info'}
                 backLink
+                onClick={()=> props.onClick()}
                 title={'DEVICE INFORMATION'}
             />
             <List noHairlinesMd style={{ fontSize: 1 }}>

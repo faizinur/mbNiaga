@@ -115,34 +115,6 @@ const SplashScreen = (props) => {
             .then(insert => {
                 if (insert) _getLocalData();
             })
-
-        /*
-        // if (dvc) {
-        // if (Connection() != "OFFLINE") {
-        log('_getReference DEV, SELALU AMBIL REF KALO DI WEB');
-        SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
-            .then(select => {
-                if (select.length == 0) {
-                    POST(`Get_all_refs`, { jam_mobile: jam_mobile })
-                        .then(res => {
-                            log(res.data)
-                            SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, res.data])
-                                // .then(insert => _getLocalData())
-                                .then(insert => log('_getLocalData()'))
-                                .catch(err => log(err));
-                        }).catch(err => log(err));
-                }
-                // else {
-                // _getLocalData();
-                // }
-            })
-            .catch(err => log(err));
-        // }
-        // else {
-        //     _getLocalData();
-        // }
-        // }
-        */
     }
     const _getLocalData = () => {
         log('_getLocalData')

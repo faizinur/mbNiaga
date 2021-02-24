@@ -63,9 +63,6 @@ class Root extends React.Component {
 			beda_jam: 0,
 		}
 	}
-	// #c0392b
-	// Light = #f96b55
-	// Dark = #890001
 	componentDidMount() {
 		this.$f7ready((f7) => {
 			// Init cordova APIs (see cordova-app.js)
@@ -214,7 +211,6 @@ class Root extends React.Component {
 		}
 	}
 }
-
 const mapStateToProps = (state) => {
 	return {
 		profile: state.user.profile,
@@ -226,7 +222,6 @@ const mapStateToProps = (state) => {
 		maxBedaJam: state.reference.maxBedaJam,
 	};
 };
-
 const mapDispatchToProps = (dispatch) => {
 	return {
 		setUser: (data) => dispatch(setUser(data)),
@@ -235,7 +230,6 @@ const mapDispatchToProps = (dispatch) => {
 		setGeolocation: (data) => dispatch(setGeolocation(data))
 	};
 };
-
 export default () => {
 	const RootApp = connect(mapStateToProps, mapDispatchToProps)(Root);
 	return (

@@ -409,7 +409,7 @@ class Login extends React.Component {
                             <>
                                 <CustomStatusBar />
                                 <Check
-                                    backLink={(e) => this._setLoginResult()}
+                                    onClick={(e) => this._setLoginResult()}
                                     title={"Gagal Login"}
                                     loginResult={this.state.resultLogin}
                                 />
@@ -424,7 +424,7 @@ class Login extends React.Component {
                     onPopupClosed={() => log('pop up Closed')}
                 >
                     <DeviceInfo
-                        backLink={(e) => this.setState({ popUpStateDeviceInfo: false })}
+                        onClick={(e) => this.setState({ popUpStateDeviceInfo: false })}
                     />
                 </Popup>
             </Page>

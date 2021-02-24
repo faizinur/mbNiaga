@@ -18,7 +18,7 @@ const back = () => {
         }
         let unRouteable = ['Login', 'SplashScreen', 'Main'];
         if (unRouteable.includes(pageCurrentName) || f7.views.main.router.history.length == 1) {
-            log('gak boleh routing dari', pageCurrentName)
+            log('gak boleh routing dari', pageCurrentName);
             return false;
         }
         //kasus tidak biasa yang routingnya bolak balik, atau halaman yang dipakai bersama
@@ -41,10 +41,8 @@ const back = () => {
                 log('navigate TO : ', destinationPage);
                 dispatch(navigateTo(destinationPage));
                 break;
-
             default: dispatch(goBack());
         }
-
     };
 }
 

@@ -26,7 +26,7 @@ const DefaultNavbar = (props) => {
                 {
                     'backLink' in props ?
                     <div
-                    onClick={() => dispatch(back())}
+                    onClick={() => 'onClick' in props ? props.onClick() : dispatch(back())}
                     >
                         <Icon style={styles.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
                     </div>
