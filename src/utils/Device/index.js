@@ -6,7 +6,7 @@ var Device = {
             // var deviceType = getDevice();
             (!Perangkat.android && !Perangkat.ios) ? reject("Device not support") : resolve(window.device);
         });
-    },
+    }, 
 }
 export default Device;
 

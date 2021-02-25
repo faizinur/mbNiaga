@@ -68,8 +68,8 @@ class Login extends React.Component {
     componentDidMount() {
         log('componentDidMount LOGIN : ', this.props.device);
         // log('HIDE SHOW POPUP!');
-        if(f7.views.main.router.history.length == 0){ //GARA GARA GOBACK REDUX ini ke load lagi jadi di cek kalo / berarti pertama login
-            this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
+        if (f7.views.main.router.history.length == 0) { //GARA GARA GOBACK REDUX ini ke load lagi jadi di cek kalo / berarti pertama login
+            // this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
         }
     }
     _onClickLogin = async () => {
@@ -91,12 +91,13 @@ class Login extends React.Component {
 
         try {
             if (dvc) {
-                this.props.setDevice({
-                    ...await Perangkat.getInformation(),
-                    ...{
-                        serial: cordova.plugins.uid.ICCID === undefined ? 'undefined' : cordova.plugins.uid.ICCID
-                    }
-                });
+                // this.props.setDevice({
+                //     ...await Perangkat.getInformation(),
+                //     ...{
+                //         serial: cordova.plugins.uid.ICCID === undefined ? 'undefined' : cordova.plugins.uid.ICCID
+                //     }
+                // });
+                this.props.setDevice(await Perangkat.getInformation());
                 if (Connection() == 'OFFLINE') {
                     this._setLoginResult('MobileData');
                     f7.dialog.alert('Pastikan anda tersambung jaringan internet')
@@ -113,7 +114,7 @@ class Login extends React.Component {
                 password: password,
                 imei: JSON.stringify(uuid),
                 iccd: JSON.stringify(serial),
-                jam_mobile : `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0'+minutes : minutes}:${seconds < 9 ? '0'+seconds : seconds}`,
+                jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0' + minutes : minutes}:${seconds < 9 ? '0' + seconds : seconds}`,
             }
             const userPIN = await SQLite.query('SELECT value from COLLECTION where key=?', [PIN]);
             POST(`Login`, data)
@@ -162,12 +163,13 @@ class Login extends React.Component {
         let dvcInfo = (!Device.android && !Device.ios) ?
             { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' }
             :
-            {
-                ...await Perangkat.getInformation(),
-                ...{
-                    serial: cordova.plugins.uid.ICCID
-                }
-            };
+            await Perangkat.getInformation();
+        // {
+        //     ...await Perangkat.getInformation(),
+        //     ...{
+        //         serial: cordova.plugins.uid.ICCID
+        //     }
+        // };
         this.props.setDevice(dvcInfo);
         let userTmp = {
             ...Object.assign({}, this.state.user),
@@ -181,12 +183,13 @@ class Login extends React.Component {
         let dvcInfo = (!Device.android && !Device.ios) ?
             { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' }
             :
-            {
-                ...await Perangkat.getInformation(),
-                ...{
-                    serial: cordova.plugins.uid.ICCID
-                }
-            };
+            await Perangkat.getInformation();
+        // {
+        //     ...await Perangkat.getInformation(),
+        //     ...{
+        //         serial: cordova.plugins.uid.ICCID
+        //     }
+        // };
 
         log('_onValidatePIN : ', inputPIN)
         SQLite.query('select value from COLLECTION where key=?', [PIN])
@@ -294,12 +297,13 @@ class Login extends React.Component {
     }
     _onClickDeviceInfo = async () => {
         this.setState({ popUpStateDeviceInfo: true })
-        this.props.setDevice({
-            ...await Perangkat.getInformation(),
-            ...{
-                serial: cordova.plugins.uid.ICCID
-            }
-        });
+        this.props.setDevice(await Perangkat.getInformation());
+        // this.props.setDevice({
+        //     ...await Perangkat.getInformation(),
+        //     ...{
+        //         serial: cordova.plugins.uid.ICCID
+        //     }
+        // });
     }
     render() {
         return (

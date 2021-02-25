@@ -53,7 +53,6 @@
         "GPS_REQUIRED": "true"
       },
       "cordova-sqlite-storage": {},
-      "cordova-plugin-dreamover-uid": {},
       "cordova-plugin-screen-orientation": {}
     },
     "platforms": [

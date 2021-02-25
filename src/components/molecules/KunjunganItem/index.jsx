@@ -13,7 +13,7 @@ import { log, } from '../../../utils';
 
 const KunjunganItem = (props) => {
     useEffect(() => {
-        log('MOUNT OR UPDATE KunjunganItem');
+        log('MOUNT OR UPDATE KunjunganItem', props);
         return () => {
             log('UNMOUNT KunjunganItem');
         }
@@ -26,14 +26,18 @@ const KunjunganItem = (props) => {
                         key={key}
                         onClick={(e) => props.onItemClick(item.data)}
                         style={styles.container}>
-                        <div
-                            style={styles.imgContainer}>
-                            <img width="50" height="50" src={require(`../../../assets/img/person-at-home.png`).default}/>
-                        </div>
+                        {
+                            'icon' in props ? (
+                                <div
+                                    style={styles.imgContainer}>
+                                    <img width="50" height="50" src={require(`../../../assets/img/person-at-home.png`).default} />
+                                </div>
+                            ) : (<></>)
+                        }
                         <div
                             style={styles.itemContainer}>
-                            <p style={{...styles.itemText, ...{ fontWeight : 'bold'}}}>{item.namaDebitur}</p>
-                            <p style={styles.itemText}>{item.nomorKartu}</p>
+                            <p style={{ ...styles.itemText, ...{ fontWeight: 'bold', fontSize: 18 } }}>{item.namaDebitur}</p>
+                            <p style={{ ...styles.itemText, ...{ fontSize: 18 } }}>{item.nomorKartu}</p>
                             <p style={styles.itemText}>{item.alamat}</p>
                             <p style={styles.itemText}>{item.tagihan}</p>
                         </div>
