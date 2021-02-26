@@ -10,7 +10,7 @@ const DefaultNavbar = (props) => {
     // }    
     // switch (props.mode) {
     //     case 'info':
-    
+
     const dispatch = useDispatch();
     return (
         <div style={
@@ -25,12 +25,12 @@ const DefaultNavbar = (props) => {
                 style={styles.iconContainer} >
                 {
                     'backLink' in props ?
-                    <div
-                    onClick={() => 'onClick' in props ? props.onClick() : dispatch(back())}
-                    >
-                        <Icon style={styles.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
-                    </div>
-                    : <div></div>
+                        <div
+                            onClick={() => 'onClick' in props ? props.onClick() : dispatch(back())}
+                        >
+                            <Icon style={styles.icon} ios="f7:arrow_left" aurora="f7:arrow_left" md="material:arrow_back"></Icon>
+                        </div>
+                        : <div></div>
                 }
                 {
                     'title' in props ?

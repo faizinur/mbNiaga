@@ -24,12 +24,25 @@ const SystemInfo = (props) => {
 
     return (
         <Block style={{ margin: 0, padding: 0 }}>
-            <Row noGap style={{padding:5, backgroundColor:'#e4e4e4'}}>
-                <Col width="50"><p style={{margin:0, fontSize:11}}>Nama : {systemInfo.full_name}</p></Col>
-                <Col width="50"><p style={{margin:0, fontSize:11}}>Waktu Server : {systemInfo.jam_server}</p></Col>
-                <Col width="50"><p style={{margin:0, fontSize:11}}>Device ID : {device.uuid}</p></Col>
-                <Col width="50"><p style={{margin:0, fontSize:11}}>Waktu HP : {systemInfo.mobileTime}</p></Col>
-                <Col width="50"><p style={{margin:0, fontSize:11}}>ICCID : {device.serial}</p></Col>
+            <Row noGap>
+                <Col width="30" style={{ height: '100%', marginLeft: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>Agent Name</Col>
+                <Col width="65" style={{ height: '100%', marginRight: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{systemInfo.full_name}</Col>
+            </Row>
+            <Row noGap>
+                <Col width="30" style={{ height: '100%', marginLeft: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>Device ID</Col>
+                <Col width="65" style={{ height: '100%', marginRight: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{device.uuid}</Col>
+            </Row>
+            <Row noGap>
+                <Col width="30" style={{ height: '100%', marginLeft: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>ICCID</Col>
+                <Col width="65" style={{ height: '100%', marginRight: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{device.serial}</Col>
+            </Row>
+            <Row noGap>
+                <Col width="30" style={{ height: '100%', marginLeft: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>Waktu Server</Col>
+                <Col width="65" style={{ height: '100%', marginRight: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{systemInfo.jam_server}</Col>
+            </Row>
+            <Row noGap>
+                <Col width="30" style={{ height: '100%', marginLeft: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>Waktu HP</Col>
+                <Col width="65" style={{ height: '100%', marginRight: 5, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{systemInfo.mobileTime}</Col>
             </Row>
         </Block>
     )

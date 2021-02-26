@@ -184,7 +184,7 @@ class InfoDebitur extends React.Component {
 				</Toolbar>
 				<Tabs swipeable >
 					<Tab id="info-costumer-content" className="page-content" tabActive={true} style={{ paddingTop: 0 }}>
-						<Block style={{ paddingBottom: 100 }}>
+						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
 							<Card style={{ border: '2px solid #c0392b' }}>
 								<CardHeader style={{ backgroundColor: "#c0392b", }}>
 									<p style={{ color: 'white', textAlign: 'center' }}>INFO COSTUMER</p>
@@ -199,14 +199,14 @@ class InfoDebitur extends React.Component {
 						</Block>
 					</Tab>
 					<Tab id="info-akun-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ paddingBottom: 100 }}>
+						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
 							{arrDetailCust.map((item, key) => (
 								<div key={key} className={'row  no-gap'}>
 									<div className={'col-50'} style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										key{/* <p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p> */}
+										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
 									</div>
 									<div className={'col-50'} style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										value{/* <p style={{ margin: 8, wordBreak: 'break-word' }}>{['OS_Biling', 'LAST_PAYMENT_AMT', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_AMT', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'Total_Billed_Amount'].includes(item.key) ? this._formatCurrency(item.value == '' ? 0 : item.value) : item.value}</p> */}
+										<p style={{ margin: 8, wordBreak: 'break-word' }}>{['OS_Biling', 'LAST_PAYMENT_AMT', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_AMT', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'Total_Billed_Amount'].includes(item.key) ? this._formatCurrency(item.value == '' ? 0 : item.value) : item.value}</p>
 									</div>
 								</div>
 							))}
@@ -223,15 +223,15 @@ class InfoDebitur extends React.Component {
 						</Block>
 					</Tab>
 					<Tab id="info-demografi-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ paddingBottom: 100 }}>
-							{
+						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
+							{/* {
 								this._renderEl(arrDetailDemo, (item, key) => {
 									return (
 										<p key={key}>{JSON.stringify(item)}</p>
 									)
 								})
-							}
-							{/* {arrDetailDemo.map((item, key) => (
+							} */}
+							{arrDetailDemo.map((item, key) => (
 								<Row key={key} noGap>
 									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
 										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
@@ -240,19 +240,19 @@ class InfoDebitur extends React.Component {
 										<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
 									</Col>
 								</Row>
-							))} */}
+							))}
 						</Block>
 					</Tab>
 					<Tab id="info-fasilitas-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ paddingBottom: 100 }}>
-							{
+						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
+							{/* {
 								this._renderEl(arrOtherFacility, (item, key) => {
 									return (
 										<p key={key}>{JSON.stringify(item)}</p>
 									)
 								})
-							}
-							{/* {arrOtherFacility.map((item, key) => (
+							} */}
+							{arrOtherFacility.map((item, key) => (
 								<Row key={key} noGap>
 									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
 										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
@@ -261,19 +261,19 @@ class InfoDebitur extends React.Component {
 										<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
 									</Col>
 								</Row>
-							))} */}
+							))}
 						</Block>
 					</Tab>
 					<Tab id="aktivitas-historikal-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ paddingBottom: 100 }}>
-							{
+						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
+							{/* {
 								this._renderEl(history, (item, key) => {
 									return (
 										<p key={key}>{JSON.stringify(item)}</p>
 									)
 								})
-							}
-							{/* {history.map((item, key) => (
+							} */}
+							{history.map((item, key) => (
 								<Card key={key} style={{ border: '2px solid #c0392b' }}>
 									<CardHeader style={{ backgroundColor: "#c0392b", color: 'white' }}>
 										<p>HISTORI PENANGANAN</p>
@@ -286,19 +286,19 @@ class InfoDebitur extends React.Component {
 										<p><b>KETERANGAN:</b> {item.notepad}</p>
 									</CardContent>
 								</Card>
-							))} */}
+							))}
 						</Block>
 					</Tab>
 					<Tab id="info-tambahan-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ paddingBottom: 100 }}>
-							{
+						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
+							{/* {
 								this._renderEl(infoUpdateData, (item, key) => {
 									return (
 										<p key={key}>{JSON.stringify(item)}</p>
 									)
 								})
-							}
-							{/* {infoUpdateData.map((item, key) => (
+							} */}
+							{infoUpdateData.map((item, key) => (
 								<Row key={key} style={{ alignItems: 'center', marginBottom: 16 }}>
 									<Col width="45" style={{ backgroundColor: '#c0392b', color: '#fff' }}>
 										<p style={{ margin: 8, textAlign: 'center' }}>{item.kategori}</p>
@@ -313,7 +313,7 @@ class InfoDebitur extends React.Component {
 										))}
 									</Col>
 								</Row>
-							))} */}
+							))}
 						</Block>
 					</Tab>
 				</Tabs>

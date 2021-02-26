@@ -24,12 +24,23 @@ const DeviceInfo = (props) => {
     const dispatch = useDispatch();
     return (
         <Page noToolbar noNavbar name="DeviceInfo">
-            <DefaultNavbar
-                mode={'info'}
-                backLink
-                onClick={()=> props.onClick()}
-                title={'DEVICE INFORMATION'}
-            />
+            {
+                'onClick' in props ?
+                    (
+                        <DefaultNavbar
+                            backLink
+                            onClick={() => props.onClick()}
+                            title={'DEVICE INFORMATION'}
+                        />
+                    ) :
+                    (
+                        <DefaultNavbar
+                            title={'DEVICE INFORMATION'}
+                        />
+                    )
+
+            }
+
             <List noHairlinesMd style={{ fontSize: 1 }}>
                 <ListInput
                     outline

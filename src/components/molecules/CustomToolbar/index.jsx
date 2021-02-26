@@ -28,8 +28,8 @@ const CustomToolbar = (props) => {
     const dispatch = useDispatch();
     let [popupStateLogout, setPopupStateLogout] = useState(false);
     let [username, setUsername] = useState("");
-    const [tablinkActive, setTablinkActive] = useState(0);
-    const [prevTablink, setPrevTablink] = useState(0);
+    const [tablinkActive, setTablinkActive] = useState(1);
+    const [prevTablink, setPrevTablink] = useState(1);
     let user = useSelector(state => state.user.profile);
     let pin = useSelector(state => state.user.pin);
 
@@ -37,18 +37,21 @@ const CustomToolbar = (props) => {
         if (!props.shown) return false;
         log('clicked index', index, JSON.stringify(props.shown))
         let currentRoute = f7.views.main.router.history[f7.views.main.router.history.length - 1];
-        if (currentRoute == '/Main/' && index == 0) return false;
-        if (currentRoute == '/UpdatePin/' && index == 1) return false;
+        if (currentRoute == '/DeviceInfo/' && index == 0) return false;
+        if (currentRoute == '/Main/' && index == 1) return false;
+        if (currentRoute == '/UpdatePin/' && index == 2) return false;
         if (pin == "" && user.is_login == false) return false;
 
         setPrevTablink(tablinkActive);
         setTablinkActive(index);
         switch (index) {
-            case 0: dispatch(navigate('/Main/'));
+            case 0: dispatch(navigate('/DeviceInfo/'));
                 break;
-            case 1: dispatch(navigate('/UpdatePin/'));
+            case 1: dispatch(navigate('/Main/'));
                 break;
-            case 2: setPopupStateLogout(true);
+            case 2: dispatch(navigate('/UpdatePin/'));
+                break;
+            case 3: setPopupStateLogout(true);
                 break;
             default:
         }
@@ -100,27 +103,35 @@ const CustomToolbar = (props) => {
                 <Link
                     onClick={(e) => _setTablink(0)}
                     tabLink={true}
+                    text="DEVICE INFO"
+                    iconIos="f7:error_outline"
+                    iconAurora="f7:error_outline"
+                    iconMd="material:error_outline"
+                    tabLinkActive={tablinkActive == 0} />
+                <Link
+                    onClick={(e) => _setTablink(1)}
+                    tabLink={true}
                     text="MENU"
                     iconIos="f7:menu"
                     iconAurora="f7:menu"
                     iconMd="material:menu"
-                    tabLinkActive={tablinkActive == 0} />
+                    tabLinkActive={tablinkActive == 1} />
                 <Link
-                    onClick={(e) => _setTablink(1)}
+                    onClick={(e) => _setTablink(2)}
                     tabLink={true}
                     text="UBAH PIN"
                     iconIos="f7:lock"
                     iconAurora="f7:lock"
                     iconMd="material:lock"
-                    tabLinkActive={tablinkActive == 1} />
+                    tabLinkActive={tablinkActive == 2} />
                 <Link
-                    onClick={(e) => _setTablink(2)}
+                    onClick={(e) => _setTablink(3)}
                     tabLink={true}
                     text="KELUAR"
                     iconIos="f7:arrow_right_to_line_alt"
                     iconAurora="f7:arrow_right_to_line_alt"
                     iconMd="material:exit_to_app"
-                    tabLinkActive={tablinkActive == 2} />
+                    tabLinkActive={tablinkActive == 3} />
             </Toolbar>
             <Popup
                 className="logout-popup"

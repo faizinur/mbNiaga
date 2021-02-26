@@ -30,6 +30,7 @@ class Main extends React.Component {
         return (
             <Page style={{ paddingBottom: 60 }} name="Main">
                 <DefaultNavbar
+                    profile={"hehehehehee"}
                     title="MOBILE APPLICATION INTERACTION"
                     network={Connection()}
                 />
@@ -38,32 +39,32 @@ class Main extends React.Component {
                     item={[
                         {
                             onClick: (e) => this.props.navigate('/ListDebitur/'),
-                            label: "Daftar Debitur",
+                            label: "Customer List",
                             image: "list_debitur.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/RencanaKunjungan/'),
-                            label: "Rencana Kunjungan",
+                            label: "Visit Plan",
                             image: "rencana_kunjungan.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/RekapTertunda/'),
-                            label: "Rekap Tertunda",
+                            label: "Postphoned List",
                             image: "rekap_tertunda.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/RekapTerkirim/'),
-                            label: "Rekap Terkirim",
+                            label: "Sent List",
                             image: "rekap_terkirim.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/VisitedList/'),
-                            label: "Daftar Dikunjungi",
+                            label: "Visited List",
                             image: "list_kunjungan.png",
                         },
                         {
-                            onClick: (e) => this.props.navigate('/DeviceInfo/'),
-                            label: "Device Information",
+                            onClick: (e) => this.props.navigate('/PaidList/'),
+                            label: "Paid List",
                             image: "Information.png",
                         },
                     ]}

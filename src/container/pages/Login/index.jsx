@@ -69,7 +69,7 @@ class Login extends React.Component {
         log('componentDidMount LOGIN : ', this.props.device);
         // log('HIDE SHOW POPUP!');
         if (f7.views.main.router.history.length == 0) { //GARA GARA GOBACK REDUX ini ke load lagi jadi di cek kalo / berarti pertama login
-            // this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
+            this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
         }
     }
     _onClickLogin = async () => {
@@ -305,6 +305,9 @@ class Login extends React.Component {
         //     }
         // });
     }
+    _onChangeBahasa = () => {
+
+    }
     render() {
         return (
             <Page loginScreen name="Login">
@@ -317,6 +320,7 @@ class Login extends React.Component {
                         outline
                         type="text"
                         label="Username"
+                        placeholder="Type Here"
                         value={this.state.username}
                         onInput={(e) => {
                             this.setState({ username: e.target.value });
@@ -329,6 +333,7 @@ class Login extends React.Component {
                             outline
                             type={this.state.inputPasswordType}
                             label="Password"
+                            placeholder="Type Here"
                             value={this.state.password}
                             onInput={(e) => {
                                 this.setState({ password: e.target.value });
@@ -379,8 +384,19 @@ class Login extends React.Component {
                             </Col>
                         </Row>
                     </Block>
+                    <Block>
+                        <Row>
+                            <Col width="100">
+                                <Button
+                                    onClick={() => this._onChangeBahasa()}
+                                    round
+                                    style={{ backgroundColor: 'transparent', color: '#c0392b' }}
+                                    text="Bahasa"
+                                />
+                            </Col>
+                        </Row>
+                    </Block>
                 </List>
-
                 <Popup
                     className="daftarPin-popup"
                     opened={this.state.popUpStateDaftarPin}
@@ -391,7 +407,6 @@ class Login extends React.Component {
                         onSubmitPIN={this._submitPIN}
                     />
                 </Popup>
-
                 <Popup
                     className="loginPin-popup"
                     opened={this.state.popUpStateLoginPin}

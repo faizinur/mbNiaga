@@ -32,6 +32,7 @@ import RencanaKunjungan from './RencanaKunjungan';
 import Idle from './Idle';
 import VisitedList from './VisitedList';
 import RekapTertunda from './RekapTertunda';
+import PaidList from './PaidList';
 
 export {
     NotFound,
@@ -68,4 +69,5 @@ export {
     Idle,
     VisitedList,
     RekapTertunda,
+    PaidList,
 }

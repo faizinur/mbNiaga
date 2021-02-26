@@ -29,6 +29,7 @@ const back = () => {
             case 'RekapTertunda':
             case 'VisitedList':
             case 'DeviceInfo':
+            case 'PaidList':
                 log('navigate TO : /Main/');
                 dispatch(navigateTo('/Main/'));
                 break;

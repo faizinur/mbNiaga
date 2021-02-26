@@ -32,6 +32,7 @@ import {
 	RencanaKunjungan,
 	VisitedList,
 	RekapTertunda,
+	PaidList,
 } from '../../container/pages';
 
 
@@ -175,6 +176,10 @@ var router = [
 	{
 		path: '/RekapTertunda/',
 		component: RekapTertunda,
+	},
+	{
+		path: '/PaidList/',
+		component: PaidList,
 	},
 	{
 		path: '(.*)',
