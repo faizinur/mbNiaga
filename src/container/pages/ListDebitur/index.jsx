@@ -76,7 +76,8 @@ class ListDebitur extends React.Component {
 	}
 	_next(data) {
 		this.props.setDetailCustomer(data);
-		this.props.navigate('/InfoDebitur/');
+		// this.props.navigate('/InfoDebitur/');
+		this.props.navigate('/DetailDebitur/');
 	}
 	_search = async () => {
 		var param = this.state.searchParameter.filter(obj => obj.column != "" && obj.operator != "");

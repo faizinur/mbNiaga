@@ -34,8 +34,9 @@ const back = () => {
                 dispatch(navigateTo('/Main/'));
                 break;
             case 'InfoDebitur':
-                log('navigate TO : /ListDebitur/');
-                dispatch(navigateTo('/ListDebitur/'));
+                // log('navigate TO : /ListDebitur/');
+                log('navigate TO : /DetailDebitur/');
+                dispatch(navigateTo('/DetailDebitur/'));
                 break;
             case 'AddKunjungan':
                 let destinationPage = f7.views.main.router.history[f7.views.main.router.history.length - 2];

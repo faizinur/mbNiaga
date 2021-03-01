@@ -179,7 +179,7 @@ class Root extends React.Component {
 			)
 		} else {
 			return (
-				<App params={this.state.f7params}>
+				<App params={this.state.f7params} events={[0,10,20,30]}>
 					<BlockTimeout display={this.state.blockTimeout} />
 					<CustomToolbar
 						shown={shownToolbar}
@@ -204,7 +204,7 @@ class Root extends React.Component {
 						/>
 					</Popup>
 					<Views className="safe-areas">
-						<View main url={'/'} />
+						<View main url={'/ListDebitur/'} />
 					</Views>
 				</ App >
 			)
