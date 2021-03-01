@@ -106,7 +106,6 @@ const SplashScreen = (props) => {
             })
             .then(ref => {
                 if (ref && ref.status == 'success') {
-                    log(ref.data);
                     return SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, ref.data])
                 } else {
                     return false;
@@ -120,7 +119,6 @@ const SplashScreen = (props) => {
         log('_getLocalData')
         SQLite.fetchAll()
             .then(res => {
-                log(res);
                 if (REFERENCE in res) {
                     let call_result = 'call_result' in res.REFERENCE ? res.REFERENCE.call_result : [];
                     let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];

@@ -33,6 +33,7 @@ import Idle from './Idle';
 import VisitedList from './VisitedList';
 import RekapTertunda from './RekapTertunda';
 import PaidList from './PaidList';
+import DetailDebitur from './DetailDebitur';
 
 export {
     NotFound,
@@ -70,4 +71,5 @@ export {
     VisitedList,
     RekapTertunda,
     PaidList,
+    DetailDebitur,
 }

@@ -54,12 +54,13 @@ const styles = {
         flex: 1,
         height: 'fit-content',
         flexDirection: 'row',
-        padding: 10
+        padding: 10,
+        backgroundColor : 'white', 
     },
     imgContainer: {
         display: 'flex',
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#c0392b',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -70,14 +71,15 @@ const styles = {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         padding: 5,
-        backgroundColor: 'white',
+        backgroundColor: '#c0392b',
         borderBottomColor: '#b5b5b5',
         borderBottomWidth: 2,
         borderBottomStyle: 'groove'
     },
     itemText: {
         margin: 0,
-        wordBreak: 'break-all'
+        wordBreak: 'break-all',
+        color: 'white'
     },
 }
 

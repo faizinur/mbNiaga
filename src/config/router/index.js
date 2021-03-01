@@ -33,6 +33,7 @@ import {
 	VisitedList,
 	RekapTertunda,
 	PaidList,
+	DetailDebitur,
 } from '../../container/pages';
 
 
@@ -180,6 +181,10 @@ var router = [
 	{
 		path: '/PaidList/',
 		component: PaidList,
+	},
+	{
+		path: '/DetailDebitur/',
+		component: DetailDebitur,
 	},
 	{
 		path: '(.*)',

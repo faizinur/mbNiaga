@@ -114,21 +114,26 @@ class ListDebitur extends React.Component {
 		searchParam = searchParam.slice(0, -1);
 		this.setState({ searchParameter: searchParam });
 	}
-
+	_clear = () => {
+		this.setState({ searchParameter: [] })
+		this.setState({ searchParameter: [{ 'column': '', 'operator': '', 'value': '' }] })
+	}
 	render() {
 		return (
-			<Page name="ListDebitur" noToolbar noNavbar style={{ paddingBottom: 85 }}>
-				<DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} backLink/>
+			<Page name="ListDebitur" noToolbar noNavbar style={{ paddingBottom: 58 }}>
+				<DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} backLink />
 				<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
 					<SystemInfo />
 					<Block style={{ margin: 0, padding: 0 }}>
 						{this.state.searchParameter.map((item, key) => (
-							<Row key={key} noGap>
+							<Row key={key} noGap style={{ backgroundColor: 'black' }}>
 								<Col width="40" tag="span" style={{ margin: 0, padding: 0 }}>
 									<List style={{ marginBottom: 8, marginTop: 8, padding: 0 }}>
 										<ListInput
 											outline
 											label="Parameter"
+											inputStyle={{ backgroundColor: '#666666', color: 'white' }}
+											style={{ backgroundColor: 'black' }}
 											type="select"
 											defaultValue=""
 											onChange={({ target }) => {
@@ -137,7 +142,7 @@ class ListDebitur extends React.Component {
 												}))
 											}}
 										>
-											<option value="" disabled>--pilih--</option>
+											<option value="" disabled>Choose</option>
 											{
 												this.state.parameter.map((item, key) => (
 													<option key={key} value={item.code}>{item.description}</option>
@@ -152,6 +157,8 @@ class ListDebitur extends React.Component {
 										<ListInput
 											outline
 											label="kondisi"
+											inputStyle={{ backgroundColor: '#666666', color: 'white' }}
+											style={{ backgroundColor: 'black' }}
 											type="select"
 											defaultValue=""
 											onChange={({ target }) => {
@@ -160,7 +167,7 @@ class ListDebitur extends React.Component {
 												}))
 											}}
 										>
-											<option value="" disabled>--pilih--</option>
+											<option value="" disabled>Choose</option>
 											{
 												this.state.kondisi.map((item, key) => (
 													<option key={key} value={item.code}>{item.description}</option>
@@ -176,6 +183,8 @@ class ListDebitur extends React.Component {
 											outline
 											label="Value"
 											type="text"
+											inputStyle={{ backgroundColor: '#666666', color: 'white' }}
+											style={{ backgroundColor: 'black' }}
 											onChange={({ target }) => {
 												this.setState(prevState => ({
 													searchParameter: prevState.searchParameter.map((item, index) => index == key ? Object.assign(item, { value: target.value }) : item)
@@ -187,20 +196,23 @@ class ListDebitur extends React.Component {
 								</Col>
 							</Row>
 						))}
-						<Block strong style={{ margin: 0 }}>
+						<Block strong style={{ margin: 0, backgroundColor: 'black' }}>
 							<Row>
 								<Col width="50">
-									<Button fill raised onClick={() => this._tambahParameter()} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>Tambah</Button>
+									<Button fill raised onClick={() => this._tambahParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>Add Parameter</Button>
 								</Col>
 								<Col width="50">
-									<Button fill raised onClick={() => this._kurangiParameter()} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>Kurang</Button>
+									<Button fill raised onClick={() => this._kurangiParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>Less Parameter</Button>
 								</Col>
 							</Row>
 						</Block>
-						<Block strong style={{ margin: 0 }}>
-							<Row noGap>
-								<Col width="100">
-									<Button fill raised onClick={() => this._search()} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>Search</Button>
+						<Block strong style={{ margin: 0, backgroundColor: 'black' }}>
+							<Row >
+								<Col width="50">
+									<Button fill raised onClick={() => this._clear()} style={{ backgroundColor: '#FFBC26', fontSize: 12 }}>Clear All</Button>
+								</Col>
+								<Col width="50">
+									<Button fill raised onClick={() => this._search()} style={{ backgroundColor: '#60A917', fontSize: 12 }}>Search</Button>
 								</Col>
 							</Row>
 						</Block>
