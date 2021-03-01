@@ -204,7 +204,8 @@ class Root extends React.Component {
 						/>
 					</Popup>
 					<Views className="safe-areas">
-						<View main url={'/ListDebitur/'} />
+						{/* <View main url={'/ListDebitur/'} /> */}
+						<View main url={'/'} />
 					</Views>
 				</ App >
 			)
