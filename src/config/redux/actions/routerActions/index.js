@@ -33,6 +33,10 @@ const back = () => {
                 log('navigate TO : /Main/');
                 dispatch(navigateTo('/Main/'));
                 break;
+            case 'DetailDebitur':
+                log('navigate TO : /ListDebitur/');
+                dispatch(navigateTo('/ListDebitur/'));
+                break;
             case 'InfoDebitur':
                 // log('navigate TO : /ListDebitur/');
                 log('navigate TO : /DetailDebitur/');

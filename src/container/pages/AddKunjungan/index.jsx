@@ -62,6 +62,8 @@ class AddKunjungan extends React.Component {
                 district: '',
                 subDistrict: '',
                 alamat: '',
+                phone_number_1: '',
+                phone_number_2: '',
             }
         }
     }
@@ -371,7 +373,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </Row>
                 </Block>
-                
+
                 <div
                     style={{
                         width: '87%',
@@ -504,8 +506,7 @@ class AddKunjungan extends React.Component {
                 <List>
                     <ListInput
                         outline
-                        type="select"
-                        defaultValue=""
+                        type="textarea"
                         onChange={({ target }) => {
                             this.setState(prevState => ({
                                 formData: {
@@ -514,10 +515,63 @@ class AddKunjungan extends React.Component {
                                 }
                             }))
                         }}
+                    />
+                </List>
+                <CustomBlockTitle title="New Phone Number 1 Type" />
+                <List>
+                    <ListInput
+                        outline
+                        type="select"
+                        defaultValue=""
                     >
                         <option value="" disabled>--PILIH--</option>
-
+                        {contactMode.map((item, key) => (
+                            <option key={key} value={item.value} > {item.description} </option>
+                        ))}
                     </ListInput>
+                </List>
+                <CustomBlockTitle title="New Phone Number 1" />
+                <List>
+                    <ListInput
+                        outline
+                        type="number"
+                        onChange={({ target }) => {
+                            this.setState(prevState => ({
+                                formData: {
+                                    ...prevState.formData,
+                                    phone_number_1: target.value
+                                }
+                            }))
+                        }}
+                    />
+                </List>
+                <CustomBlockTitle title="New Phone Number 2 Type" />
+                <List>
+                    <ListInput
+                        outline
+                        type="select"
+                        defaultValue=""
+                    >
+                        <option value="" disabled>--PILIH--</option>
+                        {contactMode.map((item, key) => (
+                            <option key={key} value={item.value} > {item.description} </option>
+                        ))}
+                    </ListInput>
+                </List>
+                <CustomBlockTitle title="New Phone Number 2" />
+                <List>
+                    <ListInput
+                        outline
+                        type="number"
+                        onChange={({ target }) => {
+                            this.setState(prevState => ({
+                                formData: {
+                                    ...prevState.formData,
+                                    phone_number_2: target.value
+                                }
+                            }))
+                        }}
+                    />
                 </List>
                 <CustomBlockTitle title="Tempat Kunjungan" />
                 <List>
@@ -540,49 +594,48 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Metode Kontak" />
-                <List>
-                    <ListInput
-                        outline
-                        type="select"
-                        defaultValue=""
-                        onChange={({ target }) => {
-                            this.setState(prevState => ({
-                                formData: {
-                                    ...prevState.formData,
-                                    contact_mode: target.value
-                                }
-                            }))
-                        }}
-                    >
-                        <option value="" disabled>--PILIH--</option>
-                        {contactMode.map((item, key) => (
-                            <option key={key} value={item.value} > {item.description} </option>
-                        ))}
-                    </ListInput>
-                </List>
-                <CustomBlockTitle title="Detail Metode Kontak" />
-                <List>
-                    <ListInput
-                        outline
-                        type="select"
-                        defaultValue=""
-                        onChange={({ target }) => {
-                            this.setState(prevState => ({
-                                formData: {
-                                    ...prevState.formData,
-                                    contact_person: target.value
-                                }
-                            }))
-                        }}
-                    >
-                        <option value="" disabled>--PILIH--</option>
-                        {contactPerson.map((item, key) => (
-                            <option key={key} value={item.value} > {item.description} </option>
-                        ))}
-                    </ListInput>
-                </List>
-
+                {/* <CustomBlockTitle title="Metode Kontak" />
+                            <List>
+                                <ListInput
+                                    outline
+                                    type="select"
+                                    defaultValue=""
+                                    onChange={({ target }) => {
+                                        this.setState(prevState => ({
+                                            formData: {
+                                                ...prevState.formData,
+                                                contact_mode: target.value
+                                            }
+                                        }))
+                                    }}
+                                >
+                                    <option value="" disabled>--PILIH--</option>
+                                    {contactMode.map((item, key) => (
+                                        <option key={key} value={item.value} > {item.description} </option>
+                                    ))}
+                                </ListInput>
+                            </List>
+                            <CustomBlockTitle title="Detail Metode Kontak" />
+                            <List>
+                                <ListInput
+                                    outline
+                                    type="select"
+                                    defaultValue=""
+                                    onChange={({ target }) => {
+                                        this.setState(prevState => ({
+                                            formData: {
+                                                ...prevState.formData,
+                                                contact_person: target.value
+                                            }
+                                        }))
+                                    }}
+                                >
+                                    <option value="" disabled>--PILIH--</option>
+                                    {contactPerson.map((item, key) => (
+                                        <option key={key} value={item.value} > {item.description} </option>
+                                    ))}
+                                </ListInput>
+                            </List> */}
                 {Connection() != "OFFLINE" ? (
                     <>
                         <CustomBlockTitle noGap title="Lokasi" />

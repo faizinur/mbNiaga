@@ -102,7 +102,6 @@ class ListDebitur extends React.Component {
 			})
 			.catch(err => log(err))
 	}
-
 	_tambahParameter() {
 		var searchParam = this.state.searchParameter;
 		if (searchParam.length == this.state.parameter.length) return false;

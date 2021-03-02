@@ -20,7 +20,7 @@ import {
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
-import { navigate } from '../../../config/redux/actions/routerActions';
+import { navigate, back } from '../../../config/redux/actions/routerActions';
 import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
 import { Connection, log, SQLiteTypes, SQLite, Filter } from '../../../utils';
 const { ACTIVITY_HISTORY, RENCANA_KUNJUNGAN, UPDATE_HISTORY } = SQLiteTypes;
@@ -38,7 +38,8 @@ class InfoDebitur extends React.Component {
 				// {kategori : 'ALAMAT RUMAH', perubahan : []},
 				// {kategori : 'ALAMAT KANTOR', perubahan : []},
 				// {kategori : 'ALAMAT EMERGENCY', perubahan : []},
-			]
+			],
+			tabLinkActive: 'profile'
 		}
 	}
 	componentDidMount() {
@@ -147,207 +148,392 @@ class InfoDebitur extends React.Component {
 	}
 	render() {
 		const { arrDetailCust, history, infoUpdateData, arrDetailDemo, arrOtherFacility } = this.state;
-		const { detailCust } = this.props;
+		const { detailCust, profile } = this.props;
 		let [Y, M, D] = detailCust.date_of_birth.split("-");
 		let today = new Date();
+		let tabData = [
+			{
+				id: 'profile',
+				data: [
+					{
+						key: 'Customer Name',
+						value: detailCust.name || '-',
+					},
+					{
+						key: 'Loan No.',
+						value: detailCust.card_type == "CC" ? detailCust.card_no : detailCust.account_number || '-',
+					},
+					{
+						key: 'Sex',
+						value: detailCust.sex || '-',
+					},
+					{
+						key: 'DOB',
+						value: `${Math.abs(today.getFullYear() - Y)} thn ${Math.abs((today.getMonth() + 1) - M)} Bln ${Math.abs((today.getDate() + 1) - D)} Hr` || '-',
+					},
+					{
+						key: 'ID Card No.',
+						value: detailCust.card_no || '',
+					},
+					{
+						key: 'Home Address',
+						value: detailCust.home_address_1 || '-',
+					},
+					{
+						key: 'CIF No.',
+						value: detailCust.cif_number || '-',
+					},
+					{
+						key: 'Company Name',
+						value: 'value',
+					},
+					{
+						key: 'Company Address',
+						value: 'value',
+					},
+					{
+						key: 'Office Address',
+						value: detailCust.office_address_1 || '-',
+					},
+					{
+						key: 'Position',
+						value: 'value',
+					},
+					{
+						key: 'Grup Industri',
+						value: detailCust.group_id || '-',
+					},
+					{
+						key: 'Jenis Usaha',
+						value: 'value',
+					},
+					{
+						key: 'Phone 1',
+						value: detailCust.handphone || '-',
+					},
+					{
+						key: 'Phone 2',
+						value: 'value',
+					},
+					{
+						key: 'Home Phone',
+						value: detailCust.home_phone || '-',
+					},
+					{
+						key: 'Office Phone',
+						value: detailCust.office_phone || '-',
+					},
+				]
+			},
+			{
+				id: 'contract',
+				data: [
+					{
+						key: 'Customer Name.',
+						value: detailCust.name || '-',
+					},
+					{
+						key: 'Loan No.',
+						value: detailCust.card_type == "CC" ? detailCust.card_no : detailCust.account_number || '-',
+					},
+					{
+						key: 'Source Code',
+						value: 'value',
+					},
+					{
+						key: 'Credit Segment',
+						value: 'value',
+					},
+					{
+						key: 'Sector Code',
+						value: 'value',
+					},
+					{
+						key: 'Sector Description',
+						value: 'value',
+					},
+					{
+						key: 'Product',
+						value: detailCust.loan_type || '-',
+					},
+					{
+						key: 'MoB',
+						value: 'value',
+					},
+					{
+						key: 'Tenor',
+						value: this._formatCurrency(detailCust.tenor || 0),
+					},
+					{
+						key: 'Due Date/Cycle',
+						value: `${detailCust.due_date}/${detailCust.cycle_date}` || '-',
+					},
+				]
+			},
+			{
+				id: 'loan',
+				data: [
+					{
+						key: 'Customer Name.',
+						value: detailCust.name || '-',
+					},
+					{
+						key: 'Loan No.',
+						value: detailCust.card_type == "CC" ? detailCust.card_no : detailCust.account_number || '-',
+					},
+					{
+						key: 'Tunggakan Pokok',
+						value: this._formatCurrency(detailCust.princple_amount_due || 0),
+					},
+					{
+						key: 'Tunggakan Bunga',
+						value: this._formatCurrency(detailCust.dpd_cur_days || 0),
+					},
+					{
+						key: 'Denda',
+						value: this._formatCurrency(detailCust.total_due || 0)
+					},
+					{
+						key: 'Biaya Lainnya',
+						value: 'value',
+					},
+					{
+						key: 'Total Kewajiban',
+						value: 'value',
+					},
+					{
+						key: 'Bucket',
+						value: this._formatCurrency(detailCust.current_bucket || 0),
+					},
+					{
+						key: 'DPD',
+						value: detailCust.day_past_due || '-',
+					},
+					{
+						key: 'Due Date/Cycle',
+						value: `${detailCust.due_date}/${detailCust.cycle_date}` || '-',
+					},
+					{
+						key: 'Charge Off Status',
+						value: 'value',
+					},
+					{
+						key: 'Charge Off Date',
+						value: detailCust.charge_off_date || '-',
+					},
+					{
+						key: 'Block Code',
+						value: 'value',
+					},
+					{
+						key: 'Block Code Date',
+						value: 'value',
+					},
+					{
+						key: 'Outstanding Pokok',
+						value: this._formatCurrency(detailCust.princple_os || 0),
+					},
+					{
+						key: 'Outstanding Bunga',
+						value: 'value',
+					},
+					{
+						key: 'Outstanding Balance',
+						value: this._formatCurrency(detailCust.outstanding_balance || 0),
+					},
+					{
+						key: 'Saldo Denda',
+						value: 'value',
+					},
+					{
+						key: 'Flag Restructure',
+						value: detailCust.over_limit_flag || '-',
+					},
+					{
+						key: 'Restructure Date',
+						value: 'value',
+					},
+					{
+						key: 'Maturity Date',
+						value: detailCust.maturity_date || '-',
+					},
+				]
+			},
+			{
+				id: 'call',
+				data: [
+					{
+						list: [
+							{
+								key: 'CallDate',
+								value: 'value',
+							},
+							{
+								key: 'CallResult',
+								value: 'value',
+							},
+							{
+								key: 'CalledBy',
+								value: 'value',
+							},
+							{
+								key: 'PTPDate',
+								value: 'value',
+							},
+							{
+								key: 'PTPAmount',
+								value: 'value',
+							},
+							{
+								key: 'SuccesPhone',
+								value: 'value',
+							},
+
+						]
+					},
+				]
+			},
+			{
+				id: 'visit',
+				data: [
+					{
+						list: [
+							{
+								key: 'VisitDate',
+								value: 'value',
+							},
+							{
+								key: 'VisitResult',
+								value: 'value',
+							},
+							{
+								key: 'VisitedBy',
+								value: 'value',
+							},
+							{
+								key: 'PTPDate',
+								value: 'value',
+							},
+							{
+								key: 'PTPAmount',
+								value: 'value',
+							},
+							{
+								key: 'SuccessAddress',
+								value: 'value',
+							},
+						]
+					}
+				]
+			},
+			{
+				id: 'payment',
+				data: [
+					{
+						list: [
+							{
+								key: 'PayDate',
+								value: 'value',
+							},
+							{
+								key: 'PayAmount',
+								value: 'value',
+							},
+							{
+								key: 'PayVia',
+								value: 'value',
+							},
+						]
+					}
+				]
+			},
+		]
 		return (
 			<Page name="InfoDebitur" pageContent={false} style={{ paddingBottom: 60 }}>
 				<DefaultNavbar title="DETAIL DEBITUR" network={Connection()} backLink />
-				<Fab position="right-bottom" slot="fixed" color="#c0392b" style={{ marginBottom: 60 }}>
-					<Icon ios="f7:plus" aurora="f7:plus" md="material:menu"></Icon>
-					<Icon ios="f7:xmark" aurora="f7:xmark" md="material:close"></Icon>
-					<FabButtons position="top">
-						<FabButton color="blue" label="Update Data" onClick={(e) => this._updateData()} >
-							<Icon ios="f7:plus" aurora="f7:plus" md="material:mode_edit"></Icon>
-						</FabButton>
-						<FabButton color="orange" label="Rencana Kunjungan" onClick={(e) => this._rencanaKunjungan()} >
-							<Icon ios="f7:plus" aurora="f7:plus" md="material:home_work"></Icon>
-						</FabButton>
-						<FabButton color="green" label="Input Activity" onClick={(e) => this.props.navigate('/AddKunjungan/')}>
-							<Icon ios="f7:plus" aurora="f7:plus" md="material:note_add"></Icon>
-						</FabButton>
-					</FabButtons>
-				</Fab>
-				<Toolbar inner={false} tabbar top style={{ position: 'unset', flexDirection: 'row', display: 'flex', flex: 1, flexWrap: 'wrap', alignContent: 'flex-start', height: 'fit-content' }}>
-					<Link style={{ width: 'fit-content', marginRight: 5, marginLeft: 5, height: 30, }} tabLink="#info-costumer-content" id="info-costumer">INFO COSTUMER</Link>
-					<div style={{ height: 30, width: 2, backgroundColor: '#f96b55' }} />
-					<Link style={{ width: 'fit-content', marginRight: 5, marginLeft: 5, height: 30, }} tabLink="#info-akun-content" id="info-akun">INFO AKUN</Link>
-					<div style={{ height: 30, width: 2, backgroundColor: '#f96b55' }} />
-					<Link style={{ width: 'fit-content', marginRight: 5, marginLeft: 5, height: 30, }} tabLink="#info-demografi-content" id="info-demografi">INFO DEMOGRAFI</Link>
-					<div style={{ height: 30, width: 2, backgroundColor: '#f96b55' }} />
-					<Link style={{ width: 'fit-content', marginRight: 5, marginLeft: 5, height: 30, }} tabLink="#info-fasilitas-content" id="info-fasilitas-lain">INFO FASILITAS LAIN</Link>
-					<div style={{ height: 30, width: 2, backgroundColor: '#f96b55' }} />
-					<Link style={{ width: 'fit-content', marginRight: 5, marginLeft: 5, height: 30, }} tabLink="#aktivitas-historikal-content" id="aktivitas-historikal">AKTIVITAS HISTORIKAL</Link>
-					<div style={{ height: 30, width: 2, backgroundColor: '#f96b55' }} />
-					<Link style={{ width: 'fit-content', marginRight: 5, marginLeft: 5, height: 30, }} tabLink="#info-tambahan-content" id="info-tambahan">INFO TAMBAHAN</Link>
-					<div style={{ height: 30, width: 2, backgroundColor: '#f96b55' }} />
+				<Toolbar inner={false} tabbar top style={{ position: 'unset', flexDirection: 'row', display: 'flex', flex: 1, flexWrap: 'wrap', alignContent: 'flex-start', height: 'fit-content', backgroundColor: '#000000' }}>
+					{
+						tabData.map((item, index) => (
+							<div key={"Toolbar" + index} style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
+								<Link style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === item.id ? '#ff6666' : 'white' }} tabLinkActive={this.state.tabLinkActive === item.id} onClick={() => this.setState({ tabLinkActive: item.id })} tabLink={`#${item.id}`}>{item.id}</Link>
+							</div>
+						))
+					}
 				</Toolbar>
+
 				<Tabs swipeable >
-					<Tab id="info-costumer-content" className="page-content" tabActive={true} style={{ paddingTop: 0 }}>
-						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
-							<Card style={{ border: '2px solid #c0392b' }}>
-								<CardHeader style={{ backgroundColor: "#c0392b", }}>
-									<p style={{ color: 'white', textAlign: 'center' }}>INFO COSTUMER</p>
-								</CardHeader>
-								<CardContent>
-									<p><b>Customer Name:</b> {detailCust.name}</p>
-									<p><b>Card Number:</b> {detailCust.card_no}</p>
-									<p><b>Jenis Kelamin:</b> {detailCust.sex}</p>
-									<p><b>DOB:</b> {Math.abs(today.getFullYear() - Y)} thn {Math.abs((today.getMonth() + 1) - M)} Bln {Math.abs((today.getDate() + 1) - D)} Hr</p>
-								</CardContent>
-							</Card>
-						</Block>
-					</Tab>
-					<Tab id="info-akun-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
-							{arrDetailCust.map((item, key) => (
-								<div key={key} className={'row  no-gap'}>
-									<div className={'col-50'} style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
-									</div>
-									<div className={'col-50'} style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{['OS_Biling', 'LAST_PAYMENT_AMT', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_AMT', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'Total_Billed_Amount'].includes(item.key) ? this._formatCurrency(item.value == '' ? 0 : item.value) : item.value}</p>
-									</div>
-								</div>
-							))}
-							{/* {arrDetailCust.map((item, key) => (
-								<Row key={key} noGap>
-									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
-									</Col>
-									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{['OS_Biling', 'LAST_PAYMENT_AMT', 'TOTAL_AMT_DUE', 'TOTAL_CURR_DUE', 'MIN_AMOUNT_DUE', 'Tunggakan_Curr', 'Tunggakan_XDAYS', 'Tunggakan_30DPD', 'Tunggakan_60DDP', 'Tunggakan_90DDPD', 'Tunggakan_120DPD', 'Tunggakan_150DPD', 'Tunggakan_180DPD', 'Tunggakan_210DPD', 'AMOUNT_OVERDUE', 'LAST_PURCH_AMT', 'PRINCIPLE_OUTSTANDING', 'PRINCIPLE_OVERDUE', 'Total_Billed_Amount'].includes(item.key) ? this._formatCurrency(item.value == '' ? 0 : item.value) : item.value}</p>
-									</Col>
-								</Row>
-							))} */}
-						</Block>
-					</Tab>
-					<Tab id="info-demografi-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
-							{/* {
-								this._renderEl(arrDetailDemo, (item, key) => {
-									return (
-										<p key={key}>{JSON.stringify(item)}</p>
-									)
-								})
-							} */}
-							{arrDetailDemo.map((item, key) => (
-								<Row key={key} noGap>
-									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
-									</Col>
-									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
-									</Col>
-								</Row>
-							))}
-						</Block>
-					</Tab>
-					<Tab id="info-fasilitas-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
-							{/* {
-								this._renderEl(arrOtherFacility, (item, key) => {
-									return (
-										<p key={key}>{JSON.stringify(item)}</p>
-									)
-								})
-							} */}
-							{arrOtherFacility.map((item, key) => (
-								<Row key={key} noGap>
-									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{this._capitalize(item.key)}</p>
-									</Col>
-									<Col width="50" style={{ border: 1, borderStyle: 'solid', borderColor: '#a9a9a9', borderCollapse: 'collapse', alignSelf: 'stretch' }}>
-										<p style={{ margin: 8, wordBreak: 'break-word' }}>{item.value}</p>
-									</Col>
-								</Row>
-							))}
-						</Block>
-					</Tab>
-					<Tab id="aktivitas-historikal-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
-							{/* {
-								this._renderEl(history, (item, key) => {
-									return (
-										<p key={key}>{JSON.stringify(item)}</p>
-									)
-								})
-							} */}
-							{history.map((item, key) => (
-								<Card key={key} style={{ border: '2px solid #c0392b' }}>
-									<CardHeader style={{ backgroundColor: "#c0392b", color: 'white' }}>
-										<p>HISTORI PENANGANAN</p>
-									</CardHeader>
-									<CardContent>
-										<p><b>TANGGAL:</b> {item.created_time.slice(0, 10)}</p>
-										<p><b>WAKTU:</b> {item.created_time.slice(11, 19)}</p>
-										<p><b>METODE KONTAK:</b> {item.contact_mode}</p>
-										<p><b>KONTAK:</b> {item.contact_person}</p>
-										<p><b>KETERANGAN:</b> {item.notepad}</p>
-									</CardContent>
-								</Card>
-							))}
-						</Block>
-					</Tab>
-					<Tab id="info-tambahan-content" className="page-content" style={{ paddingTop: 0 }}>
-						<Block style={{ height: '65vh', overflow:'auto', marginTop:12 }}>
-							{/* {
-								this._renderEl(infoUpdateData, (item, key) => {
-									return (
-										<p key={key}>{JSON.stringify(item)}</p>
-									)
-								})
-							} */}
-							{infoUpdateData.map((item, key) => (
-								<Row key={key} style={{ alignItems: 'center', marginBottom: 16 }}>
-									<Col width="45" style={{ backgroundColor: '#c0392b', color: '#fff' }}>
-										<p style={{ margin: 8, textAlign: 'center' }}>{item.kategori}</p>
-									</Col>
-									<Col width="55">
-										{item.perubahan.map((val, idx) => (
-											<div key={idx}>
-												<div style={{ border: 1, borderStyle: 'solid', borderColor: '#c0392b', borderCollapse: 'collapse', marginBottom: 8 }}>
-													<p style={{ margin: 8, textAlign: 'center' }}>{val}</p>
-												</div>
+					{
+						tabData.map((item, index) => (
+							<Tab key={"Tab" + index} id={item.id} className="page-content" style={{ paddingTop: 0, paddingBottom: 200, paddingLeft: 10, paddingRight: 10 }}>
+								{
+									item.data.map((data, key) => (
+										(item.id == "call" || item.id == "visit" || item.id == "payment") &&
+										(
+											<div key={key} style={{ backgroundColor: '#666666', marginTop: 5, borderColor: '#000000', borderWidth: 2, borderStyle: 'groove', paddingLeft: 5, paddingRight: 5, paddingTop: 10, paddingBottom: 10 }}>
+												{data.list.map((list, listKey) => (
+													<div key={listKey} style={{ display: 'flex', flex: 1, flexDirection: 'row' }}>
+														<div style={{ display: 'flex', flex: 1 }}>
+															<p style={{ margin: 0, color: 'white' }}>{list.key}</p>
+														</div>
+														<div style={{ width: 10 }}>
+															<p style={{ margin: 0, color: 'white' }}> : </p>
+														</div>
+														<div style={{ display: 'flex', flex: 2 }}>
+															<p style={{ margin: 0, color: 'white' }}>{list.value}</p>
+														</div>
+													</div>
+												))}
 											</div>
-										))}
-									</Col>
-								</Row>
-							))}
-						</Block>
-					</Tab>
+										)
+										||
+										(item.id == "profile" || item.id == "contract" || item.id == "loan") &&
+										(
+											<Row key={key} noGap style={{ margin: 5, margin: 5 }}>
+												<Col width="30" style={{ height: '100% style={{marginTop : 5, marginBottom : 5}}', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{data.key}</Col>
+												<Col width="65" style={{ height: '100%', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{data.value}</Col>
+											</Row>
+										)
+									))
+								}
+							</Tab>
+						))
+					}
 				</Tabs>
-				{/* <Tabs swipeable style={{ marginTop: 30 }}>
-				<Tab id="info-costumer-content" className="page-content" tabActive>
-						<Block style={{ paddingBottom: 60 }}>
-							
-						</Block>
-					</Tab>
-				<Tab id="info-akun-content" className="page-content">
-						<Block style={{ paddingBottom: 60 }}>
-							
-						</Block>
-					</Tab>
-				<Tab id="info-demografi-content" className="page-content">
-						<Block style={{ paddingBottom: 60 }}>
-							
-						</Block>
-					</Tab>
-				<Tab id="info-fasilitas-content" className="page-content">
-						<Block style={{ paddingBottom: 60 }}>
-							
-						</Block>
-					</Tab>
-				<Tab id="aktivitas-historikal-content" className="page-content">
-						<Block style={{ paddingBottom: 60 }}>
-							
-						</Block>
-					</Tab>
-				<Tab id="info-tambahan-content" className="page-content">
-						<Block style={{ paddingBottom: 60 }}>
-						</Block>
-					</Tab>
-				</Tabs> */}
+
+				<div style={{ position: 'absolute', left: 0, bottom: 56, height: 58, width: '100%', backgroundColor: '#666666', zIndex: 99 }}>
+					<Block style={{ margin: 0, padding: 0 }}>
+						<Row>
+							<Col width="50">
+								<Block style={{ margin: 12 }}>
+									<Row>
+										<Col width="100">
+											<Button
+												onClick={() => this.props.navigate('/AddKunjungan/')}
+												round
+												style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
+												text="Input Visit"
+											/>
+										</Col>
+									</Row>
+								</Block>
+							</Col>
+							<Col width="50">
+								<Block style={{ margin: 12 }}>
+									<Row>
+										<Col width="100">
+											<Button
+												onClick={() => this.props.back()}
+												round
+												style={{ backgroundColor: '#FF6666', color: '#ffffff' }}
+												text="Back"
+											/>
+										</Col>
+									</Row>
+								</Block>
+							</Col>
+						</Row>
+					</Block>
+				</div>
 			</Page>
 		);
 	}
@@ -357,14 +543,14 @@ const mapStateToProps = (state) => {
 	return {
 		user: state.main.user,
 		detailCust: state.user.detailCust,
+		profile: state.user.profile,
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		//onUpdateUser: (data) => dispatch(updateUser(data)),
-		//onLogin: () => dispatch(login()),
 		navigate: (nav) => dispatch(navigate(nav)),
+		back: () => dispatch(back()),
 		setDetailCustomer: (detailCust) => dispatch(setDetailCustomer(detailCust)),
 	};
 };

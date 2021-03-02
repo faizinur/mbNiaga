@@ -154,7 +154,7 @@ const DetailDebitur = (props) => {
                                 <Row>
                                     <Col width="100">
                                         <Button
-                                            onClick={() => log('hehe')}
+                                            onClick={() => dispatch(navigate('/UpdateDebitur/'))}
                                             round
                                             style={{ backgroundColor: '#60A917', color: 'white', textTransform: 'capitalize' }}
                                             text="Address Update"

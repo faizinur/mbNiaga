@@ -38,49 +38,17 @@ const DeviceInfo = (props) => {
                             title={'DEVICE INFORMATION'}
                         />
                     )
-
             }
-
-            <List noHairlinesMd style={{ fontSize: 1 }}>
-                <ListInput
-                    outline
-                    label="Manufacture"
-                    type="text"
-                    disabled={true}
-                    value={device.manufacturer}
-                />
-                <ListInput
-                    outline
-                    label="Operating System"
-                    type="text"
-                    disabled={true}
-                    value={device.platform}
-                />
-                <ListInput
-                    outline
-                    label="Device ID"
-                    type="text"
-                    disabled={true}
-                    value={device.uuid}
-                />
-                <ListInput
-                    outline
-                    label="ICCID"
-                    type="text"
-                    disabled={true}
-                    value={device.serial}
-                />
-                <ListInput
-                    outline
-                    label="Version"
-                    type="text"
-                    disabled={true}
-                    value={device.version}
-                />
-            </List>
+            {
+                Object.keys(device).map((key) => (
+                    ['manufacturer', 'platform', 'uuid', 'serial', 'version'].includes(key) &&
+                    (<Row key={key} noGap style={{ margin: 5, margin: 5 }}>
+                        <Col width="30" style={{ height: '100% style={{marginTop : 5, marginBottom : 5}}', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{key}</Col>
+                        <Col width="65" style={{ height: '100%', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{device[key]}</Col>
+                    </Row>)
+                ))
+            }
         </Page>
     );
 }
-
-
 export default DeviceInfo;

@@ -24,7 +24,7 @@ const styles = {
     container: {
         display: 'flex',
         height: 42,
-        backgroundColor: "#c0392b",
+        backgroundColor: "#666666",
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: '5%',
@@ -37,7 +37,7 @@ const styles = {
     containerNoGap: {
         display: 'flex',
         height: 42,
-        backgroundColor: "#c0392b",
+        backgroundColor: "#666666",
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: '5%',
@@ -48,7 +48,7 @@ const styles = {
     containerCenter: {
         display: 'flex',
         height: 42,
-        backgroundColor: "#c0392b",
+        backgroundColor: "#666666",
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: '5%',
@@ -61,7 +61,7 @@ const styles = {
     containerCenterNoGap: {
         display: 'flex',
         height: 42,
-        backgroundColor: "#c0392b",
+        backgroundColor: "#666666",
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: '5%',
