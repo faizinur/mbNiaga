@@ -365,27 +365,27 @@ class InfoDebitur extends React.Component {
 					{
 						list: [
 							{
-								key: 'CallDate',
+								key: 'Call Date',
 								value: 'value',
 							},
 							{
-								key: 'CallResult',
+								key: 'Call Result',
 								value: 'value',
 							},
 							{
-								key: 'CalledBy',
+								key: 'Called By',
 								value: 'value',
 							},
 							{
-								key: 'PTPDate',
+								key: 'PTP Date',
 								value: 'value',
 							},
 							{
-								key: 'PTPAmount',
+								key: 'PTP Amount',
 								value: 'value',
 							},
 							{
-								key: 'SuccesPhone',
+								key: 'Succes Phone',
 								value: 'value',
 							},
 
@@ -399,27 +399,27 @@ class InfoDebitur extends React.Component {
 					{
 						list: [
 							{
-								key: 'VisitDate',
+								key: 'Visit Date',
 								value: 'value',
 							},
 							{
-								key: 'VisitResult',
+								key: 'Visit Result',
 								value: 'value',
 							},
 							{
-								key: 'VisitedBy',
+								key: 'Visited By',
 								value: 'value',
 							},
 							{
-								key: 'PTPDate',
+								key: 'PTP Date',
 								value: 'value',
 							},
 							{
-								key: 'PTPAmount',
+								key: 'PTP Amount',
 								value: 'value',
 							},
 							{
-								key: 'SuccessAddress',
+								key: 'Success Address',
 								value: 'value',
 							},
 						]
@@ -432,15 +432,15 @@ class InfoDebitur extends React.Component {
 					{
 						list: [
 							{
-								key: 'PayDate',
+								key: 'Pay Date',
 								value: 'value',
 							},
 							{
-								key: 'PayAmount',
+								key: 'Pay Amount',
 								value: 'value',
 							},
 							{
-								key: 'PayVia',
+								key: 'Pay Via',
 								value: 'value',
 							},
 						]
