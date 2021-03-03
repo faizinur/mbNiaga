@@ -32,7 +32,7 @@ const back = () => {
             case 'PaidList':
                 log('navigate TO : /Main/');
                 dispatch(navigateTo('/Main/'));
-                break;
+                break; 
             case 'DetailDebitur':
                 log('navigate TO : /ListDebitur/');
                 dispatch(navigateTo('/ListDebitur/'));

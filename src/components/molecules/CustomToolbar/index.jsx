@@ -149,29 +149,41 @@ const CustomToolbar = (props) => {
                             onChange={({ target }) => setUsername(target.value)}
                         />
                     </List>
-                    <List noHairlinesMd>
-                        <Block>
-                            <Row>
-                                <Col width="50">
-                                    <Button
-                                        onClick={() => _validate()}
-                                        round
-                                        style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                        text="Log Out"
-                                    />
-                                </Col>
-                                <Col width="50">
-                                    <Button
-                                        onClick={() => _cancel()}
-                                        round
-                                        style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                        text="Batal"
-                                    />
-                                </Col>
-                            </Row>
-                        </Block>
-                    </List>
                 </Page>
+                <div style={{ position: 'absolute', left: 0, bottom: 0, height: 58, width: '100%', backgroundColor: '#666666', zIndex: 99 }}>
+                    <Block style={{ margin: 0, padding: 0 }}>
+                        <Row>
+                            <Col width="50">
+                                <Block style={{ margin: 12 }}>
+                                    <Row>
+                                        <Col width="100">
+                                            <Button
+                                                onClick={() => _validate()}
+                                                round
+                                                style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
+                                                text="Log Out"
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Block>
+                            </Col>
+                            <Col width="50">
+                                <Block style={{ margin: 12 }}>
+                                    <Row>
+                                        <Col width="100">
+                                            <Button
+                                                onClick={() => _cancel()}
+                                                round
+                                                style={{ backgroundColor: '#FF6666', color: '#ffffff' }}
+                                                text="Cancel"
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Block>
+                            </Col>
+                        </Row>
+                    </Block>
+                </div>
             </Popup>
         </div>
     )

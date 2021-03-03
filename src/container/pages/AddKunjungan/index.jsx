@@ -64,6 +64,9 @@ class AddKunjungan extends React.Component {
                 alamat: '',
                 phone_number_1: '',
                 phone_number_2: '',
+                home_address_1 : props.detailCust.home_address_1,
+                office_address_1 : props.detailCust.office_address_1,
+                home_post_code : props.detailCust.home_post_code,
             }
         }
     }
@@ -86,13 +89,14 @@ class AddKunjungan extends React.Component {
             () => {
                 var { formData, ptp } = this.state;
                 log(formData)
-                var mandatoryField = ['contact_mode', 'contact_person', 'place_contacted', 'call_result', 'notepad', 'gambar'];
+                var mandatoryField = ['place_contacted', 'call_result', 'notepad', 'gambar'];
                 if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
                 for (var item in formData) {
                     if (mandatoryField.includes(item)) {
                         if (typeof (formData[item]) == 'string') {
                             if (formData[item].toString() == "") {
-                                f7.dialog.alert("Harap Isi Semua Input. 0");
+                                alert(item)
+                                // f7.dialog.alert("Harap Isi Semua Input.");
                                 return false;
                             }
                         } else {

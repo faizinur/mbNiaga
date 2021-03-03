@@ -33,7 +33,6 @@ const UpdatePin = () => {
         if (oldPIN == '' || newPIN == '' || confirmPIN == '') { f7.dialog.alert('PIN tidak boleh kosong'); return false; }
         SQLite.query('SELECT value FROM COLLECTION WHERE key=?', [PIN])
             .then(res => {
-                log(res[0])
                 if (res[0] == oldPIN) {
                     if (newPIN === confirmPIN) {
                         SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [PIN, newPIN])

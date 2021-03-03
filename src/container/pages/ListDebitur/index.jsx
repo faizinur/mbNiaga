@@ -60,16 +60,16 @@ class ListDebitur extends React.Component {
 		SQLite.query('SELECT * FROM collection where key = ?', [DETAIL_COSTUMER])
 			.then(res => {
 				var arr_result = [];
-				(res.length == 0 ? [] : res[0]).map((item, index) => arr_result.push({
-					namaDebitur: item.name,
-					nomorKartu: item.card_no,
-					alamat: item.home_address_1,
-					produk: item.loan_type,
-					tagihan: item.dpd_cur_days,
-					bucket: item.current_bucket,
-					dpd: item.day_past_due,
-					data: item
-				}));
+				(res.length == 0 ? [] : res[0]).map((item, index) =>
+					arr_result.push({
+						namaDebitur: item.name || '-',
+						nomorKartu: item.card_no || '-',
+						alamat: item.home_address_1 || '-',
+						office_address: item.office_address_1 || '-',
+						home_post_code: item.home_post_code || '-',
+						data: item,
+					})
+				);
 				this.setState({ searchResult: arr_result });
 			})
 			.catch(err => log(err))

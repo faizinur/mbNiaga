@@ -39,7 +39,8 @@ const KunjunganItem = (props) => {
                             <p style={{ ...styles.itemText, ...{ fontWeight: 'bold', fontSize: 18 } }}>{item.namaDebitur}</p>
                             <p style={{ ...styles.itemText, ...{ fontSize: 18 } }}>{item.nomorKartu}</p>
                             <p style={styles.itemText}>{item.alamat}</p>
-                            <p style={styles.itemText}>{item.tagihan}</p>
+                            <p style={styles.itemText}>{item.home_post_code}</p>
+                            <p style={styles.itemText}>{item.office_address}</p>
                         </div>
                     </div>
                 ))
@@ -55,7 +56,7 @@ const styles = {
         height: 'fit-content',
         flexDirection: 'row',
         padding: 10,
-        backgroundColor : 'white', 
+        backgroundColor: 'white',
     },
     imgContainer: {
         display: 'flex',
