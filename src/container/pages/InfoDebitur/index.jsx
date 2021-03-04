@@ -151,64 +151,58 @@ class InfoDebitur extends React.Component {
 		const { detailCust } = this.props;
 		let [Y, M, D] = detailCust.date_of_birth.split("-");
 		let today = new Date();
+		let tabdata = [
+			{
+				title: 'CUSTOMER',
+				tabLink: 'info-costumer-content',
+				id: 'info-costumer',
+			},
+			{
+				title: 'ACCOUNT',
+				tabLink: 'info-akun-content',
+				id: 'info-akun',
+			},
+			{
+				title: 'DEMOGRAFI',
+				tabLink: 'info-demografi-content',
+				id: 'info-demografi',
+			},
+			{
+				title: 'OTHER FACILITY',
+				tabLink: 'info-fasilitas-content',
+				id: 'info-fasilitas-lain',
+			},
+			{
+				title: 'HISTORIKAL ACTIVITY',
+				tabLink: 'aktivitas-historikal-content',
+				id: 'aktivitas-historikal',
+			},
+			{
+				title: 'ADDITIONAL INFO',
+				tabLink: 'info-tambahan-content',
+				id: 'info-tambahan',
+			},
+		];
+
 		return (
 			<Page name="InfoDebitur" pageContent={false} style={{ paddingBottom: 60 }}>
 				<DefaultNavbar title="DETAIL DEBITUR" network={Connection()} backLink />
 				<Toolbar inner={false} tabbar top style={{ position: 'unset', flexDirection: 'row', display: 'flex', flex: 1, flexWrap: 'wrap', alignContent: 'flex-start', height: 'fit-content' }}>
-					<div style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
-						<Link
-							style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === 'info-costumer-content' ? '#ff6666' : 'white' }}
-							onClick={() => this.setState({ tabLinkActive: 'info-costumer-content' })}
-							tabLink="#info-costumer-content"
-							id="info-costumer">
-							CUSTOMER
-							</Link>
-					</div>
-					<div style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
-						<Link
-							style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === 'info-akun-content' ? '#ff6666' : 'white' }}
-							onClick={() => this.setState({ tabLinkActive: 'info-akun-content' })}
-							tabLink="#info-akun-content"
-							id="info-akun">
-							ACCOUNT
-							</Link>
-					</div>
-					<div style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
-						<Link
-							style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === 'info-demografi-content' ? '#ff6666' : 'white' }}
-							onClick={() => this.setState({ tabLinkActive: 'info-demografi-content' })}
-							tabLink="#info-demografi-content"
-							id="info-demografi">
-							DEMOGRAFI
-							</Link>
-					</div>
-					<div style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
-						<Link
-							style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === 'info-fasilitas-content' ? '#ff6666' : 'white' }}
-							onClick={() => this.setState({ tabLinkActive: 'info-fasilitas-content' })}
-							tabLink="#info-fasilitas-content"
-							id="info-fasilitas-lain
-						">OTHER FACILITY
-						</Link>
-					</div>
-					<div style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
-						<Link
-							style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === 'aktivitas-historikal-content' ? '#ff6666' : 'white' }}
-							onClick={() => this.setState({ tabLinkActive: 'aktivitas-historikal-content' })}
-							tabLink="#aktivitas-historikal-content"
-							id="aktivitas-historikal">
-							HISTORIKAL ACTIVITY
-							</Link>
-					</div>
-					<div style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
-						<Link
-							style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30, color: this.state.tabLinkActive === 'info-tambahan-content' ? '#ff6666' : 'white' }}
-							onClick={() => this.setState({ tabLinkActive: 'info-tambahan-content' })}
-							tabLink="#info-tambahan-content"
-							id="info-tambahan">
-							ADDITIONAL INFO
-							</Link>
-					</div>
+					{
+						tabdata.map((item, key) => (
+							<div key={key} style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
+								<Link
+									style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30 }}
+									onClick={() => this.setState({ tabLinkActive: item.tabLink })}
+									tabLink={`#${item.tabLink}`}
+									id={item.id}
+								>
+									<p style={{ margin: 0, textOverflow: 'ellipsis', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden', color: this.state.tabLinkActive === item.tabLink ? '#ff6666' : 'white' }}
+									>{item.title}</p>
+								</Link>
+							</div>
+						))
+					}
 				</Toolbar>
 				<Tabs swipeable >
 					<Tab id="info-costumer-content" className="page-content" style={{ paddingTop: 0 }}>

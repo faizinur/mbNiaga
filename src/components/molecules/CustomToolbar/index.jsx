@@ -58,6 +58,7 @@ const CustomToolbar = (props) => {
     }
     const _validate = () => {
         if (username == '') { f7.dialog.alert('USERNAME tidak boleh kosong'); return false; }
+        if (username !== user.user_id) { f7.dialog.alert('USERNAME belum benar'); return false; }
         POST(`Logout`, { username: username })
             .then(res => {
                 if (res.status == 'success') {

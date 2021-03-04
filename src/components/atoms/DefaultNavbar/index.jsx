@@ -34,7 +34,7 @@ const DefaultNavbar = (props) => {
                 {
                     // 'picture' in props ?
                     <div style={{ width: 'fit-content', height: '100%', paddingRight: '1%'}}>
-                        <img style={styles.logo} src={require(`../../../assets/img/user-profile.png`).default} />
+                        <img style={styles.logo} src={require(`../../../assets/img/ic_apps_android.png`).default} />
                     </div>
                     // : ''
                 }
@@ -120,6 +120,7 @@ const styles = {
     logo : {
         height : '100%',
         filter : 'opacity(0.5) drop-shadow(0 0 0 #666666)',
+        borderRadius : 10,
     }
 };
 
