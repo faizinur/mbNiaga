@@ -27,7 +27,7 @@ const { LIST_ACCOUNT, PIN, REKAP_TERTUNDA } = SQLiteTypes;
 
 const Idle = (props) => {
     useEffect(() => {
-        log('MOUNT OR UPDATE Idle', Connection());
+        log('MOUNT OR UPDATE Idle');
         return () => {
             setUserPIN('');
             setPassword('');
@@ -82,7 +82,7 @@ const Idle = (props) => {
             password: '12345678',
             imei: JSON.stringify(uuid),
             iccd: JSON.stringify(serial),
-            jam_mobile : `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0'+minutes : minutes}:${seconds < 9 ? '0'+seconds : seconds}`,
+            jam_mobile: `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0' + minutes : minutes}:${seconds < 9 ? '0' + seconds : seconds}`,
         }
         POST(`Login`, data)
             .then(res => {
@@ -192,88 +192,102 @@ const Idle = (props) => {
         return Promise.all(reqList);
     }
     return (
-        <Page noToolbar noNavbar noSwipeback loginScreen name="Idle">
-            <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
-            {/* <img src="./src/assets/img/splash_screen.png" alt=""/> */}
-            <List inlineLabels noHairlinesMd>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                    <p>STANDBY MODE <br />HI <b>{'full_name' in user ? user.full_name.toUpperCase() : '~'}</b>, PLEASE RELOGIN</p>
-                </div>
-            </List>
-            {
-                Connection() == "OFFLINE" ?
-                    (
-                        <List inlineLabels noHairlinesMd>
-                            <ListInput
-                                outline
-                                label="PIN"
-                                type={"password"}
-                                inputmode={"numeric"}
-                                pattern="[0-9]*"
-                                onChange={({ target }) => setUserPIN(target.value)}
-                                maxlength={6}
-                                minlength={4}
-                                value={userPIN}
-                            />
-                        </List>
-                    ) : (
-                        <List inlineLabels noHairlinesMd>
-                            <ListInput
-                                outline
-                                label="Password :"
-                                type="password"
-                                value={password}
-                                onChange={({ target }) => setPassword(target.value)}
-                            />
-                        </List>
-                    )
-            }
-            <List noHairlinesMd>
-                <Block>
+        <div>
+            <Page noToolbar noNavbar noSwipeback loginScreen name="Idle">
+                <LoginScreenTitle style={stylesheet.LoginScreenTitle}>Mobile Application Interaction</LoginScreenTitle>
+                {/* <img src="./src/assets/img/splash_screen.png" alt=""/> */}
+                <List inlineLabels noHairlinesMd>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                        <p>STANDBY MODE <br />HI <b>{'full_name' in user ? user.full_name.toUpperCase() : '~'}</b>, PLEASE RELOGIN</p>
+                    </div>
+                </List>
+                {
+                    Connection() == "OFFLINE" ?
+                        (
+                            <List inlineLabels noHairlinesMd>
+                                <ListInput
+                                    outline
+                                    label="PIN"
+                                    type={"password"}
+                                    inputmode={"numeric"}
+                                    pattern="[0-9]*"
+                                    onChange={({ target }) => setUserPIN(target.value)}
+                                    maxlength={6}
+                                    minlength={4}
+                                    value={userPIN}
+                                />
+                            </List>
+                        ) : (
+                            <List inlineLabels noHairlinesMd>
+                                <ListInput
+                                    outline
+                                    label="Password :"
+                                    type="password"
+                                    value={password}
+                                    onChange={({ target }) => setPassword(target.value)}
+                                />
+                            </List>
+                        )
+                }
+                <Popup
+                    className="failedIdle-popup"
+                    opened={loginResult.length > 0 ? true : false}
+                    onPopupClosed={() => log('pop up Closed')}
+                >
+                    <Page noToolbar noNavbar>
+                        <DefaultNavbar
+                            mode="info"
+                            backLink={(e) => setLoginResult([])}
+                            title={'Gagal Login'}
+                        />
+                        <CardContent padding={false}>
+                            <List medial-list style={{ marginRight: 20, marginLeft: 20, fontSize: 12 }}>
+                                <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="User ID dan Password anda belum sesuai">
+                                    <Icon f7={loginResult.includes('UserAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
+                                </ListItem>
+                                <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Device id anda sesuai">
+                                    <Icon f7={loginResult.includes('ICCIDAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
+                                </ListItem>
+                            </List>
+                        </CardContent>
+                    </Page>
+                </Popup>
+            </Page>
+            <div style={{ position: 'absolute', left: 0, bottom: 0, height: 58, width: '100%', backgroundColor: '#666666', zIndex: 99 }}>
+                <Block style={{ margin: 0, padding: 0 }}>
                     <Row>
                         <Col width="50">
-                            <Button
-                                onClick={() => Connection() == "OFFLINE" ? _validateOffline() : _validateOnline()}
-                                round
-                                style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                text="Login"
-                            />
+                            <Block style={{ margin: 12 }}>
+                                <Row>
+                                    <Col width="100">
+                                        <Button
+                                            onClick={() => Connection() == "OFFLINE" ? _validateOffline() : _validateOnline()}
+                                            round
+                                            style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
+                                            text="Login"
+                                        />
+                                    </Col>
+                                </Row>
+                            </Block>
                         </Col>
                         <Col width="50">
-                            <Button
-                                onClick={() => _exit()}
-                                round
-                                style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                text="Exit"
-                            />
+                            <Block style={{ margin: 12 }}>
+                                <Row>
+                                    <Col width="100">
+                                        <Button
+                                            onClick={() => _exit()}
+                                            round
+                                            style={{ backgroundColor: '#FF6666', color: '#ffffff' }}
+                                            text="Exit"
+                                        />
+                                    </Col>
+                                </Row>
+                            </Block>
                         </Col>
                     </Row>
                 </Block>
-            </List>
-            <Popup
-                className="failedIdle-popup"
-                opened={loginResult.length > 0 ? true : false}
-                onPopupClosed={() => log('pop up Closed')}
-            >
-                <Page noToolbar noNavbar>
-                    <DefaultNavbar
-                        mode="info"
-                        backLink={(e) => setLoginResult([])}
-                        title={'Gagal Login'}
-                    />
-                    <CardContent padding={false}>
-                        <List medial-list style={{ marginRight: 20, marginLeft: 20, fontSize: 12 }}>
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="User ID dan Password anda belum sesuai">
-                                <Icon f7={loginResult.includes('UserAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
-                            </ListItem>
-                            <ListItem style={{ color: 'white', backgroundColor: '#c0392b', flex: 1, flexDirection: 'row', marginBottom: 5 }} title="Device id anda sesuai">
-                                <Icon f7={loginResult.includes('ICCIDAuth') ? "xmark_rectangle_fiil" : "checkmark_rectangle"}></Icon>
-                            </ListItem>
-                        </List>
-                    </CardContent>
-                </Page>
-            </Popup>
-        </Page>
+            </div>
+        </div>
     )
 }
 

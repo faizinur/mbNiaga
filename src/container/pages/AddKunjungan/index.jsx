@@ -64,14 +64,15 @@ class AddKunjungan extends React.Component {
                 alamat: '',
                 phone_number_1: '',
                 phone_number_2: '',
-                home_address_1 : props.detailCust.home_address_1,
-                office_address_1 : props.detailCust.office_address_1,
-                home_post_code : props.detailCust.home_post_code,
+                home_address_1: props.detailCust.home_address_1,
+                office_address_1: props.detailCust.office_address_1,
+                home_post_code: props.detailCust.home_post_code,
+                
             }
         }
     }
     componentDidMount() {
-        log('componentDidMount AddKunjungan', this.props.province);
+        log('componentDidMount AddKunjungan');
     }
     _kirim() {
         let dvc = (!Device.android && !Device.ios) ? false : true;
@@ -241,6 +242,24 @@ class AddKunjungan extends React.Component {
                 value: profile.full_name || '-',
             },
         ];
+        let  phoneNumberType = [
+            {
+                value: 'Home Phone',
+                description: 'Home Phone',
+            },
+            {
+                value: 'HandPhone',
+                description: 'HandPhone',
+            },
+            {
+                value: 'Office Phone',
+                description: 'Office Phone',
+            },
+            {
+                value: 'Other',
+                description: 'Other',
+            },
+        ];
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="AddKunjungan">
                 <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} backLink />
@@ -377,7 +396,6 @@ class AddKunjungan extends React.Component {
                         ))}
                     </Row>
                 </Block>
-
                 <div
                     style={{
                         width: '87%',
@@ -529,7 +547,7 @@ class AddKunjungan extends React.Component {
                         defaultValue=""
                     >
                         <option value="" disabled>--PILIH--</option>
-                        {contactMode.map((item, key) => (
+                        {phoneNumberType.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
                     </ListInput>
@@ -557,7 +575,7 @@ class AddKunjungan extends React.Component {
                         defaultValue=""
                     >
                         <option value="" disabled>--PILIH--</option>
-                        {contactMode.map((item, key) => (
+                        {phoneNumberType.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
                     </ListInput>

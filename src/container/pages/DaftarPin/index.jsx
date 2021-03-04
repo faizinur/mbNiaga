@@ -42,78 +42,86 @@ const DaftarPin = (props) => {
         props.onValidatePIN(pin);
     }
     return (
-        <Page noToolbar noNavbar style={{ fontSize: 10, paddingBottom: 60 }}>
-            <List noHairlinesMd>
-                {
-                    'onValidatePIN' in props ?
-                        <List noHairlinesMd>
-                            <ListItem
-                                title="Masukkan PIN anda" style={{ alignItems: 'center' }}
-                            />
-                            <ListInput
-                                outline
-                                label="Masukan PIN"
-                                type={"password"}
-                                inputmode={"numeric"}
-                                pattern="[0-9]*"
-                                onChange={({ target }) => setNewPIN(target.value)}
-                                maxlength={6}
-                                minlength={4}
-                                value={newPIN}
-                            />
-                        </List>
-                        :
-                        <List noHairlinesMd>
-                            <ListItem
-                                title="Daftar PIN" style={{ alignItems: 'center' }}
-                            />
+        <div>
+            <Page noToolbar noNavbar style={{ fontSize: 10, paddingBottom: 60 }}>
+                <List noHairlinesMd>
+                    {
+                        'onValidatePIN' in props ?
+                            <List noHairlinesMd>
+                                <ListItem
+                                    title="Masukkan PIN anda" style={{ alignItems: 'center' }}
+                                />
+                                <ListInput
+                                    outline
+                                    label="Masukan PIN"
+                                    type={"password"}
+                                    inputmode={"numeric"}
+                                    pattern="[0-9]*"
+                                    onChange={({ target }) => setNewPIN(target.value)}
+                                    maxlength={6}
+                                    minlength={4}
+                                    value={newPIN}
+                                />
+                            </List>
+                            :
+                            <List noHairlinesMd>
+                                <ListItem
+                                    title="Daftar PIN" style={{ alignItems: 'center' }}
+                                />
 
-                            <ListInput
-                                outline
-                                label="Masukan PIN Baru"
-                                type={"password"}
-                                inputmode={"numeric"}
-                                pattern="[0-9]*"
-                                onChange={({ target }) => setNewPIN(target.value)}
-                                maxlength={6}
-                                minlength={4}
-                                value={newPIN}
-                            />
-                            <ListInput
-                                outline
-                                label="Konfirmasi PIN Baru"
-                                type={"password"}
-                                inputmode={"numeric"}
-                                pattern="[0-9]*"
-                                onChange={({ target }) => setConfirmPIN(target.value)}
-                                maxlength={6}
-                                minlength={4}
-                                value={confirmPIN}
-                            />
-                        </List>
-                }
-            </List>
-            <List>
-                <Block strong>
+                                <ListInput
+                                    outline
+                                    label="Masukan PIN Baru"
+                                    type={"password"}
+                                    inputmode={"numeric"}
+                                    pattern="[0-9]*"
+                                    onChange={({ target }) => setNewPIN(target.value)}
+                                    maxlength={6}
+                                    minlength={4}
+                                    value={newPIN}
+                                />
+                                <ListInput
+                                    outline
+                                    label="Konfirmasi PIN Baru"
+                                    type={"password"}
+                                    inputmode={"numeric"}
+                                    pattern="[0-9]*"
+                                    onChange={({ target }) => setConfirmPIN(target.value)}
+                                    maxlength={6}
+                                    minlength={4}
+                                    value={confirmPIN}
+                                />
+                            </List>
+                    }
+                </List>
+            </Page>
+            <div style={{ position: 'absolute', left: 0, bottom: 0, height: 58, width: '100%', backgroundColor: '#666666', zIndex: 99 }}>
+                <Block style={{ margin: 0, padding: 0 }}>
                     <Row>
                         <Col width="100">
-                            <Button
-                                fill
-                                raised
-                                onClick={() =>
-                                    'onSubmitPIN' in props ?
-                                        _submitPIN() :
-                                        ('onValidatePIN' in props ?
-                                            _validatePIN() :
-                                            _next())
-                                }
-                                style={{ backgroundColor: '#c0392b' }}
-                            >Next</Button>
+                            <Block style={{ margin: 12 }}>
+                                <Row>
+                                    <Col width="100">
+                                        <Button
+                                            onClick={() =>
+                                                'onSubmitPIN' in props ?
+                                                    _submitPIN() :
+                                                    ('onValidatePIN' in props ?
+                                                        _validatePIN() :
+                                                        _next())
+                                            }
+                                            round
+                                            style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
+                                            text="Next"
+                                        />
+                                    </Col>
+                                </Row>
+                            </Block>
                         </Col>
                     </Row>
                 </Block>
-            </List>
-        </Page>
+            </div>
+        </div>
     )
 }
 

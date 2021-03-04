@@ -62,11 +62,11 @@ class Main extends React.Component {
                             label: "Visited List",
                             image: "list_kunjungan.png",
                         },
-                        {
-                            onClick: (e) => this.props.navigate('/PaidList/'),
-                            label: "Paid List",
-                            image: "Information.png",
-                        },
+                        // {
+                        //     onClick: (e) => this.props.navigate('/PaidList/'),
+                        //     label: "Paid List",
+                        //     image: "Information.png",
+                        // },
                     ]}
                 />
             </Page>

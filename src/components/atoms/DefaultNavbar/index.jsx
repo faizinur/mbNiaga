@@ -5,12 +5,6 @@ import { Icon } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
 import { back } from '../../../config/redux/actions/';
 const DefaultNavbar = (props) => {
-    // if('mode' in props){
-
-    // }    
-    // switch (props.mode) {
-    //     case 'info':
-
     const dispatch = useDispatch();
     return (
         <div style={
@@ -23,7 +17,7 @@ const DefaultNavbar = (props) => {
         }>
             <div
                 style={styles.iconContainer} >
-                {
+                {/* {
                     'backLink' in props ?
                         <div
                             onClick={() => 'onClick' in props ? props.onClick() : dispatch(back())}
@@ -36,15 +30,37 @@ const DefaultNavbar = (props) => {
                     'title' in props ?
                         <p style={styles.title}>{props.title}</p>
                         : <p></p>
+                } */}
+                {
+                    // 'picture' in props ?
+                    <div style={{ width: 'fit-content', height: '100%', paddingRight: '1%'}}>
+                        <img style={styles.logo} src={require(`../../../assets/img/user-profile.png`).default} />
+                    </div>
+                    // : ''
+                }
+
+                {
+                    'title' in props ?
+                        <div style={{ display: 'flex', height: '100%', flex: 1 }}>
+                            <p style={styles.title}>{props.title}</p>
+                        </div>
+                        : ''
+                }
+                {
+                    'network' in props ?
+                        <div style={{ width: 'fit-content', height: '100%', paddingLeft: '1%' }}>
+                            <p style={styles.network}>{props.network}</p>
+                        </div>
+                        : ''
                 }
             </div>
-            {
+            {/* {
                 'network' in props ?
                     <div>
                         <p style={styles.network}>{props.network}</p>
                     </div>
                     : ''
-            }
+            } */}
         </div >
     )
     //     default:
@@ -78,7 +94,8 @@ const styles = {
         fontSize: 14,
         fontWeight: 'initial',
         color: '#fcf5f4',
-        lineHeight: 16
+        lineHeight: 3,
+        margin: 0,
     },
     icon: {
         fontSize: 12,
@@ -90,6 +107,7 @@ const styles = {
     iconContainer: {
         height: 40,
         display: 'flex',
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -98,6 +116,10 @@ const styles = {
         fontSize: 12,
         fontWeight: 'initial',
         color: '#fcf5f4',
+    },
+    logo : {
+        height : '100%',
+        filter : 'opacity(0.5) drop-shadow(0 0 0 #666666)',
     }
 };
 
