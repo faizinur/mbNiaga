@@ -8,6 +8,7 @@ import {
     login,
     setDevice,
     setGeolocation,
+    setBahasa,
 } from './mainActions';
 
 import {
@@ -70,4 +71,5 @@ export {
     setBedaJam,
     setMaxBedaJam,
     setMountPoint,
+    setBahasa,
 }

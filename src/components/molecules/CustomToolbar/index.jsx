@@ -17,15 +17,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser, navigate, setPin } from '../../../config/redux/actions/';
 import { log, POST, SQLite, SQLiteTypes } from '../../../utils';
 const { LIST_ACCOUNT, PIN } = SQLiteTypes;
+import { CustomToolbar as Strings } from '../../../utils/Localization';
+
 const CustomToolbar = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE CustomToolbar shown', JSON.stringify(props.shown));
+        Strings.setLanguage(bahasa);
         return () => {
             setUsername('')
             log('UNMOUNT CustomToolbar');
         }
     }, []);
     const dispatch = useDispatch();
+    const bahasa = useSelector(state => state.main.bahasa);
     let [popupStateLogout, setPopupStateLogout] = useState(false);
     let [username, setUsername] = useState("");
     const [tablinkActive, setTablinkActive] = useState(1);
@@ -57,8 +61,8 @@ const CustomToolbar = (props) => {
         }
     }
     const _validate = () => {
-        if (username == '') { f7.dialog.alert('USERNAME tidak boleh kosong'); return false; }
-        if (username !== user.user_id) { f7.dialog.alert('USERNAME belum benar'); return false; }
+        if (username == '') { f7.dialog.alert(Strings.emptyUsername); return false; }
+        if (username !== user.user_id) { f7.dialog.alert(Strings.errorUsername); return false; }
         POST(`Logout`, { username: username })
             .then(res => {
                 if (res.status == 'success') {
@@ -104,7 +108,7 @@ const CustomToolbar = (props) => {
                 <Link
                     onClick={(e) => _setTablink(0)}
                     tabLink={true}
-                    text="DEVICE INFO"
+                    text={Strings.linkDevice}
                     iconIos="f7:error_outline"
                     iconAurora="f7:error_outline"
                     iconMd="material:error_outline"
@@ -112,7 +116,7 @@ const CustomToolbar = (props) => {
                 <Link
                     onClick={(e) => _setTablink(1)}
                     tabLink={true}
-                    text="MENU"
+                    text={Strings.linkMenu}
                     iconIos="f7:menu"
                     iconAurora="f7:menu"
                     iconMd="material:menu"
@@ -120,7 +124,7 @@ const CustomToolbar = (props) => {
                 <Link
                     onClick={(e) => _setTablink(2)}
                     tabLink={true}
-                    text="UBAH PIN"
+                    text={Strings.linkPIN}
                     iconIos="f7:lock"
                     iconAurora="f7:lock"
                     iconMd="material:lock"
@@ -128,7 +132,7 @@ const CustomToolbar = (props) => {
                 <Link
                     onClick={(e) => _setTablink(3)}
                     tabLink={true}
-                    text="KELUAR"
+                    text={Strings.linkExit}
                     iconIos="f7:arrow_right_to_line_alt"
                     iconAurora="f7:arrow_right_to_line_alt"
                     iconMd="material:exit_to_app"
@@ -144,7 +148,7 @@ const CustomToolbar = (props) => {
                     <List inlineLabels noHairlinesMd>
                         <ListInput
                             outline
-                            label="username :"
+                            label={Strings.usernameLabel}
                             type="text"
                             value={username}
                             onChange={({ target }) => setUsername(target.value)}
@@ -162,7 +166,7 @@ const CustomToolbar = (props) => {
                                                 onClick={() => _validate()}
                                                 round
                                                 style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
-                                                text="Log Out"
+                                                text={Strings.logout}
                                             />
                                         </Col>
                                     </Row>
@@ -176,7 +180,7 @@ const CustomToolbar = (props) => {
                                                 onClick={() => _cancel()}
                                                 round
                                                 style={{ backgroundColor: '#FF6666', color: '#ffffff' }}
-                                                text="Cancel"
+                                                text={Strings.cancel}
                                             />
                                         </Col>
                                     </Row>

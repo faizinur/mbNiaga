@@ -27,6 +27,7 @@ import {
     setIdleTime,
     setBedaJam,
     setMaxBedaJam,
+    setBahasa,
 } from '../../../config/redux/actions/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 const {
@@ -39,7 +40,8 @@ const {
     REFERENCE,
     RENCANA_KUNJUNGAN,
     GEOLOCATION,
-    UPDATE_HISTORY
+    UPDATE_HISTORY,
+    BAHASA,
 } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
@@ -155,7 +157,7 @@ const SplashScreen = (props) => {
                     let hours = date.getHours();
                     let minutes = date.getMinutes();
                     let seconds = date.getSeconds();
-                    let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0'+minutes : minutes}:${seconds < 9 ? '0'+seconds : seconds}`;
+                    let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours < 9 ? '0' + hours : hours}:${minutes < 9 ? '0' + minutes : minutes}:${seconds < 9 ? '0' + seconds : seconds}`;
 
                     let serverDate = new Date(jam_mobile);
                     serverDate.setSeconds((new Date(res.LIST_ACCOUNT.jam_mobile) - new Date(res.LIST_ACCOUNT.jam_server)) / 1000);
@@ -165,12 +167,12 @@ const SplashScreen = (props) => {
                     let ServerHours = serverDate.getHours();
                     let ServerMinutes = serverDate.getMinutes();
                     let ServerSeconds = serverDate.getSeconds();
-                    let jam_server = `${ServerYear}-${ServerMonth < 9 ? '0' + ServerMonth : ServerMonth}-${ServerDay} ${ServerHours < 9 ? '0' + ServerHours : ServerHours}:${ServerMinutes < 9 ? '0'+ServerMinutes : ServerMinutes}:${ServerSeconds < 9 ? '0'+ServerSeconds : ServerSeconds}`;
+                    let jam_server = `${ServerYear}-${ServerMonth < 9 ? '0' + ServerMonth : ServerMonth}-${ServerDay} ${ServerHours < 9 ? '0' + ServerHours : ServerHours}:${ServerMinutes < 9 ? '0' + ServerMinutes : ServerMinutes}:${ServerSeconds < 9 ? '0' + ServerSeconds : ServerSeconds}`;
 
                     res.LIST_ACCOUNT = {
                         ...res.LIST_ACCOUNT, ...{
                             mobileTime: jam_mobile,
-                            jam_server : jam_server,
+                            jam_server: jam_server,
                         }
                     }
                     dispatch(setUser(res.LIST_ACCOUNT));
@@ -193,6 +195,9 @@ const SplashScreen = (props) => {
                 }
                 if (GEOLOCATION in res) {
                     log(`handle ${GEOLOCATION}`)
+                }
+                if (BAHASA in res) {
+                    dispatch(setBahasa(res.BAHASA))
                 }
             })
             .catch(err => log(err));

@@ -14,7 +14,8 @@ import { connect } from 'react-redux';
 import { navigate, setDetailCustomer } from '../../../config/redux/actions/';
 import { log, Filter, SQLite, SQLiteTypes, Connection } from '../../../utils/';
 import { SystemInfo, KunjunganItem } from '../../../components/molecules';
-import { DefaultNavbar } from '../../../components/atoms'
+import { DefaultNavbar } from '../../../components/atoms';
+import { RencanaKunjungan as Strings } from '../../../utils/Localization';
 const { RENCANA_KUNJUNGAN } = SQLiteTypes;
 
 class RencanaKunjungan extends React.Component {
@@ -54,7 +55,9 @@ class RencanaKunjungan extends React.Component {
             searchValue: '',
             searchResult: [],
             searchParameter: [],
+            language: props.bahasa,
         }
+        Strings.setLanguage(this.state.language);
     }
     componentDidMount() {
         this._tambahParameter()
@@ -123,7 +126,7 @@ class RencanaKunjungan extends React.Component {
     render() {
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="RencanaKunjungan">
-                <DefaultNavbar title="RENCANA KUNJUNGAN" network={Connection()} backLink />
+                <DefaultNavbar title={Strings.title} network={Connection()} backLink />
                 <List noHairlinesMd style={{ margin: 0, padding: 0 }}>
                     <SystemInfo />
                     <Block style={{ margin: 0, padding: 0 }}>
@@ -144,7 +147,7 @@ class RencanaKunjungan extends React.Component {
                                                 }))
                                             }}
                                         >
-                                            <option value="" disabled>Choose</option>
+                                            <option value="" disabled>{Strings.choose}</option>
                                             {
                                                 this.state.parameter.map((item, key) => (
                                                     <option key={key} value={item.code}>{item.description}</option>
@@ -169,7 +172,7 @@ class RencanaKunjungan extends React.Component {
                                                 }))
                                             }}
                                         >
-                                            <option value="" disabled>Choose</option>
+                                            <option value="" disabled>{Strings.choose}</option>
                                             {
                                                 this.state.kondisi.map((item, key) => (
                                                     <option key={key} value={item.code}>{item.description}</option>
@@ -201,20 +204,20 @@ class RencanaKunjungan extends React.Component {
                         <Block strong style={{ margin: 0, backgroundColor: 'black' }}>
                             <Row>
                                 <Col width="50">
-                                    <Button fill raised onClick={() => this._tambahParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>Add Parameter</Button>
+                                    <Button fill raised onClick={() => this._tambahParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.add}</Button>
                                 </Col>
                                 <Col width="50">
-                                    <Button fill raised onClick={() => this._kurangiParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>Less Parameter</Button>
+                                    <Button fill raised onClick={() => this._kurangiParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.less}</Button>
                                 </Col>
                             </Row>
                         </Block>
                         <Block strong style={{ margin: 0, backgroundColor: 'black' }}>
                             <Row >
                                 <Col width="50">
-                                    <Button fill raised onClick={() => this._clear()} style={{ backgroundColor: '#FFBC26', fontSize: 12 }}>Clear All</Button>
+                                    <Button fill raised onClick={() => this._clear()} style={{ backgroundColor: '#FFBC26', fontSize: 12 }}>{Strings.clear}</Button>
                                 </Col>
                                 <Col width="50">
-                                    <Button fill raised onClick={() => this._search()} style={{ backgroundColor: '#60A917', fontSize: 12 }}>Search</Button>
+                                    <Button fill raised onClick={() => this._search()} style={{ backgroundColor: '#60A917', fontSize: 12 }}>{Strings.search}</Button>
                                 </Col>
                             </Row>
                         </Block>
@@ -232,6 +235,7 @@ class RencanaKunjungan extends React.Component {
 const mapStateToProps = (state) => {
     return {
         detailCust: state.user.detailCust,
+        bahasa: state.main.bahasa,
     };
 };
 

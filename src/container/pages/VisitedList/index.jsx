@@ -15,11 +15,13 @@ import { log, Connection, SQLite, SQLiteTypes, Filter } from '../../../utils';
 import { useDispatch, useSelector } from "react-redux";
 import { DefaultNavbar } from '../../../components/atoms';
 import { SystemInfo, KunjunganItem } from '../../../components/molecules';
+import { VisitedList as Strings } from '../../../utils/Localization';
 const { DAFTAR_DIKUNJUNGI, ACTIVITY_HISTORY } = SQLiteTypes;
 
 const VisitedList = (props) => {
 	useEffect(() => {
 		log('MOUNT OR UPDATE visitedList');
+		Strings.setLanguage(bahasa);
 		_tambahParameter();
 		_getVisitedList();
 		return () => {
@@ -27,6 +29,7 @@ const VisitedList = (props) => {
 		}
 	}, []);
 	const dispatch = useDispatch();
+	let bahasa = useSelector(state => state.main.bahasa);
 	const [listDikunjungi, setListDikunjungi] = useState([]);
 	let [listTerkirim, setListTerkirim] = useState([]);
 	let [parameter, setParameter] = useState([
@@ -134,7 +137,7 @@ const VisitedList = (props) => {
 	return (
 		<Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="VisitedList" backLink>
 			<DefaultNavbar
-				title={'Daftar Dikunjungi'}
+				title={Strings.title}
 				network={Connection()}
 				backLink
 			/>
@@ -156,7 +159,7 @@ const VisitedList = (props) => {
 											setSearchParameter(searchParameter.map((item, index) => index == key ? Object.assign(item, { column: target.value }) : item))
 										}}
 									>
-										<option value="" disabled>Choose</option>
+										<option value="" disabled>{Strings.choose}</option>
 										{
 											parameter.map((item, key) => (
 												<option key={key} value={item.code}>{item.description}</option>
@@ -179,7 +182,7 @@ const VisitedList = (props) => {
 											setSearchParameter(searchParameter.map((item, index) => index == key ? Object.assign(item, { operator: target.value }) : item));
 										}}
 									>
-										<option value="" disabled>Choose</option>
+										<option value="" disabled>{Strings.choose}</option>
 										{
 											kondisi.map((item, key) => (
 												<option key={key} value={item.code}>{item.description}</option>
@@ -209,20 +212,20 @@ const VisitedList = (props) => {
 					<Block strong style={{ margin: 0, backgroundColor: 'black' }}>
 						<Row>
 							<Col width="50">
-								<Button fill raised onClick={() => _tambahParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>Add Parameter</Button>
+								<Button fill raised onClick={() => _tambahParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.add}</Button>
 							</Col>
 							<Col width="50">
-								<Button fill raised onClick={() => _kurangiParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>Less Parameter</Button>
+								<Button fill raised onClick={() => _kurangiParameter()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.less}</Button>
 							</Col>
 						</Row>
 					</Block>
 					<Block strong style={{ margin: 0, backgroundColor: 'black' }}>
 						<Row >
 							<Col width="50">
-								<Button fill raised onClick={() => _clear()} style={{ backgroundColor: '#FFBC26', fontSize: 12 }}>Clear All</Button>
+								<Button fill raised onClick={() => _clear()} style={{ backgroundColor: '#FFBC26', fontSize: 12 }}>{Strings.clear}</Button>
 							</Col>
 							<Col width="50">
-								<Button fill raised onClick={() => _search()} style={{ backgroundColor: '#60A917', fontSize: 12 }}>Search</Button>
+								<Button fill raised onClick={() => _search()} style={{ backgroundColor: '#60A917', fontSize: 12 }}>{Strings.search}</Button>
 							</Col>
 						</Row>
 					</Block>

@@ -28,5 +28,5 @@ export {
     Filter,
     Decrypt,
     selfDecrypt,
-    Encrypt
+    Encrypt,
 }

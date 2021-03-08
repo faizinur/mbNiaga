@@ -2,6 +2,7 @@ import {
     SET_DEVICE,
     UPDATE_USER,
     SET_GEOLOCATION,
+    SET_BAHASA,
 } from '../../actions/types'
 
 const initialState = {
@@ -30,7 +31,8 @@ const initialState = {
         heading: null,
         speed: null,
         timestamp: 0,
-    }
+    },
+    bahasa : 'ID'
 };
 import { log } from '../../../../utils/';
 
@@ -53,6 +55,12 @@ const mainReducers = (state = initialState, action) => {
             return {
                 ...state,
                 geolocation: action.payload,
+            }
+        case SET_BAHASA:
+            // log('SET GEOLOCATION : ', action.payload);
+            return {
+                ...state,
+                bahasa: action.payload,
             }
         default:
             return state;

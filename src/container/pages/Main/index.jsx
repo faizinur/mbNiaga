@@ -9,11 +9,14 @@ import { navigate } from '../../../config/redux/actions/';
 import { log, Camera, Connection } from '../../../utils';
 import { DefaultNavbar, ListMenu } from '../../../components/atoms';
 import { SystemInfo } from '../../../components/molecules';
+import { Main as Strings } from '../../../utils/Localization';
 class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            language: props.bahasa,
         }
+        Strings.setLanguage(this.state.language);
     }
     componentDidMount() {
         log('componentDidMount MAIN');
@@ -30,8 +33,7 @@ class Main extends React.Component {
         return (
             <Page style={{ paddingBottom: 60 }} name="Main">
                 <DefaultNavbar
-                    profile={"hehehehehee"}
-                    title="MOBILE APPLICATION INTERACTION"
+                    title={Strings.title}
                     network={Connection()}
                 />
                 <SystemInfo />
@@ -39,27 +41,27 @@ class Main extends React.Component {
                     item={[
                         {
                             onClick: (e) => this.props.navigate('/ListDebitur/'),
-                            label: "Customer List",
+                            label: Strings.CustomerMenu,
                             image: "list_debitur.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/RencanaKunjungan/'),
-                            label: "Visit Plan",
+                            label: Strings.VisitMenu,
                             image: "rencana_kunjungan.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/RekapTertunda/'),
-                            label: "Postphoned List",
+                            label: Strings.PostphonedMenu,
                             image: "rekap_tertunda.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/RekapTerkirim/'),
-                            label: "Sent List",
+                            label: Strings.SentMenu,
                             image: "rekap_terkirim.png",
                         },
                         {
                             onClick: (e) => this.props.navigate('/VisitedList/'),
-                            label: "Visited List",
+                            label: Strings.VisitedMenu,
                             image: "list_kunjungan.png",
                         },
                         // {
@@ -77,6 +79,7 @@ class Main extends React.Component {
 const mapStateToProps = (state) => {
     return {
         profile: state.user.profile,
+        bahasa: state.main.bahasa,
     };
 };
 

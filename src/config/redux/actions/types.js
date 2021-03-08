@@ -21,6 +21,7 @@ const SET_IDLE_TIME = 'SET_IDLE_TIME';
 const SET_BEDA_JAM = 'SET_BEDA_JAM';
 const SET_MAX_BEDA_JAM = 'SET_MAX_BEDA_JAM';
 const SET_MOUNT_POINT = 'SET_MOUNT_POINT';
+const SET_BAHASA = 'SET_BAHASA';
 
 export {
     UPDATE_USER,
@@ -46,4 +47,5 @@ export {
     SET_BEDA_JAM,
     SET_MAX_BEDA_JAM,
     SET_MOUNT_POINT,
+    SET_BAHASA,
 }

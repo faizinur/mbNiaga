@@ -14,16 +14,18 @@ import {
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { log } from '../../../utils/';
 import { useDispatch, useSelector } from "react-redux";
-import Login from '../Login';
+import { DaftarPin as Strings } from '../../../utils/Localization';
 
 const DaftarPin = (props) => {
     useEffect(() => {
-        log('MOUNT OR UPDATE DaftarPin');
+        log('MOUNT OR UPDATE DaftarPin' );
+        Strings.setLanguage(bahasa);
         return () => {
             log('UNMOUNT DaftarPin');
         }
-    }, []);
+    }, [bahasa]);
     const dispatch = useDispatch();
+    const bahasa = useSelector(state => state.main.bahasa);
     const [newPIN, setNewPIN] = useState('');
     const [confirmPIN, setConfirmPIN] = useState('');
     const _next = () => log('DaftarPin : Nothing...');//dispatch(navigate('/Main/'))
@@ -49,11 +51,11 @@ const DaftarPin = (props) => {
                         'onValidatePIN' in props ?
                             <List noHairlinesMd>
                                 <ListItem
-                                    title="Masukkan PIN anda" style={{ alignItems: 'center' }}
+                                    title={Strings.loginTitle} style={{ alignItems: 'center' }}
                                 />
                                 <ListInput
                                     outline
-                                    label="Masukan PIN"
+                                    label={Strings.loginPinLabel}
                                     type={"password"}
                                     inputmode={"numeric"}
                                     pattern="[0-9]*"
@@ -66,12 +68,11 @@ const DaftarPin = (props) => {
                             :
                             <List noHairlinesMd>
                                 <ListItem
-                                    title="Daftar PIN" style={{ alignItems: 'center' }}
+                                    title={Strings.registerTitle} style={{ alignItems: 'center' }}
                                 />
-
                                 <ListInput
                                     outline
-                                    label="Masukan PIN Baru"
+                                    label={Strings.pinLabel}
                                     type={"password"}
                                     inputmode={"numeric"}
                                     pattern="[0-9]*"
@@ -82,7 +83,7 @@ const DaftarPin = (props) => {
                                 />
                                 <ListInput
                                     outline
-                                    label="Konfirmasi PIN Baru"
+                                    label={Strings.konfirmasiLabel}
                                     type={"password"}
                                     inputmode={"numeric"}
                                     pattern="[0-9]*"
@@ -112,7 +113,7 @@ const DaftarPin = (props) => {
                                             }
                                             round
                                             style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
-                                            text="Next"
+                                            text={Strings.next}
                                         />
                                     </Col>
                                 </Row>

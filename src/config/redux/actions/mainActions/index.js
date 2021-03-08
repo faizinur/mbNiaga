@@ -4,7 +4,8 @@ import {
 	SET_DEVICE,
 	UPDATE_USER,
 	SET_GEOLOCATION,
-	SET_GEOLOCATION_IDLE
+	SET_GEOLOCATION_IDLE,
+	SET_BAHASA,
 } from '../types'
 
 
@@ -18,6 +19,10 @@ const setDevice = (data) => ({
 });
 const setGeolocation = (data) => ({
 	type: SET_GEOLOCATION,
+	payload: data
+});
+const setBahasa = (data) => ({
+	type: SET_BAHASA,
 	payload: data
 });
 
@@ -39,4 +44,5 @@ export {
 	login,
 	setDevice,
 	setGeolocation,
+	setBahasa,
 }

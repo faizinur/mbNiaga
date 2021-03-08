@@ -22,12 +22,14 @@ import stylesheet from './stylesheet';
 import { DefaultNavbar } from '../../../components/atoms';
 // import { errorMonitor } from 'nedb';
 import { setUser, navigate, setPin } from '../../../config/redux/actions/';
+import { Idle as Strings } from '../../../utils/Localization';
 const { LIST_ACCOUNT, PIN, REKAP_TERTUNDA } = SQLiteTypes;
 
 
 const Idle = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE Idle');
+        Strings.setLanguage(bahasa);
         return () => {
             setUserPIN('');
             setPassword('');
@@ -35,6 +37,7 @@ const Idle = (props) => {
         }
     }, [])
     const dispatch = useDispatch();
+    let bahasa = useSelector(state => state.main.bahasa)
     const [password, setPassword] = useState('');
     const [userPIN, setUserPIN] = useState('');
     const user = useSelector(state => state.user.profile);
@@ -44,7 +47,10 @@ const Idle = (props) => {
 
     const _validateOffline = async () => {
         //LOGIN OFFLINE
-        if (PIN == '') return false;
+        if (userPIN == '') {
+            f7.dialog.alert(Strings.inputAlertOffline);
+            return false;
+        }
         let dvc = (!Device.android && !Device.ios) ? false : true;
         if (dvc) {
             let deviceInfo = await Device.getInformation();
@@ -100,13 +106,13 @@ const Idle = (props) => {
     }
     const _exit = () => {
         // if (Connection() != "OFFLINE") {
-        f7.dialog.confirm('Keluar dan hapus data ?',
+        f7.dialog.confirm(Strings.exitConfirm,
             () => {
-                f7.dialog.confirm('Unggah data tertunda?',
+                f7.dialog.confirm(Strings.uploadConfirm,
                     () => {
-                        f7.dialog.login('Masukkan Usrename dan Password', (username, password) => {
+                        f7.dialog.login(Strings.exitTitle, (username, password) => {
                             if (username == '' || password == '') {
-                                f7.dialog.alert('Harap isi username dan password.');
+                                f7.dialog.alert(Strings.inputAlertOnline);
                                 return false;
                             }
                             _getDelayedList()
@@ -207,7 +213,7 @@ const Idle = (props) => {
                             <List inlineLabels noHairlinesMd>
                                 <ListInput
                                     outline
-                                    label="PIN"
+                                    label={Strings.pinLabel}
                                     type={"password"}
                                     inputmode={"numeric"}
                                     pattern="[0-9]*"
@@ -221,7 +227,7 @@ const Idle = (props) => {
                             <List inlineLabels noHairlinesMd>
                                 <ListInput
                                     outline
-                                    label="Password :"
+                                    label={Strings.passwordLabel}
                                     type="password"
                                     value={password}
                                     onChange={({ target }) => setPassword(target.value)}
@@ -264,7 +270,7 @@ const Idle = (props) => {
                                             onClick={() => Connection() == "OFFLINE" ? _validateOffline() : _validateOnline()}
                                             round
                                             style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
-                                            text="Login"
+                                            text={Strings.login}
                                         />
                                     </Col>
                                 </Row>
@@ -278,7 +284,7 @@ const Idle = (props) => {
                                             onClick={() => _exit()}
                                             round
                                             style={{ backgroundColor: '#FF6666', color: '#ffffff' }}
-                                            text="Exit"
+                                            text={Strings.exit}
                                         />
                                     </Col>
                                 </Row>

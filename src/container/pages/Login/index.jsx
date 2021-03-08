@@ -10,8 +10,10 @@ import {
     Row,
     f7,
     Popup,
-    ListGroup,
     Icon,
+    Sheet,
+    BlockTitle,
+    ListItem,
 } from 'framework7-react';
 
 import { connect } from 'react-redux';
@@ -27,12 +29,14 @@ import {
     setCallResult,
     setContactMode,
     setContactPerson,
-    setPlaceContacted
+    setPlaceContacted,
+    setBahasa,
 } from '../../../config/redux/actions/';
 import { POST, Device as Perangkat, log, Connection, SQLite, SQLiteTypes } from '../../../utils/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin, Check, DeviceInfo } from '../../pages/';
 import { CustomStatusBar } from '../../../components/atoms/';
+import { Login as Strings } from '../../../utils/Localization';
 const {
     PIN,
     DEVICE_INFO,
@@ -44,13 +48,13 @@ const {
     REKAP_TERTUNDA,
     RENCANA_KUNJUNGAN,
     UPDATE_HISTORY,
+    BAHASA,
 }
     = SQLiteTypes;
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             username: (!Device.android && !Device.ios) ? 'TEST' : '',
             password: (!Device.android && !Device.ios) ? '1234' : '',
@@ -59,14 +63,17 @@ class Login extends React.Component {
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             popUpStateDeviceInfo: false,
+            sheetBahasa: false,
             resultLogin: [],//['MobileData','Airplane','LoginTime','DeviceTime','UserAuth','DeviceAuth','ICCIDAuth']
             user: {},
             inputPasswordType: 'password',
+            language: props.bahasa,
         };
+        Strings.setLanguage(this.state.language);
         // props.setUser({});
     }
     componentDidMount() {
-        log('componentDidMount LOGIN : ', this.props.device);
+        log('componentDidMount LOGIN : ', this.props.bahasa);
         // log('HIDE SHOW POPUP!');
         if (f7.views.main.router.history.length == 0) { //GARA GARA GOBACK REDUX ini ke load lagi jadi di cek kalo / berarti pertama login
             this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
@@ -304,12 +311,23 @@ class Login extends React.Component {
         //     }
         // });
     }
-    _onChangeBahasa = () => {
-
+    _onChangeBahasa = async () => {
+        let { language } = this.state;
+        let { bahasa } = this.props;
+        if (language == null || language == '') return false;
+        if (language == bahasa) return false;
+        SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [BAHASA, language])
+            .then(res => {
+                Strings.setLanguage(language);
+                this.setState({});
+                this.props.setBahasa(language)
+                window.location.reload();
+            })
+            .catch(err => log(err));
     }
     render() {
         return (
-            <Page loginScreen name="Login">
+            <Page loginScreen name="Login" >
                 <center>
                     <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
                 </center>
@@ -318,8 +336,8 @@ class Login extends React.Component {
                     <ListInput
                         outline
                         type="text"
-                        label="Username"
-                        placeholder="Type Here"
+                        label={Strings.usernameLabel}
+                        placeholder={Strings.usernamePlaceholder}
                         value={this.state.username}
                         onInput={(e) => {
                             this.setState({ username: e.target.value });
@@ -331,8 +349,8 @@ class Login extends React.Component {
                         <ListInput
                             outline
                             type={this.state.inputPasswordType}
-                            label="Password"
-                            placeholder="Type Here"
+                            label={Strings.passwordLabel}
+                            placeholder={Strings.passwordPlaceholder}
                             value={this.state.password}
                             onInput={(e) => {
                                 this.setState({ password: e.target.value });
@@ -366,7 +384,7 @@ class Login extends React.Component {
                                     onClick={() => this._onClickLogin()}
                                     round
                                     style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                    text="Login"
+                                    text={Strings.login}
                                 />
                             </Col>
                         </Row>
@@ -378,7 +396,7 @@ class Login extends React.Component {
                                     onClick={() => this._onClickDeviceInfo()}
                                     round
                                     style={{ backgroundColor: 'transparent', color: '#c0392b' }}
-                                    text="Device Info"
+                                    text={Strings.deviceInfo}
                                 />
                             </Col>
                         </Row>
@@ -387,10 +405,10 @@ class Login extends React.Component {
                         <Row>
                             <Col width="100">
                                 <Button
-                                    onClick={() => this._onChangeBahasa()}
+                                    onClick={() => this.setState({ sheetBahasa: true })}
                                     round
                                     style={{ backgroundColor: 'transparent', color: '#c0392b' }}
-                                    text="Bahasa"
+                                    text={Strings.bahasa}
                                 />
                             </Col>
                         </Row>
@@ -428,7 +446,7 @@ class Login extends React.Component {
                                 <CustomStatusBar />
                                 <Check
                                     onClick={(e) => this._setLoginResult()}
-                                    title={"Gagal Login"}
+                                    title={Strings.failedLogin}
                                     loginResult={this.state.resultLogin}
                                 />
                             </>
@@ -445,7 +463,46 @@ class Login extends React.Component {
                         onClick={(e) => this.setState({ popUpStateDeviceInfo: false })}
                     />
                 </Popup>
-            </Page>
+                <Sheet
+                    className="demo-sheet-swipe-to-step"
+                    style={{ height: 'auto', '--f7-sheet-bg-color': '#fff' }}
+                    swipeToStep
+                    backdrop
+                    opened={this.state.sheetBahasa}
+                    swipeToClose={false}
+                    closeByBackdropClick={false}
+                    closeByOutsideClick={false}
+                >
+                    <div className="sheet-modal-swipe-step">
+                        <div className="padding-horizontal padding-bottom">
+                            <div className="margin-top text-align-center">{Strings.pilihBahasa}</div>
+                            <List>
+                                <ListInput
+                                    // outline
+                                    type="select"
+                                    defaultValue={this.state.language}
+                                    onChange={({ target }) => this.setState({ language: target.value })}
+                                >
+                                    <option value="" disabled>--{Strings.choose}--</option>
+                                    {
+                                        Strings.getAvailableLanguages().map((item, index) => (
+                                            <option key={index} value={item}>{item}</option>
+                                        ))
+                                    }
+                                </ListInput>
+                            </List>
+                            <Button
+                                large
+                                fill
+                                style={{ backgroundColor: '#c0392b', color: 'white' }}
+                                onClick={() => this.setState({ sheetBahasa: false }, () => this._onChangeBahasa())}
+                            >
+                                {Strings.pilih}
+                            </Button>
+                        </div>
+                    </div>
+                </Sheet>
+            </Page >
         );
     }
 }
@@ -458,6 +515,7 @@ const mapStateToProps = (state) => {
         paymentHistory: state.user.paymentHistory,
         device: state.main.device,
         pin: state.user.pin,
+        bahasa: state.main.bahasa,
     };
 };
 
@@ -474,6 +532,7 @@ const mapDispatchToProps = (dispatch) => {
         setContactMode: (data) => dispatch(setContactMode(data)),
         setContactPerson: (data) => dispatch(setContactPerson(data)),
         setPlaceContacted: (data) => dispatch(setPlaceContacted(data)),
+        setBahasa: (data) => dispatch(setBahasa(data)),
     };
 };
 
