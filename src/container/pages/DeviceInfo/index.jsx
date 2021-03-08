@@ -13,14 +13,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { navigate } from '../../../config/redux/actions/';
 import { log } from '../../../utils';
 import { DefaultNavbar } from '../../../components/atoms/';
+import { DeviceInfo as Strings } from '../../../utils/Localization';
+
 const DeviceInfo = (props) => {
     useEffect(() => {
         log('MOUNT OR UPDATE DeviceInfo');
+        Strings.setLanguage(bahasa);
         return () => {
             log('UNMOUNT DeviceInfo');
         }
     }, [])
     const device = useSelector(state => state.main.device);
+    const bahasa = useSelector(state => state.main.bahasa);
     const dispatch = useDispatch();
     const _capitalize = (sentence = '') => {
         if (sentence == '') return null;
@@ -36,12 +40,12 @@ const DeviceInfo = (props) => {
                         <DefaultNavbar
                             backLink
                             onClick={() => props.onClick()}
-                            title={'DEVICE INFORMATION'}
+                            title={Strings.title}
                         />
                     ) :
                     (
                         <DefaultNavbar
-                            title={'DEVICE INFORMATION'}
+                            title={Strings.title}
                         />
                     )
             }
