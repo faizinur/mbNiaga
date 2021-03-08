@@ -190,15 +190,17 @@ class InfoDebitur extends React.Component {
 				<Toolbar inner={false} tabbar top style={{ position: 'unset', flexDirection: 'row', display: 'flex', flex: 1, flexWrap: 'wrap', alignContent: 'flex-start', height: 'fit-content' }}>
 					{
 						tabdata.map((item, key) => (
-							<div key={key} style={{ height: 30, width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
+							<div key={key} style={{ width: '24.35%', overflow: 'hidden', backgroundColor: '#666666', borderColor: 'white', borderWidth: 1, borderStyle: 'groove' }}>
 								<Link
-									style={{ width: '100%', paddingRight: 5, paddingLeft: 5, height: 30 }}
+									style={{ padding: 5, }}
 									onClick={() => this.setState({ tabLinkActive: item.tabLink })}
 									tabLink={`#${item.tabLink}`}
 									id={item.id}
 								>
-									<p style={{ margin: 0, textOverflow: 'ellipsis', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden', color: this.state.tabLinkActive === item.tabLink ? '#ff6666' : 'white' }}
-									>{item.title}</p>
+									<center>
+										<p style={{ fontSize: 'smaller', margin: 0, textOverflow: 'ellipsis', width: '100%', whiteSpace: 'break-spaces', overflow: 'hidden', color: this.state.tabLinkActive === item.tabLink ? '#ff6666' : 'white' }}
+										>{item.title}</p>
+									</center>
 								</Link>
 							</div>
 						))
@@ -368,7 +370,7 @@ class InfoDebitur extends React.Component {
 									<Col width="30" style={{ height: '100% style={{marginTop : 5, marginBottom : 5}}', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>
 										<p style={{ margin: 8, textAlign: 'center' }}>{this._capitalize(item.kategori || '-')}</p>
 									</Col>
-									<Col width="65" style={{ height: '100%', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>
+									<Col width="65" style={{ height: '100%', minHeight: 62, marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>
 										{item.perubahan.map((val, idx) => (
 											<div key={idx}>
 												<div style={{ border: 1, borderStyle: 'solid', borderColor: '#666666', borderCollapse: 'collapse', marginBottom: 8 }}>

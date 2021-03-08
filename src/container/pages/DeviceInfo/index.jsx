@@ -22,6 +22,12 @@ const DeviceInfo = (props) => {
     }, [])
     const device = useSelector(state => state.main.device);
     const dispatch = useDispatch();
+    const _capitalize = (sentence = '') => {
+        if (sentence == '') return null;
+        const words = sentence.toLowerCase().replaceAll('_', ' ').split(' ');
+        words.map((item, index) => words[index] = item[0].toUpperCase() + item.slice(1, item.length))
+        return words.join(" ");
+    }
     return (
         <Page noToolbar noNavbar name="DeviceInfo">
             {
@@ -43,8 +49,8 @@ const DeviceInfo = (props) => {
                 Object.keys(device).map((key) => (
                     ['manufacturer', 'platform', 'uuid', 'serial', 'version'].includes(key) &&
                     (<Row key={key} noGap style={{ margin: 5, margin: 5 }}>
-                        <Col width="30" style={{ height: '100% style={{marginTop : 5, marginBottom : 5}}', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{key}</Col>
-                        <Col width="65" style={{ height: '100%', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>{device[key]}</Col>
+                        <Col width="30" style={{ height: '100% style={{marginTop : 5, marginBottom : 5}}', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 400, wordWrap: 'break-word' }}>{_capitalize(key)}</Col>
+                        <Col width="65" style={{ height: '100%', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 400, wordWrap: 'break-word' }}>{device[key]}</Col>
                     </Row>)
                 ))
             }
