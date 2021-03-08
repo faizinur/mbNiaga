@@ -9,6 +9,7 @@ import RekapTertunda from './RekapTertunda';
 import RekapTerkirim from './RekapTerkirim';
 import VisitedList from './VisitedList';
 import Idle from './Idle';
+import DeviceInfo from './DeviceInfo';
 
 export {
     Login,
@@ -22,4 +23,5 @@ export {
     RekapTerkirim,
     VisitedList,
     Idle,
+    DeviceInfo,
 }
