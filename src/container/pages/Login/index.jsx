@@ -190,7 +190,6 @@ class Login extends React.Component {
         //         serial: cordova.plugins.uid.ICCID
         //     }
         // };
-
         log('_onValidatePIN : ', inputPIN)
         SQLite.query('select value from COLLECTION where key=?', [PIN])
             .then(res => {
