@@ -14,15 +14,15 @@ import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
 import { log, Connection, POST, SQLite, SQLiteTypes } from '../../../utils/';
-var {REKAP_TERKIRIM, REKAP_TERTUNDA} = SQLiteTypes;
-
+var { REKAP_TERKIRIM, REKAP_TERTUNDA } = SQLiteTypes;
+import { UpdateDebitur as Strings } from '../../../utils/Localization';
 class UpdateDebitur extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user: this.props.user,
             region: this.props.region,
-            detailCust : this.props.detailCust,
+            detailCust: this.props.detailCust,
             tipeAlamat: [
                 { code: 'ALAMAT_RUMAH', description: 'ALAMAT RUMAH' },
                 { code: 'ALAMAT_KANTOR', description: 'ALAMAT KANTOR' },
@@ -32,23 +32,23 @@ class UpdateDebitur extends React.Component {
             regency: [],
             district: [],
             subDistrict: [],
-            formData : {
-                tipeAlamat : '',
-                provinsi : '',
-                kokab : '',
-                kecamatan : '',
-                kelurahan : '',
-                zipCode : '',
-                noTelp : ''
+            formData: {
+                tipeAlamat: '',
+                provinsi: '',
+                kokab: '',
+                kecamatan: '',
+                kelurahan: '',
+                zipCode: '',
+                noTelp: ''
             },
-            
-        }
-        log(this.props.user)
+            language: props.bahasa,
+        };
+        Strings.setLanguage(this.state.language);
     }
     _kirim() {
         var { formData } = this.state;
         log("formData", formData)
-        var mandatoryField = ['tipeAlamat','provinsi','kokab','kecamatan','kelurahan','zipCode','noTelp'];
+        var mandatoryField = ['tipeAlamat', 'provinsi', 'kokab', 'kecamatan', 'kelurahan', 'zipCode', 'noTelp'];
         for (var item in formData) {
             if (mandatoryField.includes(item)) {
                 if (formData[item].toString() == "") {
@@ -83,31 +83,34 @@ class UpdateDebitur extends React.Component {
             'updated_by': this.state.user.user_id,
             'transaction_type': 'UPDATE_DATA'
         }
-        switch(formData.tipeAlamat){
+        switch (formData.tipeAlamat) {
             case 'ALAMAT_RUMAH':
-                updateData = {...updateData, 
+                updateData = {
+                    ...updateData,
                     home_address_1: `${formData.provinsi}, ${formData.kokab}, KECAMATAN ${formData.kecamatan}, KELURAHAN ${formData.kelurahan}, ${formData.zipCode}`,
                     home_city: formData.kokab,
                     home_post_code: formData.zipCode,
                     home_phone: formData.noTelp
                 }
-            break;
+                break;
             case 'ALAMAT_KANTOR':
-                updateData = {...updateData,
+                updateData = {
+                    ...updateData,
                     office_address_1: `${formData.provinsi}, ${formData.kokab}, KECAMATAN ${formData.kecamatan}, KELURAHAN ${formData.kelurahan}, ${formData.zipCode}`,
                     office_city: formData.kokab,
                     office_post_code: formData.zipCode,
                     office_phone: formData.noTelp
                 }
-            break;
+                break;
             case 'ALAMAT_EMERGENCY':
-                updateData = {...updateData,
+                updateData = {
+                    ...updateData,
                     refferal_address_1: `${formData.provinsi}, ${formData.kokab}, KECAMATAN ${formData.kecamatan}, KELURAHAN ${formData.kelurahan}, ${formData.zipCode}`,
                     refferal_city: formData.kokab,
                     refferal_post_code: formData.zipCode,
                     refferal_home_phone: formData.noTelp
                 }
-            break;
+                break;
         }
         if (Connection() != "OFFLINE") {
             POST('save_update_data', updateData)
@@ -116,7 +119,7 @@ class UpdateDebitur extends React.Component {
         } else {
             this._saveRekapData(updateData, false);
         }
-    }    
+    }
     _saveRekapData(updateData, kirim = true) {
         SQLite.query('SELECT value from Collection where key=?', [kirim ? REKAP_TERKIRIM : REKAP_TERTUNDA])
             .then(select => {
@@ -124,9 +127,9 @@ class UpdateDebitur extends React.Component {
                     .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
             }).catch(err => log(err));
     }
-    _dropdownRegion(level, value){
-        var {regency, district, subDistrict} = this.state.region;
-        switch(level){
+    _dropdownRegion(level, value) {
+        var { regency, district, subDistrict } = this.state.region;
+        switch (level) {
             case 0:
                 this.setState(prevState => ({
                     regency: regency.filter((obj) => obj.parent_code == value),
@@ -140,8 +143,8 @@ class UpdateDebitur extends React.Component {
                         zipCode: ""
                     }
                 }))
-            break;
-            case 1:                
+                break;
+            case 1:
                 this.setState(prevState => ({
                     district: district.filter((obj) => obj.parent_code == value),
                     subDistrict: [],
@@ -152,8 +155,8 @@ class UpdateDebitur extends React.Component {
                         zipCode: ""
                     }
                 }))
-            break;
-            case 2:             
+                break;
+            case 2:
                 this.setState(prevState => ({
                     subDistrict: subDistrict.filter((obj) => obj.parent_code == value),
                     formData: {
@@ -162,7 +165,7 @@ class UpdateDebitur extends React.Component {
                         zipCode: ""
                     }
                 }))
-            break;
+                break;
             case 3:
                 this.setState(prevState => ({
                     formData: {
@@ -170,19 +173,19 @@ class UpdateDebitur extends React.Component {
                         zipCode: subDistrict.filter((obj) => obj.code == value)[0].post_code
                     }
                 }))
-            break;
+                break;
         }
     }
     render() {
-        var {detailCust, tipeAlamat, province, regency, district, subDistrict} = this.state;
+        var { detailCust, tipeAlamat, province, regency, district, subDistrict } = this.state;
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="UpdateDebitur">
-                <DefaultNavbar title="UPDATE DATA" network={Connection()} backLink/>
-                <CustomBlockTitle center title="INFO DEBITUR" />
+                <DefaultNavbar title={Strings.title} network={Connection()} backLink />
+                <CustomBlockTitle center title={Strings.subTitle} />
                 <List noHairlinesMd style={{ fontSize: 1 }}>
                     <ListInput
                         outline
-                        label="Nomor Kartu"
+                        label={Strings.cardLabel}
                         type="text"
                         disabled={true}
                         value={detailCust.card_no}
@@ -190,7 +193,7 @@ class UpdateDebitur extends React.Component {
                     </ListInput>
                     <ListInput
                         outline
-                        label="Nama"
+                        label={Strings.nameLabel}
                         type="text"
                         disabled={true}
                         value={detailCust.name}
@@ -198,7 +201,7 @@ class UpdateDebitur extends React.Component {
                     </ListInput>
                     <ListInput
                         outline
-                        label="Alamat"
+                        label={Strings.alamatLabel}
                         type="text"
                         disabled={true}
                         value={detailCust.home_address_1}
@@ -208,7 +211,7 @@ class UpdateDebitur extends React.Component {
                 <List>
                     <ListInput
                         outline
-                        label="Type Alamat"
+                        label={Strings.typeAlamatLabel}
                         type="select"
                         defaultValue=""
                         onChange={({ target }) => {
@@ -220,18 +223,18 @@ class UpdateDebitur extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--pilih--</option>
+                        <option value="" disabled>--{Strings.optionPlacehoder}--</option>
                         {tipeAlamat.map((item, key) => (
                             <option key={key} value={item.code} > {item.description} </option>
                         ))}
-                    </ListInput>   
-                    
+                    </ListInput>
+
                     <ListInput
                         outline
-                        label="Provinsi"
+                        label={Strings.provLabel}
                         type="select"
                         defaultValue=""
-                        onChange={({target}) => {
+                        onChange={({ target }) => {
                             this.setState(prevState => ({
                                 formData: {
                                     ...prevState.formData,
@@ -241,14 +244,14 @@ class UpdateDebitur extends React.Component {
                             this._dropdownRegion(0, target.value);
                         }}
                     >
-                        <option value="" disabled>--pilih--</option>
+                        <option value="" disabled>--{Strings.optionPlacehoder}--</option>
                         {province.map((item, key) => (
                             <option key={key} value={item.code} > {item.description} </option>
                         ))}
-                    </ListInput>  
+                    </ListInput>
                     <ListInput
                         outline
-                        label="Kota/Kabupaten"
+                        label={Strings.kabLabel}
                         type="select"
                         defaultValue=""
                         onChange={({ target }) => {
@@ -261,14 +264,14 @@ class UpdateDebitur extends React.Component {
                             this._dropdownRegion(1, target.value);
                         }}
                     >
-                        <option value="" disabled>--pilih--</option>
+                        <option value="" disabled>--{Strings.optionPlacehoder}--</option>
                         {regency.map((item, key) => (
                             <option key={key} value={item.code} > {item.description} </option>
                         ))}
-                    </ListInput>  
+                    </ListInput>
                     <ListInput
                         outline
-                        label="Kecamatan"
+                        label={Strings.kecLabel}
                         type="select"
                         defaultValue=""
                         onChange={({ target }) => {
@@ -281,14 +284,14 @@ class UpdateDebitur extends React.Component {
                             this._dropdownRegion(2, target.value);
                         }}
                     >
-                        <option value="" disabled>--pilih--</option>
+                        <option value="" disabled>--{Strings.optionPlacehoder}--</option>
                         {district.map((item, key) => (
                             <option key={key} value={item.code} > {item.description} </option>
                         ))}
-                    </ListInput> 
+                    </ListInput>
                     <ListInput
                         outline
-                        label="Kelurahan"
+                        label={Strings.kecLabel}
                         type="select"
                         defaultValue=""
                         onChange={({ target }) => {
@@ -301,11 +304,11 @@ class UpdateDebitur extends React.Component {
                             this._dropdownRegion(3, target.value);
                         }}
                     >
-                        <option value="" disabled>--pilih--</option>
+                        <option value="" disabled>--{Strings.optionPlacehoder}--</option>
                         {subDistrict.map((item, key) => (
                             <option key={key} value={item.code} > {item.description} </option>
                         ))}
-                    </ListInput>   
+                    </ListInput>
                     {/* <ListInput
                         outline
                         label="Provinsi"
@@ -332,21 +335,22 @@ class UpdateDebitur extends React.Component {
                     />                     */}
                     <ListInput
                         outline
-                        label="ZIP Code"
+                        label={Strings.zipLabel}
                         type="text"
                         value={this.state.formData.zipCode}
-                        onChange={({target}) => {
+                        onChange={({ target }) => {
                             this.setState(prevState => ({
                                 formData: {
                                     ...prevState.formData,
                                     zipCode: target.value
                                 }
-                            }))}
+                            }))
                         }
-                    />                    
+                        }
+                    />
                     <ListInput
                         outline
-                        label="No. Telephone"
+                        label={Strings.telLabel}
                         type="tel"
                         onChange={({ target }) => {
                             this.setState(prevState => ({
@@ -354,15 +358,16 @@ class UpdateDebitur extends React.Component {
                                     ...prevState.formData,
                                     noTelp: target.value
                                 }
-                            }))}
+                            }))
                         }
-                    />                    
+                        }
+                    />
                 </List>
                 <List>
                     <Block strong>
                         <Row>
                             <Col width="100">
-                                <Button fill raised onClick={() => this._kirim()} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>KIRIM</Button>
+                                <Button fill raised onClick={() => this._kirim()} style={{ backgroundColor: '#c0392b', fontSize: 12 }}>{Strings.kirim}</Button>
                             </Col>
                         </Row>
                     </Block>
@@ -377,13 +382,12 @@ const mapStateToProps = (state) => {
         user: state.user.profile,
         detailCust: state.user.detailCust,
         region: state.region,
+        bahasa: state.main.bahasa,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        //onUpdateUser: (data) => dispatch(updateUser(data)),
-        //onLogin: () => dispatch(login()),
         navigate: (nav) => dispatch(navigate(nav)),
         setDetailCustomer: (detailCust) => dispatch(setDetailCustomer(detailCust))
     };

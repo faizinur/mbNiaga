@@ -15,16 +15,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { navigate, setPin } from '../../../config/redux/actions/';
 import { log, SQLite, SQLiteTypes } from '../../../utils';
 import { CustomBlockTitle } from '../../../components/atoms'
+import { UpdatePin as Strings } from '../../../utils/Localization';
 const { PIN } = SQLiteTypes;
 
 const UpdatePin = () => {
     useEffect(() => {
         log('MOUNT OR UPDATE UpdatePin');
+        Strings.setLanguage(bahasa);
         return () => {
             log('UNMOUNT UpdatePin');
         }
     }, []);
     const dispatch = useDispatch();
+    const bahasa = useSelector(state => state.main.bahasa);
     const [oldPIN, setOldPIN] = useState('');
     const [newPIN, setNewPIN] = useState('');
     const [confirmPIN, setConfirmPIN] = useState('');
@@ -62,8 +65,8 @@ const UpdatePin = () => {
     }
     return (
         <Page noToolbar noNavbar>
-            <BlockTitle>Ubah PIN</BlockTitle>
-            <CustomBlockTitle title="Insert Previous PIN" />
+            <BlockTitle>{Strings.title}</BlockTitle>
+            <CustomBlockTitle title={Strings.prevPINTitle} />
             <List noHairlinesMd>
                 <ListInput
                     outline
@@ -77,7 +80,7 @@ const UpdatePin = () => {
                     minlength={4}
                 />
             </List>
-            <CustomBlockTitle title="Insert New PIN" />
+            <CustomBlockTitle title={Strings.newPINTitle} />
             <List noHairlines>
                 <ListInput
                     outline
@@ -91,7 +94,7 @@ const UpdatePin = () => {
                     minlength={4}
                 />
             </List>
-            <CustomBlockTitle title="Confirmation New PIN" />
+            <CustomBlockTitle title={Strings.confirmPINTitle} />
             <List noHairlines>
                 <ListInput
                     outline
@@ -116,7 +119,7 @@ const UpdatePin = () => {
                                             onClick={() => _onChangePIN()}
                                             round
                                             style={{ backgroundColor: '#0085FC', color: '#ffffff' }}
-                                            text="Save"
+                                            text={Strings.save}
                                         />
                                     </Col>
                                 </Row>
@@ -130,7 +133,7 @@ const UpdatePin = () => {
                                             onClick={() => _onCancel()}
                                             round
                                             style={{ backgroundColor: '#FF6666', color: '#ffffff' }}
-                                            text="Cancel"
+                                            text={Strings.cancel}
                                         />
                                     </Col>
                                 </Row>

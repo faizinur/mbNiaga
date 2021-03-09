@@ -472,6 +472,14 @@ class Login extends React.Component {
                     swipeToClose={false}
                     closeByBackdropClick={false}
                     closeByOutsideClick={false}
+                    onSheetOpen={(e) => {
+                        let backdrop = document.getElementsByClassName('sheet-backdrop backdrop-in');
+                        backdrop[0].style.backgroundColor = 'rgb(192, 57, 43,0.4)';
+                    }}
+                    style={{
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                    }}
                 >
                     <div className="sheet-modal-swipe-step">
                         <div className="padding-horizontal padding-bottom">
@@ -481,7 +489,10 @@ class Login extends React.Component {
                                     // outline
                                     type="select"
                                     defaultValue={this.state.language}
-                                    onChange={({ target }) => this.setState({ language: target.value })}
+                                    onChange={({ target }) => {
+                                        this.setState({ language: target.value });
+                                        Strings.setLanguage(target.value)
+                                    }}
                                 >
                                     <option value="" disabled>--{Strings.choose}--</option>
                                     {
@@ -495,7 +506,11 @@ class Login extends React.Component {
                                 large
                                 fill
                                 style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                onClick={() => this.setState({ sheetBahasa: false }, () => this._onChangeBahasa())}
+                                onClick={() => {
+                                    this.setState({ sheetBahasa: false }, () => {
+                                        this._onChangeBahasa()
+                                    })
+                                }}
                             >
                                 {Strings.pilih}
                             </Button>

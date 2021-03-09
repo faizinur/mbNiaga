@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     Page,
     List,
@@ -16,6 +16,7 @@ import { navigate, back, setGeolocation } from '../../../config/redux/actions/';
 import { DefaultNavbar, CustomBlockTitle, Maps } from '../../../components/atoms';
 import { CustomerInfo } from '../../../components/molecules/';
 import { Connection, log, SQLite, SQLiteTypes, Filter, Camera, POST, Geolocation } from '../../../utils';
+import { AddKunjungan as Strings } from '../../../utils/Localization';
 const { REKAP_TERTUNDA, REKAP_TERKIRIM, DAFTAR_DIKUNJUNGI, GEOLOCATION } = SQLiteTypes;
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 
@@ -69,9 +70,10 @@ class AddKunjungan extends React.Component {
                 home_address_1: props.detailCust.home_address_1,
                 office_address_1: props.detailCust.office_address_1,
                 home_post_code: props.detailCust.home_post_code,
-
-            }
-        }
+            },
+            language: props.bahasa,
+        };
+        Strings.setLanguage(this.state.language);
     }
     componentDidMount() {
         log('componentDidMount AddKunjungan');
@@ -264,7 +266,7 @@ class AddKunjungan extends React.Component {
         ];
         return (
             <Page noToolbar noNavbar style={{ paddingBottom: 60 }} name="AddKunjungan">
-                <DefaultNavbar title="INPUT HASIL KUNJUNGAN" network={Connection()} backLink />
+                <DefaultNavbar title={Strings.title} network={Connection()} backLink />
                 <Block style={{ margin: 0, padding: 5 }}>
                     <Col style={{ backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>INPUT VISIT</Col>
                     {
@@ -291,20 +293,20 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {callResult.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Tanggal PTP" />
+                <CustomBlockTitle title={Strings.tanggalPTPLabel} />
                 <List>
                     <ListInput
                         outline
                         type="datepicker"
                         defaultValue=""
                         onCalendarChange={(val) => {
-                            log("KALENDER", typeof (val[0]), JSON.stringify(val[0]).substr(1, 10))
+                            // log("KALENDER", typeof (val[0]), JSON.stringify(val[0]).substr(1, 10))
                             // log("KALENDER", `${val.getFullYear()}-${val.getMonth+1 < 10 ? `0${val.getMonth()}` : val.getMonth()}-${val.getDate() < 10 ? `0${val.getDate()}` : val.getDate()}`)
                             this.setState(prevState => ({
                                 formData: {
@@ -318,7 +320,7 @@ class AddKunjungan extends React.Component {
                         }
                     />
                 </List>
-                <CustomBlockTitle title="PTP Amount" />
+                <CustomBlockTitle title={Strings.ptpAmountLabel} />
                 <List>
                     <ListInput
                         outline
@@ -342,7 +344,7 @@ class AddKunjungan extends React.Component {
                         }}
                     />
                 </List>
-                <CustomBlockTitle title='Payment Option' />
+                <CustomBlockTitle title={Strings.paymentLabel} />
                 <List>
                     <ListInput
                         outline
@@ -363,7 +365,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Detail Hasil Kunjungan (Remarks)" />
+                <CustomBlockTitle title={Strings.hasilKunjunganLabel} />
                 <List>
                     <ListInput
                         outline
@@ -378,7 +380,7 @@ class AddKunjungan extends React.Component {
                         }}
                     />
                 </List>
-                <CustomBlockTitle noGap title="Foto Dokumendasi" />
+                <CustomBlockTitle noGap title={Strings.fotoLabel} />
                 <Block>
                     <Row>
                         {this.state.formData.gambar.map((item, index) => (
@@ -411,8 +413,7 @@ class AddKunjungan extends React.Component {
                     }}
                     onClick={(e) => this._getGeo()}
                 >Press this to take location</div>
-
-                <CustomBlockTitle title="Visit Provinsi" />
+                <CustomBlockTitle title={Strings.provLabel} />
                 <List>
                     <ListInput
                         outline
@@ -439,7 +440,7 @@ class AddKunjungan extends React.Component {
                         })}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Visit Kabupaten" />
+                <CustomBlockTitle title={Strings.kabLabel} />
                 <List>
                     <ListInput
                         outline
@@ -469,7 +470,7 @@ class AddKunjungan extends React.Component {
                         }
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Visit Kecamatan" />
+                <CustomBlockTitle title={Strings.kecLabel} />
                 <List>
                     <ListInput
                         outline
@@ -498,7 +499,7 @@ class AddKunjungan extends React.Component {
                         }
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Visit Kelurahan" />
+                <CustomBlockTitle title={Strings.kelLabel} />
                 <List>
                     <ListInput
                         outline
@@ -526,7 +527,7 @@ class AddKunjungan extends React.Component {
                         }
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Address" />
+                <CustomBlockTitle title={Strings.addLabel} />
                 <List>
                     <ListInput
                         outline
@@ -541,7 +542,7 @@ class AddKunjungan extends React.Component {
                         }}
                     />
                 </List>
-                <CustomBlockTitle title="New Phone Number 1 Type" />
+                <CustomBlockTitle title={Strings.phone1TypeLabel} />
                 <List>
                     <ListInput
                         outline
@@ -562,7 +563,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="New Phone Number 1" />
+                <CustomBlockTitle title={Strings.phone1Label} />
                 <List>
                     <ListInput
                         outline
@@ -578,7 +579,7 @@ class AddKunjungan extends React.Component {
                         }}
                     />
                 </List>
-                <CustomBlockTitle title="New Phone Number 2 Type" />
+                <CustomBlockTitle title={Strings.phone2TypeLabel} />
                 <List>
                     <ListInput
                         outline
@@ -599,7 +600,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="New Phone Number 2" />
+                <CustomBlockTitle title={Strings.phone2Label} />
                 <List>
                     <ListInput
                         outline
@@ -615,7 +616,7 @@ class AddKunjungan extends React.Component {
                         }}
                     />
                 </List>
-                <CustomBlockTitle title="Metode Kontak" />
+                <CustomBlockTitle title={Strings.metodeKontakLabel} />
                 <List>
                     <ListInput
                         outline
@@ -636,7 +637,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Detail Metode Kontak" />
+                <CustomBlockTitle title={Strings.detailMetodeKontakLabel} />
                 <List>
                     <ListInput
                         outline
@@ -657,7 +658,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
-                <CustomBlockTitle title="Tempat Kunjungan" />
+                <CustomBlockTitle title={Strings.tempatKunjunganLabel} />
                 <List>
                     <ListInput
                         outline
@@ -680,7 +681,7 @@ class AddKunjungan extends React.Component {
                 </List>
                 {Connection() != "OFFLINE" ? (
                     <>
-                        <CustomBlockTitle noGap title="Lokasi" />
+                        <CustomBlockTitle noGap title={Strings.lokasiLabel} />
                         <Block>
                             <Row>
                                 <Col width="100">
@@ -690,7 +691,6 @@ class AddKunjungan extends React.Component {
                         </Block>
                     </>
                 ) : null}
-
                 <Block style={{ margin: 0, backgroundColor: '#666666', height: 80 }}>
                     <Row style={{ paddingTop: 5 }}>
                         <Col width="50">
@@ -721,13 +721,12 @@ const mapStateToProps = (state) => {
         regency: state.region.regency,
         district: state.region.district,
         subDistrict: state.region.subDistrict,
+        bahasa: state.main.bahasa,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        //onUpdateUser: (data) => dispatch(updateUser(data)),
-        //onLogin: () => dispatch(login()),
         navigate: (nav) => dispatch(navigate(nav)),
         back: () => dispatch(back()),
         setDetailCustomer: (detailCust) => dispatch(setDetailCustomer(detailCust)),

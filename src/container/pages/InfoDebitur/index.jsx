@@ -24,6 +24,7 @@ import { navigate } from '../../../config/redux/actions/routerActions';
 import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
 import { Connection, log, SQLiteTypes, SQLite, Filter } from '../../../utils';
 const { ACTIVITY_HISTORY, RENCANA_KUNJUNGAN, UPDATE_HISTORY } = SQLiteTypes;
+import { InfoDebitur as Strings } from '../../../utils/Localization';
 
 class InfoDebitur extends React.Component {
 	constructor(props) {
@@ -40,7 +41,9 @@ class InfoDebitur extends React.Component {
 				// {kategori : 'ALAMAT EMERGENCY', perubahan : []},
 			],
 			tabLinkActive: 'info-costumer-content',
-		}
+			language: props.bahasa,
+		};
+		Strings.setLanguage(this.state.language);
 	}
 	componentDidMount() {
 		var arrDetailCust = [];
@@ -153,32 +156,32 @@ class InfoDebitur extends React.Component {
 		let today = new Date();
 		let tabdata = [
 			{
-				title: 'CUSTOMER',
+				title: Strings.costumer,
 				tabLink: 'info-costumer-content',
 				id: 'info-costumer',
 			},
 			{
-				title: 'ACCOUNT',
+				title: Strings.akun,
 				tabLink: 'info-akun-content',
 				id: 'info-akun',
 			},
 			{
-				title: 'DEMOGRAFI',
+				title: Strings.demografi,
 				tabLink: 'info-demografi-content',
 				id: 'info-demografi',
 			},
 			{
-				title: 'OTHER FACILITY',
+				title: Strings.fasilitas,
 				tabLink: 'info-fasilitas-content',
 				id: 'info-fasilitas-lain',
 			},
 			{
-				title: 'HISTORIKAL ACTIVITY',
+				title: Strings.historikal,
 				tabLink: 'aktivitas-historikal-content',
 				id: 'aktivitas-historikal',
 			},
 			{
-				title: 'ADDITIONAL INFO',
+				title: Strings.additional,
 				tabLink: 'info-tambahan-content',
 				id: 'info-tambahan',
 			},
@@ -206,8 +209,8 @@ class InfoDebitur extends React.Component {
 						))
 					}
 				</Toolbar>
-				<Tabs swipeable >
-					<Tab id="info-costumer-content" className="page-content" style={{ paddingTop: 0 }}>
+				<Tabs>
+					<Tab id="info-costumer-content" tabActive className="page-content" style={{ paddingTop: 0 }}>
 						<Block style={{ height: '65vh', overflow: 'auto', marginTop: 12 }}>
 							<Row noGap style={{ margin: 5, margin: 5 }}>
 								<Col width="30" style={{ height: '100% style={{marginTop : 5, marginBottom : 5}}', marginBottom: 3, fontSize: 11, backgroundColor: '#666666', borderRadius: 5, padding: 7, color: 'white', fontWeight: 300, wordWrap: 'break-word' }}>
@@ -393,6 +396,7 @@ const mapStateToProps = (state) => {
 	return {
 		user: state.main.user,
 		detailCust: state.user.detailCust,
+		bahasa: state.main.bahasa,
 	};
 };
 
