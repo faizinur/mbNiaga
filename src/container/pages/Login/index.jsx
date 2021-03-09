@@ -321,7 +321,8 @@ class Login extends React.Component {
                 Strings.setLanguage(language);
                 this.setState({});
                 this.props.setBahasa(language)
-                window.location.reload();
+                this.props.navigate('/Login/')
+                f7.views.main.router.history = ['/'];
             })
             .catch(err => log(err));
     }

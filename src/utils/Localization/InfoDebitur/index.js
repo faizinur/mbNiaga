@@ -3,7 +3,7 @@ import LocalizedStrings from 'react-localization';
 let InfoDebitur = new LocalizedStrings({
     "ID": {
         title: 'DETAIL DEBITUR',
-        costumer: 'kostumer',
+        costumer: 'Nasabah',
         akun: 'akun',
         demografi: 'demografi',
         fasilitas: 'fasilitas lain',

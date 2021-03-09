@@ -53,7 +53,7 @@ const SplashScreen = (props) => {
             _getReference(),
             _getDevice(),
             //.... another promise
-        ]).then(res => {
+        ]).then(res => { 
             setTimeout(() =>
                 props.onFinish({
                     realApp: true,

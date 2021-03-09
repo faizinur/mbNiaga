@@ -47,6 +47,10 @@ var router = [
 		component: Login,
 	},
 	{
+		path: '/Login/',
+		component: Login,
+	},
+	{
 		path: '/Home/',
 		component: Home,
 	},

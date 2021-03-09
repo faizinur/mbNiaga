@@ -365,6 +365,69 @@ class AddKunjungan extends React.Component {
                         ))}
                     </ListInput>
                 </List>
+                <CustomBlockTitle title={Strings.metodeKontakLabel} />
+                <List>
+                    <ListInput
+                        outline
+                        type="select"
+                        defaultValue=""
+                        onChange={({ target }) => {
+                            this.setState(prevState => ({
+                                formData: {
+                                    ...prevState.formData,
+                                    contact_mode: target.value
+                                }
+                            }))
+                        }}
+                    >
+                        <option value="" disabled>--PILIH--</option>
+                        {contactMode.map((item, key) => (
+                            <option key={key} value={item.value} > {item.description} </option>
+                        ))}
+                    </ListInput>
+                </List>
+                <CustomBlockTitle title={Strings.detailMetodeKontakLabel} />
+                <List>
+                    <ListInput
+                        outline
+                        type="select"
+                        defaultValue=""
+                        onChange={({ target }) => {
+                            this.setState(prevState => ({
+                                formData: {
+                                    ...prevState.formData,
+                                    contact_person: target.value
+                                }
+                            }))
+                        }}
+                    >
+                        <option value="" disabled>--PILIH--</option>
+                        {contactPerson.map((item, key) => (
+                            <option key={key} value={item.value} > {item.description} </option>
+                        ))}
+                    </ListInput>
+                </List>
+                <CustomBlockTitle title={Strings.tempatKunjunganLabel} />
+                <List>
+                    <ListInput
+                        outline
+                        type="select"
+                        defaultValue=""
+                        onChange={({ target }) => {
+                            this.setState(prevState => ({
+                                formData: {
+                                    ...prevState.formData,
+                                    place_contacted: target.value
+                                }
+                            }))
+                        }}
+                    >
+                        <option value="" disabled>--PILIH--</option>
+                        {placeContacted.map((item, key) => (
+                            <option key={key} value={item.value} > {item.description} </option>
+                        ))}
+                    </ListInput>
+                </List>
                 <CustomBlockTitle title={Strings.hasilKunjunganLabel} />
                 <List>
                     <ListInput
@@ -400,7 +463,7 @@ class AddKunjungan extends React.Component {
                         ))}
                     </Row>
                 </Block>
-                <div
+                {/* <div
                     style={{
                         width: '87%',
                         height: 30,
@@ -412,7 +475,7 @@ class AddKunjungan extends React.Component {
                         paddingTop: 6
                     }}
                     onClick={(e) => this._getGeo()}
-                >Press this to take location</div>
+                >Press this to take location</div> */}
                 <CustomBlockTitle title={Strings.provLabel} />
                 <List>
                     <ListInput
@@ -615,69 +678,6 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     />
-                </List>
-                <CustomBlockTitle title={Strings.metodeKontakLabel} />
-                <List>
-                    <ListInput
-                        outline
-                        type="select"
-                        defaultValue=""
-                        onChange={({ target }) => {
-                            this.setState(prevState => ({
-                                formData: {
-                                    ...prevState.formData,
-                                    contact_mode: target.value
-                                }
-                            }))
-                        }}
-                    >
-                        <option value="" disabled>--PILIH--</option>
-                        {contactMode.map((item, key) => (
-                            <option key={key} value={item.value} > {item.description} </option>
-                        ))}
-                    </ListInput>
-                </List>
-                <CustomBlockTitle title={Strings.detailMetodeKontakLabel} />
-                <List>
-                    <ListInput
-                        outline
-                        type="select"
-                        defaultValue=""
-                        onChange={({ target }) => {
-                            this.setState(prevState => ({
-                                formData: {
-                                    ...prevState.formData,
-                                    contact_person: target.value
-                                }
-                            }))
-                        }}
-                    >
-                        <option value="" disabled>--PILIH--</option>
-                        {contactPerson.map((item, key) => (
-                            <option key={key} value={item.value} > {item.description} </option>
-                        ))}
-                    </ListInput>
-                </List>
-                <CustomBlockTitle title={Strings.tempatKunjunganLabel} />
-                <List>
-                    <ListInput
-                        outline
-                        type="select"
-                        defaultValue=""
-                        onChange={({ target }) => {
-                            this.setState(prevState => ({
-                                formData: {
-                                    ...prevState.formData,
-                                    place_contacted: target.value
-                                }
-                            }))
-                        }}
-                    >
-                        <option value="" disabled>--PILIH--</option>
-                        {placeContacted.map((item, key) => (
-                            <option key={key} value={item.value} > {item.description} </option>
-                        ))}
-                    </ListInput>
                 </List>
                 {Connection() != "OFFLINE" ? (
                     <>
