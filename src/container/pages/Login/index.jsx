@@ -68,6 +68,13 @@ class Login extends React.Component {
             user: {},
             inputPasswordType: 'password',
             language: props.bahasa,
+            version: {
+                appName: 'MobColl',
+                major: '0',
+                minor: '1',
+                patch: '2',
+                release: 'alpha',
+            }
         };
         Strings.setLanguage(this.state.language);
         // props.setUser({});
@@ -327,198 +334,204 @@ class Login extends React.Component {
             .catch(err => log(err));
     }
     render() {
+        let { appName, major, minor, patch, release } = this.state.version;
         return (
-            <Page loginScreen name="Login" >
-                <center>
-                    <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
-                </center>
-                <LoginScreenTitle style={{ ...stylesheet.LoginScreenTitle, ...{ marginTop: 0, fontSize: 'larger' } }}>Mobile Application Interaction</LoginScreenTitle>
-                <List style={{ margin: 0, width: '100%' }}>
-                    <ListInput
-                        outline
-                        type="text"
-                        label={Strings.usernameLabel}
-                        placeholder={Strings.usernamePlaceholder}
-                        value={this.state.username}
-                        onInput={(e) => {
-                            this.setState({ username: e.target.value });
-                        }}
-                    />
-                </List>
-                <div style={{ display: 'flex', flex: 1 }}>
+            <div>
+                <div style={{ position: 'absolute', width: '100%', height: 20, left: 0, bottom: 0, display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 999999, }}>
+                    <p style={{ margin: 0, fontSize: 'smaller' }}>{`${appName} v${major}.${minor}.${patch}-${release}`}</p>
+                </div>
+                <Page loginScreen name="Login" >
+                    <center>
+                        <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
+                    </center>
+                    <LoginScreenTitle style={{ ...stylesheet.LogisnScreenTitle, ...{ marginTop: 0, fontSize: 'larger' } }}>Mobile Application Interaction</LoginScreenTitle>
                     <List style={{ margin: 0, width: '100%' }}>
                         <ListInput
                             outline
-                            type={this.state.inputPasswordType}
-                            label={Strings.passwordLabel}
-                            placeholder={Strings.passwordPlaceholder}
-                            value={this.state.password}
+                            type="text"
+                            label={Strings.usernameLabel}
+                            placeholder={Strings.usernamePlaceholder}
+                            value={this.state.username}
                             onInput={(e) => {
-                                this.setState({ password: e.target.value });
+                                this.setState({ username: e.target.value });
                             }}
                         />
                     </List>
-                    {
-                        this.state.password.length > 0 &&
-                        <div style={{ position: 'absolute', height: 63, width: 40, right: '5%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-                            <div
-                                onClick={
-                                    () =>
-                                        this.setState({
-                                            inputPasswordType: this.state.inputPasswordType == 'password' ? 'text' : 'password'
-                                        })
-                                }
-                                style={{ marginTop: 20, borderRadius: 25, }}>
-                                <Icon
-                                    style={{ color: '#c0392b' }}
-                                    f7={this.state.inputPasswordType == 'password' ? 'eye_slash' : 'eye'}
-                                />
+                    <div style={{ display: 'flex', flex: 1 }}>
+                        <List style={{ margin: 0, width: '100%' }}>
+                            <ListInput
+                                outline
+                                type={this.state.inputPasswordType}
+                                label={Strings.passwordLabel}
+                                placeholder={Strings.passwordPlaceholder}
+                                value={this.state.password}
+                                onInput={(e) => {
+                                    this.setState({ password: e.target.value });
+                                }}
+                            />
+                        </List>
+                        {
+                            this.state.password.length > 0 &&
+                            <div style={{ position: 'absolute', height: 63, width: 40, right: '5%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+                                <div
+                                    onClick={
+                                        () =>
+                                            this.setState({
+                                                inputPasswordType: this.state.inputPasswordType == 'password' ? 'text' : 'password'
+                                            })
+                                    }
+                                    style={{ marginTop: 20, borderRadius: 25, }}>
+                                    <Icon
+                                        style={{ color: '#c0392b' }}
+                                        f7={this.state.inputPasswordType == 'password' ? 'eye_slash' : 'eye'}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    }
-                </div>
-                <List noHairlinesMd>
-                    <Block>
-                        <Row>
-                            <Col width="100">
-                                <Button
-                                    onClick={() => this._onClickLogin()}
-                                    round
-                                    style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                    text={Strings.login}
-                                />
-                            </Col>
-                        </Row>
-                    </Block>
-                    <Block>
-                        <Row>
-                            <Col width="100">
-                                <Button
-                                    onClick={() => this._onClickDeviceInfo()}
-                                    round
-                                    style={{ backgroundColor: 'transparent', color: '#c0392b' }}
-                                    text={Strings.deviceInfo}
-                                />
-                            </Col>
-                        </Row>
-                    </Block>
-                    <Block>
-                        <Row>
-                            <Col width="100">
-                                <Button
-                                    onClick={() => this.setState({ sheetBahasa: true })}
-                                    round
-                                    style={{ backgroundColor: 'transparent', color: '#c0392b' }}
-                                    text={Strings.bahasa}
-                                />
-                            </Col>
-                        </Row>
-                    </Block>
-                </List>
-                <Popup
-                    className="daftarPin-popup"
-                    opened={this.state.popUpStateDaftarPin}
-                    onPopupClosed={() => log('pop up Closed')}
-                >
-                    <CustomStatusBar />
-                    <DaftarPin
-                        onSubmitPIN={this._submitPIN}
-                    />
-                </Popup>
-                <Popup
-                    className="loginPin-popup"
-                    opened={this.state.popUpStateLoginPin}
-                    onPopupClosed={() => log('pop up Closed')}
-                >
-                    <CustomStatusBar />
-                    <DaftarPin
-                        onValidatePIN={this._onValidatePIN}
-                    />
-                </Popup>
-                <Popup
-                    className="failedLogin-popup"
-                    opened={this.state.resultLogin.length > 0 ? true : false}
-                    onPopupClosed={() => log('pop up Closed')}
-                >
+                        }
+                    </div>
+                    <List noHairlinesMd>
+                        <Block>
+                            <Row>
+                                <Col width="100">
+                                    <Button
+                                        onClick={() => this._onClickLogin()}
+                                        round
+                                        style={{ backgroundColor: '#c0392b', color: 'white' }}
+                                        text={Strings.login}
+                                    />
+                                </Col>
+                            </Row>
+                        </Block>
+                        <Block>
+                            <Row>
+                                <Col width="100">
+                                    <Button
+                                        onClick={() => this._onClickDeviceInfo()}
+                                        round
+                                        style={{ backgroundColor: 'transparent', color: '#c0392b' }}
+                                        text={Strings.deviceInfo}
+                                    />
+                                </Col>
+                            </Row>
+                        </Block>
+                        <Block>
+                            <Row>
+                                <Col width="100">
+                                    <Button
+                                        onClick={() => this.setState({ sheetBahasa: true })}
+                                        round
+                                        style={{ backgroundColor: 'transparent', color: '#c0392b' }}
+                                        text={Strings.bahasa}
+                                    />
+                                </Col>
+                            </Row>
+                        </Block>
+                    </List>
+                    <Popup
+                        className="daftarPin-popup"
+                        opened={this.state.popUpStateDaftarPin}
+                        onPopupClosed={() => log('pop up Closed')}
+                    >
+                        <CustomStatusBar />
+                        <DaftarPin
+                            onSubmitPIN={this._submitPIN}
+                        />
+                    </Popup>
+                    <Popup
+                        className="loginPin-popup"
+                        opened={this.state.popUpStateLoginPin}
+                        onPopupClosed={() => log('pop up Closed')}
+                    >
+                        <CustomStatusBar />
+                        <DaftarPin
+                            onValidatePIN={this._onValidatePIN}
+                        />
+                    </Popup>
+                    <Popup
+                        className="failedLogin-popup"
+                        opened={this.state.resultLogin.length > 0 ? true : false}
+                        onPopupClosed={() => log('pop up Closed')}
+                    >
 
-                    {
-                        this.state.resultLogin.length > 0 ?
-                            <>
-                                <CustomStatusBar />
-                                <Check
-                                    onClick={(e) => this._setLoginResult()}
-                                    title={Strings.failedLogin}
-                                    loginResult={this.state.resultLogin}
-                                />
-                            </>
-                            :
-                            <></>
-                    }
-                </Popup>
-                <Popup
-                    className="deviceInfo-popup"
-                    opened={this.state.popUpStateDeviceInfo}
-                    onPopupClosed={() => log('pop up Closed')}
-                >
-                    <DeviceInfo
-                        onClick={(e) => this.setState({ popUpStateDeviceInfo: false })}
-                    />
-                </Popup>
-                <Sheet
-                    className="demo-sheet-swipe-to-step"
-                    style={{ height: 'auto', '--f7-sheet-bg-color': '#fff' }}
-                    swipeToStep
-                    backdrop
-                    opened={this.state.sheetBahasa}
-                    swipeToClose={false}
-                    closeByBackdropClick={false}
-                    closeByOutsideClick={false}
-                    onSheetOpen={(e) => {
-                        let backdrop = document.getElementsByClassName('sheet-backdrop backdrop-in');
-                        backdrop[0].style.backgroundColor = 'rgb(192, 57, 43,0.4)';
-                    }}
-                    style={{
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                    }}
-                >
-                    <div className="sheet-modal-swipe-step">
-                        <div className="padding-horizontal padding-bottom">
-                            <div className="margin-top text-align-center">{Strings.pilihBahasa}</div>
-                            <List>
-                                <ListInput
-                                    // outline
-                                    type="select"
-                                    defaultValue={this.state.language}
-                                    onChange={({ target }) => {
-                                        this.setState({ language: target.value });
-                                        Strings.setLanguage(target.value)
+                        {
+                            this.state.resultLogin.length > 0 ?
+                                <>
+                                    <CustomStatusBar />
+                                    <Check
+                                        onClick={(e) => this._setLoginResult()}
+                                        title={Strings.failedLogin}
+                                        loginResult={this.state.resultLogin}
+                                    />
+                                </>
+                                :
+                                <></>
+                        }
+                    </Popup>
+                    <Popup
+                        className="deviceInfo-popup"
+                        opened={this.state.popUpStateDeviceInfo}
+                        onPopupClosed={() => log('pop up Closed')}
+                    >
+                        <DeviceInfo
+                            onClick={(e) => this.setState({ popUpStateDeviceInfo: false })}
+                        />
+                    </Popup>
+                    <Sheet
+                        className="demo-sheet-swipe-to-step"
+                        style={{ height: 'auto', '--f7-sheet-bg-color': '#fff' }}
+                        swipeToStep
+                        backdrop
+                        opened={this.state.sheetBahasa}
+                        swipeToClose={false}
+                        closeByBackdropClick={false}
+                        closeByOutsideClick={false}
+                        onSheetOpen={(e) => {
+                            let backdrop = document.getElementsByClassName('sheet-backdrop backdrop-in');
+                            backdrop[0].style.backgroundColor = 'rgb(192, 57, 43,0.4)';
+                        }}
+                        style={{
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                        }}
+                    >
+                        <div className="sheet-modal-swipe-step">
+                            <div className="padding-horizontal padding-bottom">
+                                <div className="margin-top text-align-center">{Strings.pilihBahasa}</div>
+                                <List>
+                                    <ListInput
+                                        // outline
+                                        type="select"
+                                        defaultValue={this.state.language}
+                                        onChange={({ target }) => {
+                                            this.setState({ language: target.value });
+                                            Strings.setLanguage(target.value)
+                                        }}
+                                    >
+                                        <option value="" disabled>--{Strings.choose}--</option>
+                                        {
+                                            Strings.getAvailableLanguages().map((item, index) => (
+                                                <option key={index} value={item}>{item}</option>
+                                            ))
+                                        }
+                                    </ListInput>
+                                </List>
+                                <Button
+                                    large
+                                    fill
+                                    style={{ backgroundColor: '#c0392b', color: 'white' }}
+                                    onClick={() => {
+                                        this.setState({ sheetBahasa: false }, () => {
+                                            this._onChangeBahasa()
+                                        })
                                     }}
                                 >
-                                    <option value="" disabled>--{Strings.choose}--</option>
-                                    {
-                                        Strings.getAvailableLanguages().map((item, index) => (
-                                            <option key={index} value={item}>{item}</option>
-                                        ))
-                                    }
-                                </ListInput>
-                            </List>
-                            <Button
-                                large
-                                fill
-                                style={{ backgroundColor: '#c0392b', color: 'white' }}
-                                onClick={() => {
-                                    this.setState({ sheetBahasa: false }, () => {
-                                        this._onChangeBahasa()
-                                    })
-                                }}
-                            >
-                                {Strings.pilih}
-                            </Button>
+                                    {Strings.pilih}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </Sheet>
-            </Page >
+                    </Sheet>
+                </Page >
+            </div>
         );
     }
 }

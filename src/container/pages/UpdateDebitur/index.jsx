@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { navigate } from '../../../config/redux/actions/routerActions';
 import { DefaultNavbar, CustomBlockTitle } from '../../../components/atoms';
 import { log, Connection, POST, SQLite, SQLiteTypes } from '../../../utils/';
-var { REKAP_TERKIRIM, REKAP_TERTUNDA } = SQLiteTypes;
+const { REKAP_TERKIRIM, REKAP_TERTUNDA } = SQLiteTypes;
 import { UpdateDebitur as Strings } from '../../../utils/Localization';
 class UpdateDebitur extends React.Component {
     constructor(props) {
@@ -47,7 +47,6 @@ class UpdateDebitur extends React.Component {
     }
     _kirim() {
         var { formData } = this.state;
-        log("formData", formData)
         var mandatoryField = ['tipeAlamat', 'provinsi', 'kokab', 'kecamatan', 'kelurahan', 'zipCode', 'noTelp'];
         for (var item in formData) {
             if (mandatoryField.includes(item)) {
@@ -123,9 +122,12 @@ class UpdateDebitur extends React.Component {
     _saveRekapData(updateData, kirim = true) {
         SQLite.query('SELECT value from Collection where key=?', [kirim ? REKAP_TERKIRIM : REKAP_TERTUNDA])
             .then(select => {
-                SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [kirim ? REKAP_TERKIRIM : REKAP_TERTUNDA, [...(select.length != 0 ? select[0] : []), updateData]])
-                    .then(insert => this.props.navigate('/Main/')).catch(err => log(err));
-            }).catch(err => log(err));
+                return SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [kirim ? REKAP_TERKIRIM : REKAP_TERTUNDA, [...(select.length != 0 ? select[0] : []), updateData]])
+            })
+            .then(insert => {
+                this.props.navigate('/Main/')
+            })
+            .catch(err => log(err));
     }
     _dropdownRegion(level, value) {
         var { regency, district, subDistrict } = this.state.region;
@@ -245,9 +247,7 @@ class UpdateDebitur extends React.Component {
                         }}
                     >
                         <option value="" disabled>--{Strings.optionPlacehoder}--</option>
-                        {province.map((item, key) => (
-                            <option key={key} value={item.code} > {item.description} </option>
-                        ))}
+                        {province.map((item, key) => (<option key={key} value={item.code} > {item.description} </option>))}
                     </ListInput>
                     <ListInput
                         outline

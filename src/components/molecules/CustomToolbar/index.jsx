@@ -62,7 +62,7 @@ const CustomToolbar = (props) => {
     }
     const _validate = () => {
         if (username == '') { f7.dialog.alert(Strings.emptyUsername); return false; }
-        if (username !== user.user_id) { f7.dialog.alert(Strings.errorUsername); return false; }
+        if (username.toUpperCase() != user.user_id.toUpperCase()) { f7.dialog.alert(Strings.errorUsername); return false; }
         POST(`Logout`, { username: username })
             .then(res => {
                 if (res.status == 'success') {
@@ -80,7 +80,7 @@ const CustomToolbar = (props) => {
                         dispatch(setUser(updatedUser));
                         dispatch(setPin(updatedPIN));
                         dispatch(navigate('/', true));
-                        setTablinkActive(0);
+                        setTablinkActive(1);
                         setPopupStateLogout(false);
                     }).catch(err => log(err));
                 } else {

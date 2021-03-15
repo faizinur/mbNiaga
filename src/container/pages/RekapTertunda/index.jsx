@@ -46,7 +46,7 @@ class RekapTertunda extends React.Component {
                 { code: 'DOES_NOT_EQUAL', description: 'Does Not Equal' },
                 { code: 'GREATHER_THAN_EQUAL_TO', description: 'Greather Than Equal To' },
                 { code: 'LESS_THAN_EQUAL_TO', description: 'Less Than Equal To' },
-                { code: 'BETWEEN', description: 'Between' },
+                // { code: 'BETWEEN', description: 'Between' },
                 { code: 'BEGIN_WITH', description: 'Begin With' },
                 { code: 'END_WITH', description: 'End With' },
                 { code: 'CONTAINS', description: 'Contains' },

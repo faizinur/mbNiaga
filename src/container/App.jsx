@@ -158,6 +158,7 @@ class Root extends React.Component {
 	render() {
 		const { realApp } = this.state;
 		let shownToolbar = (Object.keys(this.props.profile).length > 0 && this.props.profile.is_login == true) ? true : false;
+
 		if (!realApp) {
 			return (
 				<App params={this.state.f7params}>
@@ -179,7 +180,7 @@ class Root extends React.Component {
 			)
 		} else {
 			return (
-				<App params={this.state.f7params} events={[0,10,20,30]}>
+				<App params={this.state.f7params}>
 					<BlockTimeout display={this.state.blockTimeout} />
 					<CustomToolbar
 						shown={shownToolbar}
