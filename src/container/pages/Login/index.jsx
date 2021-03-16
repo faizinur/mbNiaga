@@ -72,7 +72,7 @@ class Login extends React.Component {
                 appName: 'MobColl',
                 major: '0',
                 minor: '1',
-                patch: '2',
+                patch: '3',
                 release: 'alpha',
             }
         };
@@ -83,7 +83,7 @@ class Login extends React.Component {
         log('componentDidMount LOGIN : ', this.props.bahasa);
         // log('HIDE SHOW POPUP!');
         if (f7.views.main.router.history.length == 0) { //GARA GARA GOBACK REDUX ini ke load lagi jadi di cek kalo / berarti pertama login
-            // this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
+            this.setState({ popUpStateLoginPin: (this.props.pin != "" && this.props.profile.is_login == true) ? true : false });
         }
     }
     _onClickLogin = async () => {

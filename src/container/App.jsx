@@ -6,6 +6,7 @@ import {
 	View,
 	Popup,
 	f7,
+	Button,
 } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 import router from '../config/router';
@@ -184,6 +185,7 @@ class Root extends React.Component {
 					<BlockTimeout display={this.state.blockTimeout} />
 					<CustomToolbar
 						shown={shownToolbar}
+						language={this.props.bahasa}
 					/>
 					<Popup
 						className="idle-popup"
@@ -191,6 +193,7 @@ class Root extends React.Component {
 						onPopupClosed={() => log('pop up Closed')}
 					>
 						<Idle
+							onClick={() => this.setState({popUpStateIdle : false, })}
 							onLogin={(result) => {
 								if (result != false) {
 									this.setState({ popUpStateIdle: false, idleCounter: 0 })
@@ -204,11 +207,11 @@ class Root extends React.Component {
 							Connection={Connection()}
 						/>
 					</Popup>
+					<div
+						style={{ position: 'absolute', height: 30, width: 30, borderRadius: 15, bottom: 10, right: 10, backgroundColor: '#c0392b', zIndex: 99999 }}
+						onClick={() => this.props.back()}
+					/>
 					<Views className="safe-areas">
-						<div 
-						style={{ position: 'absolute', height: 30, width: 30, borderRadius: 15, top: 10, left: 10 }} 
-							onClick={()=> this.props.back()}
-						/>
 						<View main url={'/'} />
 					</Views>
 				</ App >
@@ -225,6 +228,7 @@ const mapStateToProps = (state) => {
 		idleTime: state.reference.idleTime,
 		bedaJam: state.reference.bedaJam,
 		maxBedaJam: state.reference.maxBedaJam,
+		bahasa: state.main.bahasa,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -232,7 +236,7 @@ const mapDispatchToProps = (dispatch) => {
 		setUser: (data) => dispatch(setUser(data)),
 		navigate: (nav) => dispatch(navigate(nav)),
 		back: () => dispatch(back()),
-		setGeolocation: (data) => dispatch(setGeolocation(data))
+		setGeolocation: (data) => dispatch(setGeolocation(data)),
 	};
 };
 export default () => {

@@ -245,6 +245,10 @@ const Idle = (props) => {
                             mode="info"
                             backLink={(e) => setLoginResult([])}
                             title={'Gagal Login'}
+                            onClick={() => {
+                                setLoginResult([]);
+                                props.onClick()
+                            }}
                         />
                         <CardContent padding={false}>
                             <List medial-list style={{ marginRight: 20, marginLeft: 20, fontSize: 12 }}>

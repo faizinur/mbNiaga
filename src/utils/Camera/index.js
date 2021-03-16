@@ -16,7 +16,9 @@ var Camera = {
             }
             navigator.camera.getPicture(imageData => {
                 // countImageSize(imageData);
-                resolve("data:image/jpeg;base64," + imageData);
+                let imgData = imageData;
+                navigator.camera.cleanup(()=>{}, ()=>{});
+                resolve("data:image/jpeg;base64," + imgData);
             }, (message) => {
                 reject(message != "No Image Selected" ? 'Failed because: ' + message : "");
             }, options);

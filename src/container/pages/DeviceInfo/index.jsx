@@ -17,7 +17,7 @@ import { DeviceInfo as Strings } from '../../../utils/Localization';
 
 const DeviceInfo = (props) => {
     useEffect(() => {
-        log('MOUNT OR UPDATE DeviceInfo');
+        log('MOUNT OR UPDATE DeviceInfo', props);
         Strings.setLanguage(bahasa);
         return () => {
             log('UNMOUNT DeviceInfo');
@@ -58,6 +58,9 @@ const DeviceInfo = (props) => {
                     </Row>)
                 ))
             }
+            {/* <div onClick={() => props.onClick()}>
+                <p>HEY!</p>
+            </div> */}
         </Page>
     );
 }

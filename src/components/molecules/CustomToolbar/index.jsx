@@ -21,7 +21,7 @@ import { CustomToolbar as Strings } from '../../../utils/Localization';
 
 const CustomToolbar = (props) => {
     useEffect(() => {
-        log('MOUNT OR UPDATE CustomToolbar shown', JSON.stringify(props.shown));
+        log('MOUNT OR UPDATE CustomToolbar shown', JSON.stringify(props));
         Strings.setLanguage(bahasa);
         return () => {
             setUsername('')
@@ -104,6 +104,9 @@ const CustomToolbar = (props) => {
                 zIndex: 'shown' in props ? 9999 : 0,
                 display: props.shown == false ? 'none' : 'block',
             }}>
+            {
+                Strings.setLanguage(props.language)
+            }
             <Toolbar tabbar bottom labels>
                 <Link
                     onClick={(e) => _setTablink(0)}

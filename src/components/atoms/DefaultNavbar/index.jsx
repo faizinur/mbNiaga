@@ -33,8 +33,15 @@ const DefaultNavbar = (props) => {
                 } */}
                 {
                     // 'picture' in props ?
-                    <div style={{ width: 'fit-content', height: '100%', paddingRight: '1%'}}>
-                        <img style={styles.logo} src={require(`../../../assets/img/ic_apps_android.png`).default} />
+                    <div style={{ width: 'fit-content', height: '100%', paddingRight: '1%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {
+                            'onClick' in props ?
+                                <div onClick={() => props.onClick()}>
+                                    <Icon icon="icon-back" style={{ color: '#FFF' }}></Icon>
+                                </div>
+                                :
+                                <img style={styles.logo} src={require(`../../../assets/img/ic_apps_android.png`).default} />
+                        }
                     </div>
                     // : ''
                 }
@@ -117,10 +124,10 @@ const styles = {
         fontWeight: 'initial',
         color: '#fcf5f4',
     },
-    logo : {
-        height : '100%',
-        filter : 'opacity(0.5) drop-shadow(0 0 0 #666666)',
-        borderRadius : 10,
+    logo: {
+        height: '100%',
+        filter: 'opacity(0.5) drop-shadow(0 0 0 #666666)',
+        borderRadius: 10,
     }
 };
 
