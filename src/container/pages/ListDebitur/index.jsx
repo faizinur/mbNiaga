@@ -33,7 +33,7 @@ class ListDebitur extends React.Component {
 				{ code: 'home_post_code', description: 'Zipcode' },
 				{ code: 'branch_code', description: 'Branch Code' },
 				{ code: '', description: 'Branch Name' },
-			],
+			], 
 			kondisi: [
 				{ code: 'EQUAL', description: 'Equal' },
 				{ code: 'DOES_NOT_EQUAL', description: 'Does Not Equal' },
@@ -125,7 +125,7 @@ class ListDebitur extends React.Component {
 	render() {
 		return (
 			<Page name="ListDebitur" noToolbar noNavbar style={{ paddingBottom: 58 }}>
-				<DefaultNavbar title="DAFTAR DEBITUR" network={Connection()} profile />
+				<DefaultNavbar title={Strings.title} network={Connection()} profile />
 				<List noHairlinesMd style={{ margin: 0, padding: 0 }}>
 					<SystemInfo />
 					<Block style={{ margin: 0, padding: 0 }}>
@@ -160,7 +160,7 @@ class ListDebitur extends React.Component {
 									<List style={{ marginBottom: 8, marginTop: 8, padding: 0 }}>
 										<ListInput
 											outline
-											label="kondisi"
+											label={Strings.condition}
 											inputStyle={{ backgroundColor: '#666666', color: 'white' }}
 											style={{ backgroundColor: 'black' }}
 											type="select"

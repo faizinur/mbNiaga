@@ -93,7 +93,7 @@ class AddKunjungan extends React.Component {
         f7.dialog.confirm('Apakah anda akan menyimpan hasil kunjungan ?.',
             () => {
                 var { formData, ptp } = this.state;
-                log(formData)
+                // log(formData)
                 var mandatoryField = ['place_contacted', 'call_result', 'notepad', 'gambar'];
                 if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
                 for (var item in formData) {
@@ -114,9 +114,12 @@ class AddKunjungan extends React.Component {
                     }
                 }
                 if (Connection() != "OFFLINE") {
-                    POST('save_visit_history', formData)
-                        .then(res => res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
-                        ).catch(err => log(err));
+                POST('save_visit_history', formData)
+                    .then(res => {
+                        // log('save_visit_history ', res)
+                        res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
+                    })
+                    .catch(err => log(err));
                 } else {
                     this._saveRekapTertunda();
                 }
@@ -278,7 +281,7 @@ class AddKunjungan extends React.Component {
                         ))
                     }
                 </Block>
-                <CustomBlockTitle title="Hasil Kunjungan" />
+                <CustomBlockTitle title={Strings.kunjunganTitle} />
                 <List>
                     <ListInput
                         outline
@@ -359,7 +362,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {optionPayment.map((item, key) => (
                             <option key={key} value={item.value} > {this._formatCurrency(item.value)} </option>
                         ))}
@@ -380,7 +383,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {contactMode.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
@@ -401,7 +404,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {contactPerson.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
@@ -422,7 +425,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {placeContacted.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
@@ -497,7 +500,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="">--PILIH--</option>
+                        <option value="">--P{Strings.optionPlacholder}ILIH--</option>
                         {this.props.province.map((item, key) => {
                             return <option key={key} value={item.code} > {item.description} </option>
                         })}
@@ -520,7 +523,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="">--PILIH--</option>
+                        <option value="">--{Strings.optionPlacholder}--</option>
                         {
                             this.state.formData.province != "" ?
                                 (
@@ -549,7 +552,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="">--PILIH--</option>
+                        <option value="">--{Strings.optionPlacholder}--</option>
                         {
                             this.state.formData.regency != "" ?
                                 (
@@ -577,7 +580,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="">--PILIH--</option>
+                        <option value="">--{Strings.optionPlacholder}--</option>
                         {
                             this.state.formData.district != "" ?
                                 (
@@ -620,7 +623,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {phoneNumberType.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
@@ -657,7 +660,7 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="" disabled>--PILIH--</option>
+                        <option value="" disabled>--{Strings.optionPlacholder}--</option>
                         {phoneNumberType.map((item, key) => (
                             <option key={key} value={item.value} > {item.description} </option>
                         ))}
@@ -694,10 +697,10 @@ class AddKunjungan extends React.Component {
                 <Block style={{ margin: 0, backgroundColor: '#666666', height: 80 }}>
                     <Row style={{ paddingTop: 5 }}>
                         <Col width="50">
-                            <Button fill round raised onClick={() => this._kirim()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>KIRIM</Button>
+                            <Button fill round raised onClick={() => this._kirim()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.kirim}</Button>
                         </Col>
                         <Col width="50">
-                            <Button fill round raised onClick={() => this.props.back()} style={{ backgroundColor: '#FF6666', fontSize: 12 }}>BATAL</Button>
+                            <Button fill round raised onClick={() => this.props.back()} style={{ backgroundColor: '#FF6666', fontSize: 12 }}>{Strings.batal}</Button>
                         </Col>
                     </Row>
                 </Block>

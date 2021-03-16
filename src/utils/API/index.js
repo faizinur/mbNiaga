@@ -3,8 +3,8 @@ import { Encrypt, Decrypt } from '../Encryption/';
 import { f7 } from 'framework7-react';
 import { log } from '../../utils/';
 const API = axios.create({
-	// baseURL: `https://app56.ecentrix.net/niaga_api_coll2/`,
-	baseURL: `https://bssdev.ecentrix.net/niaga_mobcoll_api/index.php/`,
+	baseURL: `https://app56.ecentrix.net/niaga_api_coll2/`,
+	// baseURL: `https://bssdev.ecentrix.net/niaga_mobcoll_api/index.php/`,
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 	},
@@ -30,10 +30,10 @@ const POST = (...params) => {
 			const [url, data] = params;
 			return new Promise((resolve, reject) => {
 				f7.preloader.show();
-				API.post(url, data)
+				API.post(url, data, {timeout: 600000})
 					.then(result => {
-						log(result)
-						log('API RESULT ', params[0], params[1]);
+						// log(result)
+						// log('API RESULT ', params[0], params[1]);
 						if (result.data.status == "error" || result.status != 200) {
 							f7.preloader.hide();
 							f7.dialog.alert(`${result.data.message} ${'data' in result.data ? result.data.data : ''}`);
@@ -43,7 +43,7 @@ const POST = (...params) => {
 							resolve(result.data);
 						}
 					}).catch(err => {
-						log('API CATCH ', params[0], err);
+						// log('API CATCH ', params[0], err);
 						f7.preloader.hide();
 						reject(err)
 					});

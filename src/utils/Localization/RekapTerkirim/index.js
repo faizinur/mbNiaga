@@ -8,6 +8,7 @@ let RekapTerkirim = new LocalizedStrings({
         less: 'Kurangi Parameter',
         clear: 'Bersihkan',
         search: 'Cari',
+        condition: 'kondisi',
     },
     "EN": {
         title: 'SENT LIST',
@@ -16,6 +17,7 @@ let RekapTerkirim = new LocalizedStrings({
         less: 'Less Parameter',
         clear: 'Clear All',
         search: 'Search',
+        condition: 'condition',
     },
 });
 

@@ -4,7 +4,7 @@ let Main = new LocalizedStrings({
     "ID": {
         title: 'MOBILE APPLICATION INTERACTION',
         CustomerMenu: 'Daftar Debitur',
-        VisitMenu: 'Daftar diKunjungi',
+        VisitMenu: 'Rencana Kunjungan',
         PostphonedMenu: 'Rekap Tertunda',
         SentMenu: 'Rekap Terkirim',
         VisitedMenu: 'Daftar diKunjungi',

@@ -205,6 +205,10 @@ class Root extends React.Component {
 						/>
 					</Popup>
 					<Views className="safe-areas">
+						<div 
+						style={{ position: 'absolute', height: 30, width: 30, borderRadius: 15, top: 10, left: 10 }} 
+							onClick={()=> this.props.back()}
+						/>
 						<View main url={'/'} />
 					</Views>
 				</ App >

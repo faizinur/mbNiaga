@@ -173,7 +173,7 @@ const VisitedList = (props) => {
 								<List style={{ marginBottom: 8, marginTop: 8, padding: 0 }}>
 									<ListInput
 										outline
-										label="kondisi"
+										label={Strings.condition}
 										inputStyle={{ backgroundColor: '#666666', color: 'white' }}
 										style={{ backgroundColor: 'black' }}
 										type="select"

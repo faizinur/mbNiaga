@@ -48,12 +48,12 @@ const SplashScreen = (props) => {
         f7.preloader.show();
         log('MOUNT OR UPDATE SplashScreen');
         Promise.all([
-            _getRegion(),
             SQLite.initDB(),
             _getReference(),
             _getDevice(),
             //.... another promise
-        ]).then(res => { 
+        ]).then(res => {
+
             setTimeout(() =>
                 props.onFinish({
                     realApp: true,
@@ -85,7 +85,7 @@ const SplashScreen = (props) => {
 
         // Promise.all();
     }
-    const _getReference = () => {
+    const _getReference = async () => {
         let date = new Date();
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
@@ -95,27 +95,42 @@ const SplashScreen = (props) => {
         let seconds = date.getSeconds();
         let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`;
         let dvc = (!Device.android && !Device.ios) ? false : true;
-
-
+        let dbRes = await SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE]);
+        if (dbRes.length == 0) {
+            let getRef = await POST(`Get_all_refs`, { jam_mobile: jam_mobile });
+            let setRef = await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, getRef.data])
+            if ('insertId' in setRef && 'rowsAffected' in setRef) {
+                _getLocalData();
+            }
+        } else {
+            _getLocalData();
+        }
+        /*
         SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE])
             .then(select => {
-                if (select.length == 0) {
-                    return POST(`Get_all_refs`, { jam_mobile: jam_mobile })
-                } else {
-                    _getLocalData();
-                    return false;
-                }
+                // if (select.length == 0) {
+                    // return POST(`Get_all_refs`, { jam_mobile: jam_mobile })
+                // } else {
+                //     _getLocalData();
+                //     return false;
+                // }
             })
             .then(ref => {
-                if (ref && ref.status == 'success') {
-                    return SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, ref.data])
-                } else {
-                    return false;
-                }
+                log('_getReference', ref)
+                // if (ref && ref.status == 'success') {
+                //     dispatch(setProvince(ref.data.region.prov));
+                //     dispatch(setRegency(ref.data.region.kokab));
+                //     dispatch(setDistrict(ref.data.region.kec));
+                //     dispatch(setSubDistrict(ref.data.region.kel));
+                //     return SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, ref.data])
+                // } else {
+                //     return false;
+                // }
             })
             .then(insert => {
-                if (insert) _getLocalData();
+                // if (insert) _getLocalData();
             })
+            */
     }
     const _getLocalData = () => {
         log('_getLocalData')
@@ -142,6 +157,13 @@ const SplashScreen = (props) => {
                     dispatch(setIdleTime(parseInt(idle_time)));
                     dispatch(setBedaJam(parseInt(beda_jam)));
                     dispatch(setMaxBedaJam(parseInt(max_beda_jam)));
+
+                    let region = 'region' in res.REFERENCE ? res.REFERENCE.region : [];
+                    dispatch(setProvince(region.prov));
+                    dispatch(setRegency(region.kokab));
+                    dispatch(setDistrict(region.kec));
+                    dispatch(setSubDistrict(region.kel));
+                    region = [];
                 }
                 if (PIN in res) {
                     dispatch(setPin(res.PIN))

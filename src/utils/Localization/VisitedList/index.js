@@ -8,6 +8,7 @@ let VisitedList = new LocalizedStrings({
         less: 'Kurangi Parameter',
         clear: 'Bersihkan',
         search: 'Cari',
+        condition: 'kondisi',
     },
     "EN": {
         title: 'VISITED LIST',
@@ -16,6 +17,7 @@ let VisitedList = new LocalizedStrings({
         less: 'Less Parameter',
         clear: 'Clear All',
         search: 'Search',
+        condition: 'condition',
     },
 });
 

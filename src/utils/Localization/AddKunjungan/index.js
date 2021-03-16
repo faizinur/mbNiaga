@@ -27,7 +27,7 @@ let AddKunjungan = new LocalizedStrings({
         batal : 'BATAL',
     },
     "EN": {
-        title: 'INPUT HASIL KUNJUNGAN',
+        title: 'INPUT VISIT RESULT',
         optionPlacholder: 'Choose',
         kunjunganTitle: 'Visit Result',
         tanggalPTPLabel: 'PTP Date',

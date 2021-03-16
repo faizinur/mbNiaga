@@ -8,6 +8,7 @@ let ListDebitur = new LocalizedStrings({
         less: 'Kurangi Parameter',
         clear: 'Bersihkan',
         search: 'Cari',
+        condition: 'kondisi',
     },
     "EN": {
         title: 'List Debitur',
@@ -16,6 +17,7 @@ let ListDebitur = new LocalizedStrings({
         less: 'Less Parameter',
         clear: 'Clear All',
         search: 'Search',
+        condition: 'condition',
     },
 });
 

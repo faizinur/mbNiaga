@@ -162,7 +162,6 @@ const PaidList = (props) => {
 												<option key={key} value={item.code}>{item.description}</option>
 											))
 										}
-
 									</ListInput>
 								</List>
 							</Col>
@@ -170,7 +169,7 @@ const PaidList = (props) => {
 								<List style={{ marginBottom: 8, marginTop: 8, padding: 0 }}>
 									<ListInput
 										outline
-										label="kondisi"
+										label='kondisi'
 										inputStyle={{ backgroundColor: '#666666', color: 'white' }}
 										style={{ backgroundColor: 'black' }}
 										type="select"
