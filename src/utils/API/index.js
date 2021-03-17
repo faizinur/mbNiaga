@@ -30,7 +30,11 @@ const POST = (...params) => {
 			const [url, data] = params;
 			return new Promise((resolve, reject) => {
 				f7.preloader.show();
-				API.post(url, data, {timeout: 600000})
+				API.post(url, data,
+					{
+						timeout: 600000,
+						onDownloadProgress: progressEvent => params[2] ? params[2](progressEvent.loaded) : log('0')
+					})
 					.then(result => {
 						// log(result)
 						// log('API RESULT ', params[0], params[1]);

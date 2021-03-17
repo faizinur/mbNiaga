@@ -34,6 +34,7 @@ import VisitedList from './VisitedList';
 import RekapTertunda from './RekapTertunda';
 import PaidList from './PaidList';
 import DetailDebitur from './DetailDebitur';
+import LayarPembuka from './LayarPembuka';
 
 export {
     NotFound,
@@ -72,4 +73,5 @@ export {
     RekapTertunda,
     PaidList,
     DetailDebitur,
+    LayarPembuka,
 }

@@ -59,10 +59,12 @@ class Root extends React.Component {
 			idleCounter: 0,
 			popUpStateIdle: false,
 			mountPoint: '/',
-			blockTimeout: false,
+			blockTimeout: (props.bedaJam > props.maxBedaJam) ? true : false,
 			max_beda_jam: 0,
 			beda_jam: 0,
 		}
+		idleTimeGeo = props.refeshCoordinate;
+		idleTime = props.idleTime;
 	}
 	componentDidMount() {
 		this.$f7ready((f7) => {
@@ -157,65 +159,98 @@ class Root extends React.Component {
 		clearInterval(INTERVAL_ID);
 	}
 	render() {
-		const { realApp } = this.state;
 		let shownToolbar = (Object.keys(this.props.profile).length > 0 && this.props.profile.is_login == true) ? true : false;
-
-		if (!realApp) {
-			return (
-				<App params={this.state.f7params}>
-					<SplashScreen
-						onFinish={(e) => {
-							this.setState({
-								realApp: e.realApp,
-								idleTime: e.idleTime,
-								mountPoint: e.mount_point,
-							});
-							idleTimeGeo = this.props.refeshCoordinate;
-							idleTime = this.props.idleTime;
-							if (!(!Device.android && !Device.ios)) {
-								this.setState({ blockTimeout: (this.props.bedaJam > this.props.maxBedaJam) ? true : false });
+		const { realApp } = this.state;
+		return (
+			<App params={this.state.f7params}>
+				<BlockTimeout display={this.state.blockTimeout} />
+				<CustomToolbar
+					shown={shownToolbar}
+					language={this.props.bahasa}
+				/>
+				<Popup
+					className="idle-popup"
+					opened={this.state.popUpStateIdle}
+					onPopupClosed={() => log('pop up Closed')}
+				>
+					<Idle
+						onClick={() => this.setState({ popUpStateIdle: false, })}
+						onLogin={(result) => {
+							if (result != false) {
+								this.setState({ popUpStateIdle: false, idleCounter: 0 })
 							}
 						}}
+						onExit={(result) => {
+							if (result != false) {
+								this.setState({ popUpStateIdle: false, idleCounter: 0 })
+							}
+						}}
+						Connection={Connection()}
 					/>
-				</App>
-			)
-		} else {
-			return (
-				<App params={this.state.f7params}>
-					<BlockTimeout display={this.state.blockTimeout} />
-					<CustomToolbar
-						shown={shownToolbar}
-						language={this.props.bahasa}
-					/>
-					<Popup
-						className="idle-popup"
-						opened={this.state.popUpStateIdle}
-						onPopupClosed={() => log('pop up Closed')}
-					>
-						<Idle
-							onClick={() => this.setState({popUpStateIdle : false, })}
-							onLogin={(result) => {
-								if (result != false) {
-									this.setState({ popUpStateIdle: false, idleCounter: 0 })
-								}
-							}}
-							onExit={(result) => {
-								if (result != false) {
-									this.setState({ popUpStateIdle: false, idleCounter: 0 })
-								}
-							}}
-							Connection={Connection()}
-						/>
-					</Popup>
-					{/* <div
-						style={{ position: 'absolute', height: 30, width: 30, borderRadius: 15, bottom: 10, right: 10, backgroundColor: '#c0392b', zIndex: 99999 }}
-						onClick={() => this.props.back()}
-					/> */}
-					<Views className="safe-areas">
-						<View main url={'/'} />
-					</Views>
-				</App >
-			)
+				</Popup>
+				<Views className="safe-areas">
+					<View main url={'/LayarPembuka/'} />
+				</Views>
+			</App>
+		)
+		{
+			// if (!realApp) {
+			// 	return (
+			// 		<App params={this.state.f7params}>
+			// 			<SplashScreen
+			// 				onFinish={(e) => {
+			// 					this.setState({
+			// 						realApp: e.realApp,
+			// 						idleTime: e.idleTime,
+			// 						mountPoint: e.mount_point,
+			// 					});
+			// 					idleTimeGeo = this.props.refeshCoordinate;
+			// 					idleTime = this.props.idleTime;
+			// 					if (!(!Device.android && !Device.ios)) {
+			// 						this.setState({ blockTimeout: (this.props.bedaJam > this.props.maxBedaJam) ? true : false });
+			// 					}
+			// 				}}
+			// 			/>
+			// 		</App>
+			// 	)
+			// } else {
+			// 	return (
+			// 		<App params={this.state.f7params}>
+			// 			<BlockTimeout display={this.state.blockTimeout} />
+			// 			<CustomToolbar
+			// 				shown={shownToolbar}
+			// 				language={this.props.bahasa}
+			// 			/>
+			// 			<Popup
+			// 				className="idle-popup"
+			// 				opened={this.state.popUpStateIdle}
+			// 				onPopupClosed={() => log('pop up Closed')}
+			// 			>
+			// 				<Idle
+			// 					onClick={() => this.setState({popUpStateIdle : false, })}
+			// 					onLogin={(result) => {
+			// 						if (result != false) {
+			// 							this.setState({ popUpStateIdle: false, idleCounter: 0 })
+			// 						}
+			// 					}}
+			// 					onExit={(result) => {
+			// 						if (result != false) {
+			// 							this.setState({ popUpStateIdle: false, idleCounter: 0 })
+			// 						}
+			// 					}}
+			// 					Connection={Connection()}
+			// 				/>
+			// 			</Popup>
+			// 			{/* <div
+			// 				style={{ position: 'absolute', height: 30, width: 30, borderRadius: 15, bottom: 10, right: 10, backgroundColor: '#c0392b', zIndex: 99999 }}
+			// 				onClick={() => this.props.back()}
+			// 			/> */}
+			// 			<Views className="safe-areas">
+			// 				<View main url={'/'} />
+			// 			</Views>
+			// 		</App >
+			// 	)
+			// }
 		}
 	}
 }

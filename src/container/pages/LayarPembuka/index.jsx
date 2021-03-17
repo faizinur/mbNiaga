@@ -4,7 +4,7 @@ import {
     f7,
 } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
-import { log, SQLite, SQLiteTypes, Connection, POST, Device as Perangkat } from '../../../utils/';
+import { log, SQLite, SQLiteTypes, Connection, POST, Device as Perangkat } from '../../../utils';
 import PropTypes from 'prop-types';
 import {
     setProvince,
@@ -27,9 +27,10 @@ import {
     setBedaJam,
     setMaxBedaJam,
     setBahasa,
+    navigate,
 } from '../../../config/redux/actions/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
-import { Toast } from '../../atoms/'
+import {Toast} from '../../../components/atoms/' 
 const {
     PIN,
     DEVICE_INFO,
@@ -43,18 +44,32 @@ const {
     UPDATE_HISTORY,
     BAHASA,
 } = SQLiteTypes;
-const SplashScreen = (props) => {
+const LayarPembuka = (props) => {
     useEffect(() => {
         // f7.preloader.show();
-        log('MOUNT OR UPDATE SplashScreen');
+        log('MOUNT OR UPDATE LayarPembuka');
         Promise.all([
             SQLite.initDB(),
             _getReference(),
             _getDevice(),
             //.... another promise
-        ]).then(res => _getLocalData());
+        ]).then(res => {
+            log('udah beres!',res);
+            _getLocalData();
+            // setTimeout(() => {
+            //     f7.preloader.hide();
+            //     // log('yeay finish');
+                dispatch(navigate('/Login/'));
+            //     // props.onFinish({
+            //     //     realApp: true,
+            //     //     mount_point: mountPoint,
+            //     //     shownToolbar: mountPoint == '/' ? false : true,
+            //     // })
+            // }, 6000)
+        });
         return () => {
-            log('UNMOUNT SplashScreen');
+            // f7.preloader.hide();
+            log('UNMOUNT LayarPembuka');
         }
     }, [])
     const dispatch = useDispatch();
@@ -64,12 +79,7 @@ const SplashScreen = (props) => {
     let maxBedaJam = useSelector(state => state.reference.maxBedaJam);
     let mountPoint = useSelector(state => state.reference.mountPoint);
 
-    const [deviceState, setDeviceState] = useState('')
-    const [refState, setRefState] = useState('')
-    const [localDBState, setLocalDBState] = useState('')
-
     const _getReference = async () => {
-        setRefState('...')
         let date = new Date();
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
@@ -80,20 +90,16 @@ const SplashScreen = (props) => {
         let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`;
         let dbRes = await SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE]);
         if (dbRes.length == 0) {
-            // Toast('AMBIL DATA KE SERVER', 1000, true).open();
-            let getRef = await POST(`Get_all_refs`, { jam_mobile: jam_mobile }, (data) => setRefState(data));
-            if (getRef.status == 'success') {
-                await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, getRef.data])
-            } else {
-                await SQLite.query('DELETE FROM COLLECTION WHERE Key=?', [REFERENCE])
-            }
+            //Toast('AMBIL DATA KE SERVER DULU', 3000, true).open();
+            let getRef = await POST(`Get_all_refs`, { jam_mobile: jam_mobile });
+            (getRef.status == 'success') ? await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, getRef.data])
+                : await SQLite.query('DELETE FROM COLLECTION WHERE Key=?', [REFERENCE])
         }
-        setRefState('OK!')
+        // _getLocalData();
     }
     const _getLocalData = async () => {
-        // Toast('AMBIL DATA KE LOKAL DB', 1000, true).open();
-        setLocalDBState('...')
-        SQLite.fetchAll()
+        // Toast('AMBIL DATA KE LOKAL DB', 3000, true).open();
+        await SQLite.fetchAll()
             .then(res => {
                 if (REFERENCE in res) {
                     let call_result = 'call_result' in res.REFERENCE ? res.REFERENCE.call_result : [];
@@ -186,62 +192,25 @@ const SplashScreen = (props) => {
                 if (BAHASA in res) {
                     dispatch(setBahasa(res.BAHASA))
                 }
-                setLocalDBState('OK!')
-                f7.preloader.hide();
-                props.onFinish({
-                    realApp: true,
-                    mount_point: mountPoint,
-                    shownToolbar: mountPoint == '/' ? false : true,
-                })
             })
             .catch(err => log(err));
     }
     const _getDevice = async () => {
-        setDeviceState('...')
         let dvcInfo = (!Device.android && !Device.ios) ?
             { available: true, platform: 'Android', version: 10, uuid: '1bb9c549939b1b1e', cordova: '9.0.0', model: 'Android SDK built for x86', manufacturer: 'Google', isVirtual: true, serial: 'unknown' }
             : await Perangkat.getInformation();
         dispatch(setDevice(dvcInfo));
-        setDeviceState('OK!')
     }
     return (
-        <Page noToolbar noNavbar noSwipeback name="SplashScreen">
+        <Page noToolbar noNavbar noSwipeback name="LayarPembuka">
             <div style={styles.container}>
                 <p style={styles.text}>Mobile Collection Niaga</p>
-            </div>
-            <div
-                style={{
-                    width: '100%',
-                    height: 'fit-content',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    display: props.shown == false ? 'none' : 'block',
-                }}>
-                <div
-                    style={{ display: (deviceState == '' ? 'none' : 'flex'), flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 10, paddingRight: 10 }}
-                >
-                    <p style={{ margin: 0 }}>Retrieving Device info</p>
-                    <p style={{ margin: 0 }}>{deviceState}</p>
-                </div>
-                <div
-                    style={{ display: (refState == '' ? 'none' : 'flex'), flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 10, paddingRight: 10 }}
-                >
-                    <p style={{ margin: 0 }}>Downloading</p>
-                    <p style={{ margin: 0 }}>{refState}</p>
-                </div>
-                <div
-                    style={{ display: (localDBState == '' ? 'none' : 'flex'), flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 10, paddingRight: 10 }}
-                >
-                    <p style={{ margin: 0 }}>Collecting</p>
-                    <p style={{ margin: 0 }}>{localDBState}</p>
-                </div>
             </div>
         </Page >
     )
 }
 
-SplashScreen.propTypes = {
+LayarPembuka.propTypes = {
     onFinish: PropTypes.func,
 };
 
@@ -262,4 +231,4 @@ const styles = {
     },
 }
 
-export default SplashScreen;
+export default LayarPembuka;

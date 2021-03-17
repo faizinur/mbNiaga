@@ -114,12 +114,12 @@ class AddKunjungan extends React.Component {
                     }
                 }
                 if (Connection() != "OFFLINE") {
-                POST('save_visit_history', formData)
-                    .then(res => {
-                        // log('save_visit_history ', res)
-                        res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
-                    })
-                    .catch(err => log(err));
+                    POST('save_visit_history', formData)
+                        .then(res => {
+                            // log('save_visit_history ', res)
+                            res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
+                        })
+                        .catch(err => log(err));
                 } else {
                     this._saveRekapTertunda();
                 }

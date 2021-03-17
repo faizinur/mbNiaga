@@ -34,12 +34,13 @@ import {
 	RekapTertunda,
 	PaidList,
 	DetailDebitur,
+	LayarPembuka,
 } from '../../container/pages';
-
 
 import {
 	HomeTemplates
 } from '../../container/templates';
+
 
 var router = [
 	{
@@ -49,6 +50,10 @@ var router = [
 	{
 		path: '/Login/',
 		component: Login,
+	},
+	{
+		path: '/LayarPembuka/',
+		component: LayarPembuka,
 	},
 	{
 		path: '/Home/',
