@@ -11,7 +11,7 @@ const navigate = (pageName) => {
 
 const back = () => {
     return (dispatch, getState) => {
-        let pageCurrentName = document.getElementsByClassName('page-current')[0].dataset.name;
+        let pageCurrentName = document.getElementsByClassName('page-current')[0].dataset.name || '';
         if (document.getElementsByClassName('popup modal-in').length > 0) {
             log('ada pop up gak boleh back')
             return false;

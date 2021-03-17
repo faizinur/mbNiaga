@@ -33,7 +33,7 @@ const POST = (...params) => {
 				API.post(url, data,
 					{
 						timeout: 600000,
-						onDownloadProgress: progressEvent => params[2] ? params[2](progressEvent.loaded) : log('0')
+						onDownloadProgress: progressEvent => params[2] && params[2](progressEvent.loaded)
 					})
 					.then(result => {
 						// log(result)

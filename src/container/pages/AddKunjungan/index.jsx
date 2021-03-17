@@ -69,7 +69,7 @@ class AddKunjungan extends React.Component {
                 phone_number_2: '',
                 home_address_1: props.detailCust.home_address_1,
                 office_address_1: props.detailCust.office_address_1,
-                home_post_code: props.detailCust.home_post_code,
+                home_post_code: props.detailCust.home_post_code
             },
             language: props.bahasa,
         };
@@ -174,16 +174,16 @@ class AddKunjungan extends React.Component {
             }
         }))
     }
-    _generate_dd = (level = 0, parent_code = null) => {
-        let dd_data;
-        if (level == 0) {
-            dd_data = this.props.province.map((item, key) => {
-                return <option key={key} value={item.code} > {item.description} </option>
-            })
-        }
+    // _generate_dd = (level = 0, parent_code = null) => {
+    //     let dd_data;
+    //     if (level == 0) {
+    //         dd_data = this.props.province.map((item, key) => {
+    //             return <option key={key} value={item.code} > {item.description} </option>
+    //         })
+    //     }
 
-        return dd_data;
-    }
+    //     return dd_data;
+    // }
     _getGeo = () => {
         Geolocation.currentLocation()
             .then(res => {
@@ -500,10 +500,10 @@ class AddKunjungan extends React.Component {
                             }))
                         }}
                     >
-                        <option value="">--P{Strings.optionPlacholder}ILIH--</option>
-                        {this.props.province.map((item, key) => {
+                        <option value="">{Strings.optionPlacholder}</option>
+                        {/* {this.props.province.map((item, key) => {
                             return <option key={key} value={item.code} > {item.description} </option>
-                        })}
+                        })} */}
                     </ListInput>
                 </List>
                 <CustomBlockTitle title={Strings.kabLabel} />
@@ -525,14 +525,14 @@ class AddKunjungan extends React.Component {
                     >
                         <option value="">--{Strings.optionPlacholder}--</option>
                         {
-                            this.state.formData.province != "" ?
-                                (
-                                    this.props.regency
-                                        .filter(item => { return item.parent_code == this.state.formData.province })
-                                        .map((item, key) => {
-                                            return <option key={key} value={item.code} > {item.description} </option>
-                                        })
-                                ) : (<></>)
+                            // this.state.formData.province != "" ?
+                            //     (
+                            //         this.props.regency
+                            //             .filter(item => { return item.parent_code == this.state.formData.province })
+                            //             .map((item, key) => {
+                            //                 return <option key={key} value={item.code} > {item.description} </option>
+                            //             })
+                            //     ) : (<></>)
                         }
                     </ListInput>
                 </List>
@@ -554,14 +554,14 @@ class AddKunjungan extends React.Component {
                     >
                         <option value="">--{Strings.optionPlacholder}--</option>
                         {
-                            this.state.formData.regency != "" ?
-                                (
-                                    this.props.district
-                                        .filter(item => { return item.parent_code == this.state.formData.regency })
-                                        .map((item, key) => {
-                                            return <option key={key} value={item.code} > {item.description} </option>
-                                        })
-                                ) : (<></>)
+                            // this.state.formData.regency != "" ?
+                            //     (
+                            //         this.props.district
+                            //             .filter(item => { return item.parent_code == this.state.formData.regency })
+                            //             .map((item, key) => {
+                            //                 return <option key={key} value={item.code} > {item.description} </option>
+                            //             })
+                            //     ) : (<></>)
                         }
                     </ListInput>
                 </List>
@@ -582,14 +582,14 @@ class AddKunjungan extends React.Component {
                     >
                         <option value="">--{Strings.optionPlacholder}--</option>
                         {
-                            this.state.formData.district != "" ?
-                                (
-                                    this.props.subDistrict
-                                        .filter(item => { return item.parent_code == this.state.formData.district })
-                                        .map((item, key) => {
-                                            return <option key={key} value={item.code} > {item.description} </option>
-                                        })
-                                ) : (<></>)
+                            // this.state.formData.district != "" ?
+                            //     (
+                            //         this.props.subDistrict
+                            //             .filter(item => { return item.parent_code == this.state.formData.district })
+                            //             .map((item, key) => {
+                            //                 return <option key={key} value={item.code} > {item.description} </option>
+                            //             })
+                            //     ) : (<></>)
                         }
                     </ListInput>
                 </List>

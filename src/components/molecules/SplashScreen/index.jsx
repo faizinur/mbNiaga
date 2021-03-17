@@ -29,7 +29,7 @@ import {
     setBahasa,
 } from '../../../config/redux/actions/';
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
-import { Toast } from '../../atoms/'
+import { Toast } from '../../atoms/';
 const {
     PIN,
     DEVICE_INFO,
@@ -47,12 +47,15 @@ const SplashScreen = (props) => {
     useEffect(() => {
         // f7.preloader.show();
         log('MOUNT OR UPDATE SplashScreen');
-        Promise.all([
-            SQLite.initDB(),
-            _getReference(),
-            _getDevice(),
-            //.... another promise
-        ]).then(res => _getLocalData());
+        POST('Get_region')
+        .then(res => log(res.data))
+        .catch(err => log(err));
+        // Promise.all([
+        //     SQLite.initDB(),
+        //     _getReference(),
+        //     _getDevice(),
+        //     //.... another promise
+        // ]).then(res => _getLocalData());
         return () => {
             log('UNMOUNT SplashScreen');
         }
