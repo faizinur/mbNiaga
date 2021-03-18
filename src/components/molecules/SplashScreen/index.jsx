@@ -5,6 +5,7 @@ import {
 } from 'framework7-react';
 import { useDispatch, useSelector } from "react-redux";
 import { log, SQLite, SQLiteTypes, Connection, POST, Device as Perangkat } from '../../../utils/';
+import region from '../../../data/region.json'
 import PropTypes from 'prop-types';
 import {
     setProvince,
@@ -42,20 +43,20 @@ const {
     GEOLOCATION,
     UPDATE_HISTORY,
     BAHASA,
+    REGION,
 } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
+        log('DATABASE AMBIL YANG LOKAL AJA! SISANYA KALO ADA YANG BARU AMBIL PAKE QUERY => SELECT COUNT(*) FROM dcoll_reference_region WHERE updated_time > NOW() - interval 2 DAY;')
         // f7.preloader.show();
         log('MOUNT OR UPDATE SplashScreen');
-        POST('Get_region')
-        .then(res => log(res.data))
-        .catch(err => log(err));
-        // Promise.all([
-        //     SQLite.initDB(),
-        //     _getReference(),
-        //     _getDevice(),
-        //     //.... another promise
-        // ]).then(res => _getLocalData());
+        Promise.all([
+            SQLite.initDB(),
+            _getReference(),
+            _getDevice(),
+            _getRegion(),
+            //.... another promise
+        ]).then(res => _getLocalData());
         return () => {
             log('UNMOUNT SplashScreen');
         }
@@ -93,6 +94,84 @@ const SplashScreen = (props) => {
         }
         setRefState('OK!')
     }
+    const _getRegion = async () => {
+        // await SQLite.query('DELETE FROM COLLECTION WHERE Key=?', [REGION]); 
+        // return false;
+        //cek DB kalo ada region post tanggal sekarang dan lastUpdated time dari region DB
+        let regionDB = await SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REGION]);
+        // kalo gak ada ambil dari file JSON.
+        let lastUpdate = regionDB.length == 0 || regionDB[0].length == 0 ?
+            new Date(Math.max(...region.map(item => new Date(item.updated_time)))) :
+            new Date(Math.max(...regionDB[0].map(item => new Date(item.updated_time))));
+        //generate updated_time
+        var year = lastUpdate.getFullYear();
+        var month = (lastUpdate.getMonth() + 1) < 10 ? '0' + (lastUpdate.getMonth() + 1) : (lastUpdate.getMonth() + 1);
+        var day = lastUpdate.getDate();
+        var hours = lastUpdate.getHours();
+        var minutes = (lastUpdate.getMinutes() + 1) < 10 ? '0' + (lastUpdate.getMinutes() + 1) : (lastUpdate.getMinutes() + 1);
+        var seconds = lastUpdate.getSeconds();
+        //sych Region
+        let param = { updated_time: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}` };
+        log(param.updated_time);
+        let prov = region.filter(item => { return item.level == 0 });
+        let kokab = region.filter(item => { return item.level == 1 });
+        let kec = region.filter(item => { return item.level == 2 });
+        let kel = region.filter(item => { return item.level == 3 });
+
+        let getRegionRes = await POST('Get_region', param);
+        if (getRegionRes.status == "success") {
+            if (getRegionRes.data.length > 0) {
+                // merge datanya sama file JSON yang ada.
+                let updatedProv = getRegionRes.data.filter(item => { return item.level == 0 });
+                let updatedKokab = getRegionRes.data.filter(item => { return item.level == 1 });
+                let updatedKec = getRegionRes.data.filter(item => { return item.level == 2 });
+                let updatedKel = getRegionRes.data.filter(item => { return item.level == 3 });
+                updatedProv.map(item => {
+                    let indexFound = prov.findIndex(provItem => {
+                        return provItem.code === item.code;
+                    });
+                    prov[indexFound] = {
+                        ...prov[indexFound],
+                        ...item,
+                    }
+                });
+                updatedKokab.map(item => {
+                    let indexFound = kokab.findIndex(kokabItem => {
+                        return kokabItem.code === item.code;
+                    });
+                    kokab[indexFound] = {
+                        ...kokab[indexFound],
+                        ...item,
+                    }
+                });
+                updatedKec.map(item => {
+                    let indexFound = kec.findIndex(kecItem => {
+                        return kecItem.code === item.code;
+                    });
+                    kec[indexFound] = {
+                        ...kec[indexFound],
+                        ...item,
+                    }
+                });
+                updatedKel.map(item => {
+                    let indexFound = kel.findIndex(kelItem => {
+                        return kelItem.code === item.code;
+                    });
+                    kel[indexFound] = {
+                        ...kel[indexFound],
+                        ...item,
+                    }
+                });
+            }
+            // cocokin regionDB sama getRegionRes.data 
+            // kalo ada ini data yang disimpen ke DB
+            // await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REGION, getRegionRes.data])
+        }
+        dispatch(setProvince(prov));
+        dispatch(setRegency(kokab));
+        dispatch(setDistrict(kec));
+        dispatch(setSubDistrict(kel));
+    }
     const _getLocalData = async () => {
         // Toast('AMBIL DATA KE LOKAL DB', 1000, true).open();
         setLocalDBState('...')
@@ -103,13 +182,6 @@ const SplashScreen = (props) => {
                     let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];
                     let contact_person = 'contact_person' in res.REFERENCE ? res.REFERENCE.contact_person : [];
                     let place_contacted = 'place_contacted' in res.REFERENCE ? res.REFERENCE.place_contacted : [];
-
-                    // Toast(`
-                    // call_result : ${JSON.stringify(call_result).substring(0,150)} 
-                    // \n contact_mode : ${JSON.stringify(contact_mode).substring(0,150)}
-                    // \n contact_person : ${JSON.stringify(contact_person).substring(0,150)}
-                    // \n place_contacted : ${JSON.stringify(place_contacted).substring(0,150)}
-                    // `, 4000, true).open();
 
                     dispatch(setCallResult(call_result));
                     dispatch(setContactMode(contact_mode));
@@ -125,13 +197,6 @@ const SplashScreen = (props) => {
                     dispatch(setIdleTime(parseInt(idle_time)));
                     dispatch(setBedaJam(parseInt(beda_jam)));
                     dispatch(setMaxBedaJam(parseInt(max_beda_jam)));
-
-                    let region = 'region' in res.REFERENCE ? res.REFERENCE.region : [];
-                    dispatch(setProvince(region.prov));
-                    dispatch(setRegency(region.kokab));
-                    dispatch(setDistrict(region.kec));
-                    dispatch(setSubDistrict(region.kel));
-                    region = [];
                 }
                 if (PIN in res) {
                     dispatch(setPin(res.PIN))
