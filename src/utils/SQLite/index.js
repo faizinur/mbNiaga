@@ -5,11 +5,12 @@ import { log, uuid } from '../../utils';
 import { DB_NAME, TABLES } from './tables';
 import { Encrypt, selfDecrypt } from '../Encryption';
 import * as SQLiteTypes from './types';
+import { f7 } from 'framework7-react';
 const { PIN, LIST_ACCOUNT, DETAIL_COSTUMER, ACTIVITY_HISTORY, PAYMENT_HISTORY, DEVICE_INFO, RENCANA_KUNJUNGAN } = SQLiteTypes;
 class SQLModules extends Component {
     initDB = (populateDB = true) => {
         let db;
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             //LOKASI DI MOBILE /data/user/0/io.framework7.myapp/databases/MobileCollection.db
             // db = (!Device.android && !Device.ios) ?
             //     window.openDatabase(DB_NAME, '1.0', 'Data', 2 * 1024 * 1024) :
@@ -33,7 +34,7 @@ class SQLModules extends Component {
                     (err) => {
                         console.log('Open database ERROR: ' + JSON.stringify(error));
                         alert('Open database ERROR: ' + JSON.stringify(error));
-                        return false;
+                        reject(err)
                     });
             }
 
@@ -42,7 +43,8 @@ class SQLModules extends Component {
     populateTable = (db) => {
         db.transaction(tx => {
             // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`);
+            // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`);
+            tx.executeSql('CREATE TABLE IF NOT EXISTS collection(key text primary key, value text)');
             // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
@@ -79,6 +81,7 @@ class SQLModules extends Component {
                             }
                             resolve(ress_arr);
                         }, (tx, error) => {
+                            f7.dialog.alert(`SQL statement ERROR: ${error.message}`);
                             reject(`SQL statement ERROR: ${error.message}`);
                         });
                     });
@@ -117,7 +120,10 @@ class SQLModules extends Component {
                                     // Object.values(rs.rows).map(item => data = { ...data, ...{ [item.key]: selfDecrypt(item.value) } });
                                     resolve(data);
                                 }
-                            }, (tx, error) => reject(`SQL statement ERROR: ${error.message}`))
+                            }, (tx, error) => {
+                                f7.dialog.alert(`SQL statement ERROR: ${error.message}`);
+                                reject(`SQL statement ERROR: ${error.message}`)
+                            })
                     )
                 )
                 .catch(err => reject(err))

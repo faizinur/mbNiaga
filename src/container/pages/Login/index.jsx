@@ -102,7 +102,6 @@ class Login extends React.Component {
         var minutes = date.getMinutes();
         var seconds = date.getSeconds();
 
-
         try {
             if (dvc) {
                 // this.props.setDevice({

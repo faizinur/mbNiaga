@@ -22,6 +22,10 @@ const back = () => {
             return false;
         }
         //kasus tidak biasa yang routingnya bolak balik, atau halaman yang dipakai bersama
+        if(pageCurrentName == ""){
+            log('kosong gak boleh back!')
+            return false;
+        }
         switch (pageCurrentName) {
             case 'RencanaKunjungan':
             case 'ListDebitur':
@@ -46,6 +50,9 @@ const back = () => {
                 let destinationPage = f7.views.main.router.history[f7.views.main.router.history.length - 2];
                 log('navigate TO : ', destinationPage);
                 dispatch(navigateTo(destinationPage));
+                break;
+            case 'Login' :
+                log('gak boleh kemana mana')
                 break;
             default: dispatch(goBack());
         }

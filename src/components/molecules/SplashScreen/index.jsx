@@ -47,16 +47,20 @@ const {
 } = SQLiteTypes;
 const SplashScreen = (props) => {
     useEffect(() => {
-        log('DATABASE AMBIL YANG LOKAL AJA! SISANYA KALO ADA YANG BARU AMBIL PAKE QUERY => SELECT COUNT(*) FROM dcoll_reference_region WHERE updated_time > NOW() - interval 2 DAY;')
         // f7.preloader.show();
         log('MOUNT OR UPDATE SplashScreen');
-        Promise.all([
-            SQLite.initDB(),
-            _getReference(),
-            _getDevice(),
-            _getRegion(),
-            //.... another promise
-        ]).then(res => _getLocalData());
+        SQLite.initDB()
+            .then(res =>
+                Promise
+                    .all([
+                        _getReference(),
+                        _getDevice(),
+                        _getRegion(),
+                        //.... another promise
+                    ])
+                    .then(res => _getLocalData())
+            )
+            .catch(err => f7.dialog.alert(JSON.stringify(res)))
         return () => {
             log('UNMOUNT SplashScreen');
         }
@@ -68,9 +72,9 @@ const SplashScreen = (props) => {
     let maxBedaJam = useSelector(state => state.reference.maxBedaJam);
     let mountPoint = useSelector(state => state.reference.mountPoint);
 
-    const [deviceState, setDeviceState] = useState('')
-    const [refState, setRefState] = useState('')
-    const [localDBState, setLocalDBState] = useState('')
+    const [deviceState, setDeviceState] = useState('');
+    const [refState, setRefState] = useState('');
+    const [localDBState, setLocalDBState] = useState('');
 
     const _getReference = async () => {
         setRefState('...')
@@ -82,22 +86,32 @@ const SplashScreen = (props) => {
         let minutes = date.getMinutes();
         let seconds = date.getSeconds();
         let jam_mobile = `${year}-${month < 9 ? '0' + month : month}-${day} ${hours}:${minutes}:${seconds}`;
+        //alert('cek DB');
+
         let dbRes = await SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REFERENCE]);
+        //alert('DEB RES'+JSON.stringify(dbRes));
         if (dbRes.length == 0) {
             // Toast('AMBIL DATA KE SERVER', 1000, true).open();
-            let getRef = await POST(`Get_all_refs`, { jam_mobile: jam_mobile }, (data) => setRefState(data));
-            if (getRef.status == 'success') {
-                await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, getRef.data])
-            } else {
-                await SQLite.query('DELETE FROM COLLECTION WHERE Key=?', [REFERENCE])
+            //alert('ambil ke server');
+            try {
+                let getRef = await POST(`Get_all_refs`, { jam_mobile: jam_mobile });
+                if (getRef.status == 'success') {
+                    //alert('REF SUCCESS');
+                    await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REFERENCE, getRef.data])
+                } else {
+                    //alert('REF FAILED');
+                    await SQLite.query('DELETE FROM COLLECTION WHERE Key=?', [REFERENCE])
+                }
+            } catch (errRef) {
+                f7.dialog.alert(errRef);
             }
+        } else {
+            //alert('MASUK SINI!'+JSON.stringify(dbRes))
         }
         setRefState('OK!')
     }
     const _getRegion = async () => {
-        // await SQLite.query('DELETE FROM COLLECTION WHERE Key=?', [REGION]); 
-        // return false;
-        //cek DB kalo ada region post tanggal sekarang dan lastUpdated time dari region DB
+        //cek DB kalo ada region post lastUpdated time dari region DB
         let regionDB = await SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REGION]);
         // kalo gak ada ambil dari file JSON.
         let lastUpdate = regionDB.length == 0 || regionDB[0].length == 0 ?
@@ -111,69 +125,52 @@ const SplashScreen = (props) => {
         var minutes = (lastUpdate.getMinutes() + 1) < 10 ? '0' + (lastUpdate.getMinutes() + 1) : (lastUpdate.getMinutes() + 1);
         var seconds = lastUpdate.getSeconds();
         //sych Region
-        let param = { updated_time: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}` };
-        log(param.updated_time);
-        let prov = region.filter(item => { return item.level == 0 });
-        let kokab = region.filter(item => { return item.level == 1 });
-        let kec = region.filter(item => { return item.level == 2 });
-        let kel = region.filter(item => { return item.level == 3 });
-
-        let getRegionRes = await POST('Get_region', param);
-        if (getRegionRes.status == "success") {
-            if (getRegionRes.data.length > 0) {
-                // merge datanya sama file JSON yang ada.
-                let updatedProv = getRegionRes.data.filter(item => { return item.level == 0 });
-                let updatedKokab = getRegionRes.data.filter(item => { return item.level == 1 });
-                let updatedKec = getRegionRes.data.filter(item => { return item.level == 2 });
-                let updatedKel = getRegionRes.data.filter(item => { return item.level == 3 });
-                updatedProv.map(item => {
-                    let indexFound = prov.findIndex(provItem => {
-                        return provItem.code === item.code;
-                    });
-                    prov[indexFound] = {
-                        ...prov[indexFound],
-                        ...item,
-                    }
-                });
-                updatedKokab.map(item => {
-                    let indexFound = kokab.findIndex(kokabItem => {
-                        return kokabItem.code === item.code;
-                    });
-                    kokab[indexFound] = {
-                        ...kokab[indexFound],
-                        ...item,
-                    }
-                });
-                updatedKec.map(item => {
-                    let indexFound = kec.findIndex(kecItem => {
-                        return kecItem.code === item.code;
-                    });
-                    kec[indexFound] = {
-                        ...kec[indexFound],
-                        ...item,
-                    }
-                });
-                updatedKel.map(item => {
-                    let indexFound = kel.findIndex(kelItem => {
-                        return kelItem.code === item.code;
-                    });
-                    kel[indexFound] = {
-                        ...kel[indexFound],
-                        ...item,
-                    }
-                });
+        try {
+            let param = { updated_time: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}` };
+            let getRegionRes = await POST('Get_region', param);
+            let prov = region.filter(item => { return item.level == 0 });
+            let kokab = region.filter(item => { return item.level == 1 });
+            let kec = region.filter(item => { return item.level == 2 });
+            let kel = region.filter(item => { return item.level == 3 });
+            if (getRegionRes.status == "success") {
+                if (getRegionRes.data.length > 0) {
+                    // merge datanya sama file JSON yang ada.
+                    let updatedProv = getRegionRes.data.filter(item => { return item.level == 0 });
+                    let updatedKokab = getRegionRes.data.filter(item => { return item.level == 1 });
+                    let updatedKec = getRegionRes.data.filter(item => { return item.level == 2 });
+                    let updatedKel = getRegionRes.data.filter(item => { return item.level == 3 });
+                    prov = _compareRegion(updatedProv, prov);
+                    kokab = _compareRegion(updatedKokab, kokab);
+                    kec = _compareRegion(updatedKec, kec);
+                    kel = _compareRegion(updatedKel, kel);
+                    updatedProv = [];
+                    updatedKokab = [];
+                    updatedKec = [];
+                    updatedKel = [];
+                }
+                //cocokin data
+                if (JSON.stringify(getRegionRes.data) !== '[]') {
+                    //bandingkan data region (getRegionRes dari API) dengan (regionDB local DB)
+                    regionDB = _compareRegion(getRegionRes.data, regionDB);
+                    //simpan ke lokal Data
+                    await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REGION, regionDB])
+                }
             }
-            // cocokin regionDB sama getRegionRes.data 
-            // kalo ada ini data yang disimpen ke DB
-            // await SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REGION, getRegionRes.data])
+            dispatch(setProvince(prov));
+            dispatch(setRegency(kokab));
+            dispatch(setDistrict(kec));
+            dispatch(setSubDistrict(kel));
+            prov = [];
+            kokab = [];
+            kec = [];
+            kel = [];
+        } catch (errReg) {
+            log(getRegionRes)
         }
-        dispatch(setProvince(prov));
-        dispatch(setRegency(kokab));
-        dispatch(setDistrict(kec));
-        dispatch(setSubDistrict(kel));
     }
     const _getLocalData = async () => {
         // Toast('AMBIL DATA KE LOKAL DB', 1000, true).open();
+        log('Collecting....')
         setLocalDBState('...')
         SQLite.fetchAll()
             .then(res => {
@@ -256,6 +253,7 @@ const SplashScreen = (props) => {
                 }
                 setLocalDBState('OK!')
                 f7.preloader.hide();
+                ////alert('local Data....');
                 props.onFinish({
                     realApp: true,
                     mount_point: mountPoint,
@@ -271,6 +269,70 @@ const SplashScreen = (props) => {
             : await Perangkat.getInformation();
         dispatch(setDevice(dvcInfo));
         setDeviceState('OK!')
+    }
+    const _compareRegion = (newData, oldData) => {
+        newData.map(item => {
+            let indexFound = oldData.findIndex(oldItem => {
+                return oldItem.code === item.code;
+            });
+            if (indexFound === -1) {
+                oldData = [...oldData, item];
+            } else {
+                oldData[indexFound] = { ...oldData[indexFound], ...item };
+            }
+        });
+        return oldData;
+        /*
+                     updatedProv.map(item => {
+                         let indexFound = prov.findIndex(provItem => {
+                             return provItem.code === item.code;
+                         });
+                         if (indexFound === -1) {
+                             prov = [...prov, item];
+                         } else {
+                             prov[indexFound] = { ...prov[indexFound], ...item };
+                         }
+                     });
+                     updatedKokab.map(item => {
+                         let indexFound = kokab.findIndex(kokabItem => {
+                             return kokabItem.code === item.code;
+                         });
+                         if (indexFound === -1) {
+                             kokab = [...kokab, item];
+                         } else {
+                             kokab[indexFound] = { ...kokab[indexFound], ...item };
+                         }
+                     });
+                     updatedKec.map(item => {
+                         let indexFound = kec.findIndex(kecItem => {
+                             return kecItem.code === item.code;
+                         });
+                         if (indexFound === -1) {
+                             kec = [...kec, item];
+                         } else {
+                             kec[indexFound] = { ...kec[indexFound], ...item };
+                         }
+                     });
+                     updatedKel.map(item => {
+                         let indexFound = kel.findIndex(kelItem => {
+                             return kelItem.code === item.code;
+                         });
+                         if (indexFound === -1) {
+                             kel = [...kel, item];
+                         } else {
+                             kel[indexFound] = { ...kel[indexFound], ...item };
+                         }
+                     });
+                     getRegionRes.map(item => {
+                         let indexFound = regionDB.findIndex(regionDBItem => {
+                             return regionDBItem.code === item.code;
+                         });
+                         if (indexFound === -1) {
+                             regionDB = [...regionDB, item];
+                         } else {
+                             regionDB[indexFound] = { ...regionDB[indexFound], ...item };
+                         }
+                     */
     }
     return (
         <Page noToolbar noNavbar noSwipeback name="SplashScreen">

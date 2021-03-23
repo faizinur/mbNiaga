@@ -54,6 +54,7 @@ class AddKunjungan extends React.Component {
                 ],
                 longitude: props.geolocation.longitude,
                 latitude: props.geolocation.latitude,
+                altitude: props.geolocation.altitude,
                 created_time: props.user.mobileTime,
                 ptp_date: '',
                 ptp_amount: '',
@@ -72,8 +73,8 @@ class AddKunjungan extends React.Component {
                 home_post_code: props.detailCust.home_post_code
             },
             language: props.bahasa,
+            sendState: false,
         };
-        log(props)
         Strings.setLanguage(this.state.language);
     }
     componentDidMount() {
@@ -115,12 +116,17 @@ class AddKunjungan extends React.Component {
                     }
                 }
                 if (Connection() != "OFFLINE") {
+                    this.setState({ sendState: true });
                     POST('save_visit_history', formData)
                         .then(res => {
                             // log('save_visit_history ', res)
                             res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
+                            this.setState({ sendState: false });
                         })
-                        .catch(err => log(err));
+                        .catch(err => {
+                            log(err);
+                            this.setState({ sendState: false });
+                        });
                 } else {
                     this._saveRekapTertunda();
                 }
@@ -133,7 +139,11 @@ class AddKunjungan extends React.Component {
                 var data = select.length != 0 ? select[0] : [];
                 data.push(this.state.formData);
                 SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [REKAP_TERKIRIM, data])
-                    .then(insert => this._saveDaftarDikunjungi()).catch(err => log(err));
+                    .then(insert => {
+                        this._saveDaftarDikunjungi();
+                        f7.dialog.alert('Data Behasil disimpan.');
+                        this.setState({ sendState: false });
+                    }).catch(err => log(err));
             }).catch(err => log(err));
     }
     _saveRekapTertunda() {
@@ -142,7 +152,10 @@ class AddKunjungan extends React.Component {
                 var data = select.length != 0 ? select[0] : [];
                 data.push(this.state.formData);
                 SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [REKAP_TERTUNDA, data])
-                    .then(insert => this._saveDaftarDikunjungi()).catch(err => log(err));
+                    .then(insert => {
+                        this._saveDaftarDikunjungi();
+                        this.setState({ sendState: false });
+                    }).catch(err => log(err));
             }).catch(err => log(err));
     }
     _saveDaftarDikunjungi() {
@@ -698,10 +711,24 @@ class AddKunjungan extends React.Component {
                 <Block style={{ margin: 0, backgroundColor: '#666666', height: 80 }}>
                     <Row style={{ paddingTop: 5 }}>
                         <Col width="50">
-                            <Button fill round raised onClick={() => this._kirim()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.kirim}</Button>
+                            {
+                                this.state.sendState &&
+                                (
+                                    <Button fill round raised style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.kirim}</Button>
+                                ) || (
+                                    <Button fill round raised onClick={() => this._kirim()} style={{ backgroundColor: '#0085FC', fontSize: 12 }}>{Strings.kirim}</Button>
+                                )
+                            }
                         </Col>
                         <Col width="50">
-                            <Button fill round raised onClick={() => this.props.back()} style={{ backgroundColor: '#FF6666', fontSize: 12 }}>{Strings.batal}</Button>
+                            {
+                                this.state.sendState &&
+                                (
+                                    <Button fill round raised style={{ backgroundColor: '#FF6666', fontSize: 12 }}>{Strings.batal}</Button>
+                                ) || (
+                                    <Button fill round raised onClick={() => this.props.back()} style={{ backgroundColor: '#FF6666', fontSize: 12 }}>{Strings.batal}</Button>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Block>

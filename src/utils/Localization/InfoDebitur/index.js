@@ -12,7 +12,7 @@ let InfoDebitur = new LocalizedStrings({
     },
     "EN": {
         title: 'DEBITUR DETAIL',
-        costumer: 'cosumter',
+        costumer: 'customer',
         akun: 'account',
         demografi: 'demografi',
         fasilitas: 'other facility',

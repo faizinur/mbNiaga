@@ -38,6 +38,12 @@ const POST = (...params) => {
 					.then(result => {
 						// log(result)
 						// log('API RESULT ', params[0], params[1]);
+						//list error code simpen sini. reject!
+						if (result.data == null) {
+							f7.preloader.hide();
+							f7.dialog.alert('Maaf banget, Ada Kesalahan pada sistem Kami.');
+							reject('Maaf banget, Ada Kesalahan pada sistem Kami.')
+						}
 						if (result.data.status == "error" || result.status != 200) {
 							f7.preloader.hide();
 							f7.dialog.alert(`${result.data.message} ${'data' in result.data ? result.data.data : ''}`);
@@ -49,8 +55,10 @@ const POST = (...params) => {
 					}).catch(err => {
 						// log('API CATCH ', params[0], err);
 						f7.preloader.hide();
+						f7.dialog.alert(err);
 						reject(err)
 					});
+			
 			});
 		case "object":
 			let reqList = [];
