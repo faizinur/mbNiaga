@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { log, SQLite, SQLiteTypes, Connection, POST, Device as Perangkat } from '../../../utils/';
 import region from '../../../data/region.json'
 import PropTypes from 'prop-types';
+import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import {
     setProvince,
     setRegency,
@@ -29,7 +30,6 @@ import {
     setMaxBedaJam,
     setBahasa,
 } from '../../../config/redux/actions/';
-import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { Toast } from '../../atoms/';
 const {
     PIN,
@@ -169,11 +169,11 @@ const SplashScreen = (props) => {
         }
     }
     const _getLocalData = async () => {
-        // Toast('AMBIL DATA KE LOKAL DB', 1000, true).open();
         log('Collecting....')
         setLocalDBState('...')
         SQLite.fetchAll()
             .then(res => {
+                log('_getLocalData', res);
                 if (REFERENCE in res) {
                     let call_result = 'call_result' in res.REFERENCE ? res.REFERENCE.call_result : [];
                     let contact_mode = 'contact_mode' in res.REFERENCE ? res.REFERENCE.contact_mode : [];

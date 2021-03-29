@@ -72,7 +72,7 @@ class Login extends React.Component {
                 appName: 'MobColl',
                 major: '0',
                 minor: '1',
-                patch: '3',
+                patch: '4',
                 release: 'alpha',
             }
         };

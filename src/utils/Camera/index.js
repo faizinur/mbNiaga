@@ -8,7 +8,8 @@ var Camera = {
             if (!Device.android && !Device.ios) reject("Device not support");
             var options = {
                 quality: 50,
-                destinationType: 0,
+                DestinationType: 1,
+                EncodingType : 1,
                 sourceType: 1,
                 encodingType: 0,
                 mediaType: 0,
