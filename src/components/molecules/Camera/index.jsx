@@ -64,19 +64,19 @@ const Camera = forwardRef((props, ref) => {
             setIndex(null);
             // CameraPreview.stopCamera();
         },
-        _getBase64(data) {
-            // alert('_getBase64')
-            // log('_getBase64 : ', JSON.stringify(data));
-            data.map((item, index) => {
-                if (!item.includes('file:') || (item != "")) {
-                    CameraPreview.getBlob(item, (blob) => {
-                        let reader = new FileReader();
-                        reader.readAsDataURL(blob);
-                        reader.onloadend = () => data[index] = reader.result;
-                    });
-                }
-            });
-            return data;
+        async _getBase64(data) {
+            return new Promise(function (resolve, reject) {
+                data.map((item, index) => {
+                    if (item.includes('file')) {
+                        CameraPreview.getBlob(item, (blob) => {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            reader.onloadend = () => data[index] = reader.result;
+                        });
+                    }
+                });
+                resolve(data);
+            })
         }
     }));
     const _takePicture = () => {

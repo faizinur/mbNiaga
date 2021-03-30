@@ -82,17 +82,15 @@ class AddKunjungan extends React.Component {
     componentDidMount() {
         log('componentDidMount AddKunjungan');
     }
-    _kirim = () => {
-        // let tmpGambarFormData = Object.assign({}, this.state.formData);
-        // try {
-        let data = this.cameraRef.current._getBase64(this.state.formData.gambar);
-        log(JSON.stringify(data));
-        // } catch (err) { log(err) }
-        // this.setState({ formData: tmpGambarFormData });
-        // console.log('FORM DATA! : ', JSON.stringify(this.state.formData));
-        /*
+    _kirim = async () => {
         f7.dialog.confirm('Apakah anda akan menyimpan hasil kunjungan ?.',
             () => {
+                let gambarBase64 = await this.cameraRef.current._getBase64(this.state.formData.gambar);
+                let tmpGambarFormData = Object.assign({}, this.state.formData);
+                tmpGambarFormData.gambar = gambarBase64;
+                this.setState({ formData: tmpGambarFormData });
+                console.log('FORM DATA! : ', JSON.stringify(this.state.formData.gambar));
+
                 var { formData, ptp } = this.state;
                 // log(formData)
                 var mandatoryField = ['place_contacted', 'call_result', 'notepad', 'gambar'];
@@ -131,7 +129,6 @@ class AddKunjungan extends React.Component {
                 }
             }
         );
-        */
     }
     _saveRekapTerkirim() {
         SQLite.query('SELECT value from Collection where key=?', [REKAP_TERKIRIM])
