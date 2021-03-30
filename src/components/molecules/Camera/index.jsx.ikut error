@@ -1,0 +1,103 @@
+import React, { useEffect, useState, forwardRef, useRef, useImperativeHandle } from 'react';
+import { log } from '../../../utils/';
+import { f7 } from 'framework7-react';
+
+const Camera = forwardRef((props, ref) => {
+    useEffect(() => {
+        log('MOUNT OR UPDATE Camera');
+        return () => {
+            log('UNMOUNT Camera');
+        }
+    }, [])
+
+    let [active, setActive] = useState(false);
+    let [index, setIndex] = useState(false);
+    let { height, width } = window.screen;
+    useImperativeHandle(ref, () => ({
+        start(index = null) {
+            log('start : ', index)
+            setIndex(index);
+            setActive(true);
+            let options = {
+                x: 0,
+                y: 0,
+                width: width,
+                height: height - (height / 5),
+                camera: CameraPreview.CAMERA_DIRECTION.BACK,
+                toBack: false,
+                tapPhoto: false,
+                tapFocus: true,
+                previewDrag: false,
+                storeToFile: true,
+                disableExifHeaderStripping: false
+            };
+            CameraPreview
+                .startCamera(
+                    options,
+                    success => log(success),
+                    err => props.onError(err)
+                );
+        },
+        stop() {
+            log('stop')
+            setActive(false);
+            setIndex(null);
+            CameraPreview.stopCamera();
+        },
+    }));
+    const _takePicture = () => {
+        alert('_takePicture')
+        f7.preloader.show();
+        CameraPreview
+            .takePicture({ width: width, height: height, quality: 85 },
+                data => {
+                    props.onResult({
+                        index: index,
+                        uri: 'file://' + data[0],
+                    })
+                    alert('stop');
+                    setActive(false);
+                    setIndex(null);
+                    CameraPreview.stopCamera();
+                    f7.preloader.hide();
+                },
+                err => props.onError(err)
+            );
+    }
+    const _cancel = () => {
+        alert('_cancel')
+        setActive(false);
+        setIndex(null);
+        CameraPreview.stopCamera();
+    }
+    const _getBase64 = (data) => {
+        alert('_getBase64')
+        data.map((item, index) => {
+            CameraPreview.getBlob('file://' + item, (blob) => {
+                let reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => data[index] = reader.result;
+            });
+        });
+        return data;
+    }
+    return (
+        <>
+            {
+                active && (
+                    <div style={{ display: 'flex', flex: 1, position: 'absolute', zIndex: 9999999, backgroundColor: 'transparent', bottom: 0, left: 0, height: height / 5, width: width }}>
+                        <div style={{ display: 'flex', flex: 1, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }} />
+                        <div style={{ display: 'flex', flex: 1, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
+                            <div onClick={() => _takePicture()} style={{ height: 70, width: 70, backgroundColor: 'gray', borderRadius: 35 }} />
+                        </div>
+                        <div style={{ display: 'flex', flex: 1, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
+                            <div onClick={() => _cancel()} style={{ height: 70, width: 70, backgroundColor: 'blue', borderRadius: 35 }} />
+                        </div>
+                    </div>
+                )
+            }
+        </>
+    )
+})
+
+export default Camera;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     Page,
     f7,
@@ -45,6 +45,7 @@ const {
     BAHASA,
     REGION,
 } = SQLiteTypes;
+// import { Camera } from '../../molecules/';
 const SplashScreen = (props) => {
     useEffect(() => {
         // f7.preloader.show();
@@ -60,11 +61,12 @@ const SplashScreen = (props) => {
                     ])
                     .then(res => _getLocalData())
             )
-            .catch(err => f7.dialog.alert(JSON.stringify(res)))
+            .catch(err => f7.dialog.alert(JSON.stringify(err)))
         return () => {
             log('UNMOUNT SplashScreen');
         }
     }, [])
+
     const dispatch = useDispatch();
     let refeshCoordinate = useSelector(state => state.reference.refeshCoordinate);
     let idleTime = useSelector(state => state.reference.idleTime);
@@ -75,7 +77,6 @@ const SplashScreen = (props) => {
     const [deviceState, setDeviceState] = useState('');
     const [refState, setRefState] = useState('');
     const [localDBState, setLocalDBState] = useState('');
-
     const _getReference = async () => {
         setRefState('...')
         let date = new Date();
@@ -334,10 +335,16 @@ const SplashScreen = (props) => {
                          }
                      */
     }
+    const _fotoResult = (data) => {
+        alert(JSON.stringify(data));
+    }
+    // const cameraRef = useRef(null)
     return (
         <Page noToolbar noNavbar noSwipeback name="SplashScreen">
             <div style={styles.container}>
-                <p style={styles.text}>Mobile Collection Niaga</p>
+                <p style={styles.text}>Mobile Collection Niaga</p><br /><br />
+                {/* <p onClick={()=> cameraRef.current.start(0)}>START</p><br /><br />
+                <p onClick={()=> cameraRef.current.stop()}>STOP</p><br /><br /> */}
             </div>
             <div
                 style={{
@@ -367,6 +374,11 @@ const SplashScreen = (props) => {
                     <p style={{ margin: 0 }}>{localDBState}</p>
                 </div>
             </div>
+            {/* <Camera
+                ref={cameraRef}
+                onResult={data => _fotoResult(data)}
+                onError={err => alert(err)}
+            /> */}
         </Page >
     )
 }

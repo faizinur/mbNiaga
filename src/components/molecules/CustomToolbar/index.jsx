@@ -95,6 +95,7 @@ const CustomToolbar = (props) => {
     }
     return (
         <div
+            className={"Custom-Toolbar-Container"}
             style={{
                 width: '100%',
                 height: 56,

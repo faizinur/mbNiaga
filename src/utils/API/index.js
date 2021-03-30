@@ -55,8 +55,8 @@ const POST = (...params) => {
 					}).catch(err => {
 						// log('API CATCH ', params[0], err);
 						f7.preloader.hide();
-						f7.dialog.alert(err);
-						reject(err)
+						f7.dialog.alert(err+" : "+url);
+						reject(err+" : "+url)
 					});
 			
 			});
