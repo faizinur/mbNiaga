@@ -37,6 +37,7 @@ import { Device } from 'framework7/framework7-lite.esm.bundle.js';
 import { DaftarPin, Check, DeviceInfo } from '../../pages/';
 import { CustomStatusBar } from '../../../components/atoms/';
 import { Login as Strings } from '../../../utils/Localization';
+import { Camera } from '../../../components/molecules';
 const {
     PIN,
     DEVICE_INFO,
@@ -56,10 +57,10 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: (!Device.android && !Device.ios) ? 'TEST' : '',
-            password: (!Device.android && !Device.ios) ? '1234' : '',
-            // username: 'TEST',
-            // password: '1234',
+            // username: (!Device.android && !Device.ios) ? 'TEST' : '',
+            // password: (!Device.android && !Device.ios) ? '1234' : '',
+            username: 'TEST',
+            password: '1234',
             popUpStateDaftarPin: false,
             popUpStateLoginPin: false,
             popUpStateDeviceInfo: false,
@@ -78,6 +79,7 @@ class Login extends React.Component {
         };
         Strings.setLanguage(this.state.language);
         // props.setUser({});
+        this.cameraRef = React.createRef();
     }
     componentDidMount() {
         log('componentDidMount LOGIN : ');
@@ -233,23 +235,39 @@ class Login extends React.Component {
                     };
                     var params = [];
                     select[0].map((item) => {
-                        params = [...params, [item.transaction_type == 'KUNJUNGAN' ? 'save_visit_history' : 'save_update_data', item]]
+                        params = [...params, [item.transaction_type == 'KUNJUNGAN' ? 'save_visit_history' : 'save_update_data', item]];
                     })
-                    this._kirimDataTertunda(params)
-                        .then(res => {
-                            log("HASIL KIRIM: ", res)
-                            var gagalKirim = [];
-                            res.map((item, index) => {
-                                if (item == "GAGAL")
-                                    gagalKirim = [...gagalKirim, select[0][index]]
+                    Promise.all(params.map(item => SQLite._getImage(item[1].id)))
+                        .then(images => {
+                            images.map(image => {
+                                params.forEach((item) => {
+                                    if (item[1].id === image[0].id) {
+                                        item[1].gambar = image[0].data
+                                    }
+                                });
                             })
-                            SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REKAP_TERTUNDA, gagalKirim])
-                                .then(insert => gagalKirim.length != 0 ? reject("GAGAL KIRIM REKAP TERTUNDA") : resolve(true))
-                                .catch(err => reject(err));
-                        }).catch(err => reject(err))
+
+                            this._kirimDataTertunda(params)
+                                .then(res => {
+                                    log("HASIL KIRIM: ", res)
+                                    var gagalKirim = [];
+                                    res.map((item, index) => {
+                                        if (item == "GAGAL")
+                                            gagalKirim = [...gagalKirim, select[0][index]]
+                                    })
+                                    resolve(true);
+                                    SQLite.query('INSERT OR REPLACE INTO COLLECTION (key, value) VALUES(?,?)', [REKAP_TERTUNDA, gagalKirim])
+                                        .then(insert => gagalKirim.length != 0 ? reject("GAGAL KIRIM REKAP TERTUNDA") : resolve(true))
+                                        .catch(err => reject(err));
+                                }).catch(err => reject(err))
+                        })
+                        .catch(err => {
+                            log(err);
+                        })
                 }).catch(err => reject(err));
         })
     }
+
     _kirimDataTertunda = (params) => {
         let reqList = [];
         params.map(item =>
@@ -339,6 +357,7 @@ class Login extends React.Component {
                 <div style={{ position: 'absolute', width: '100%', height: 20, left: 0, bottom: 0, display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 999999, }}>
                     <p style={{ margin: 0, fontSize: 'smaller' }}>{`${appName} v${major}.${minor}.${patch}-${release}`}</p>
                 </div>
+                <Camera ref={this.cameraRef} />
                 <Page loginScreen name="Login" >
                     <center>
                         <img style={{ height: 100, width: 100 }} src={require(`../../../assets/img/ic_apps_ios.png`).default} />
@@ -413,6 +432,18 @@ class Login extends React.Component {
                                 </Col>
                             </Row>
                         </Block>
+                        {/* <Block>
+                            <Row>
+                                <Col width="100">
+                                    <Button
+                                        onClick={() => this._generateBase64()}
+                                        round
+                                        style={{ backgroundColor: 'transparent', color: '#c0392b' }}
+                                        text={'Strings.deviceInfo'}
+                                    />
+                                </Col>
+                            </Row>
+                        </Block> */}
                         <Block>
                             <Row>
                                 <Col width="100">

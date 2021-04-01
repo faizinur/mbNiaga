@@ -212,7 +212,7 @@ class Root extends React.Component {
 						onClick={() => this.props.back()}
 					/> */}
 					<Views className="safe-areas">
-						<View main url={'/ListDebitur/'} />
+						<View main url={'/'} />
 					</Views>
 				</App >
 			)

@@ -16,7 +16,7 @@ import { navigate, back, setGeolocation } from '../../../config/redux/actions/';
 import { DefaultNavbar, CustomBlockTitle, Maps } from '../../../components/atoms';
 import { Camera } from '../../../components/molecules';
 import { CustomerInfo } from '../../../components/molecules/';
-import { Connection, log, SQLite, SQLiteTypes, Filter, POST, Geolocation } from '../../../utils';
+import { Connection, log, SQLite, SQLiteTypes, Filter, POST, Geolocation, uuid } from '../../../utils';
 import { AddKunjungan as Strings } from '../../../utils/Localization';
 const { REKAP_TERTUNDA, REKAP_TERKIRIM, DAFTAR_DIKUNJUNGI, GEOLOCATION } = SQLiteTypes;
 import { Device } from 'framework7/framework7-lite.esm.bundle.js';
@@ -34,6 +34,7 @@ class AddKunjungan extends React.Component {
             placeContacted: props.placeContacted,
             callResult: props.callResult,
             formData: {
+                id: null,
                 card_no: props.detailCust.card_no,
                 name: props.detailCust.name,
                 account_number: props.detailCust.account_number,
@@ -48,10 +49,10 @@ class AddKunjungan extends React.Component {
                 contact_mode: '',
                 place_contacted: '',
                 gambar: [
+                    'data:image/jpeg;base64/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIe',
+                    'data:image/jpeg;base64/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIe',
+                    'data:image/jpeg;base64/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIe',
                     '',
-                    '',
-                    '',
-                    ''
                 ],
                 longitude: props.geolocation.longitude,
                 latitude: props.geolocation.latitude,
@@ -83,52 +84,74 @@ class AddKunjungan extends React.Component {
         log('componentDidMount AddKunjungan');
     }
     _kirim = async () => {
-        f7.dialog.confirm('Apakah anda akan menyimpan hasil kunjungan ?.',
-            () => {
-                let gambarBase64 = await this.cameraRef.current._getBase64(this.state.formData.gambar);
-                let tmpGambarFormData = Object.assign({}, this.state.formData);
-                tmpGambarFormData.gambar = gambarBase64;
-                this.setState({ formData: tmpGambarFormData });
-                console.log('FORM DATA! : ', JSON.stringify(this.state.formData.gambar));
+        // f7.dialog.confirm('Apakah anda akan menyimpan hasil kunjungan ?.',
+        //     () => {
 
-                var { formData, ptp } = this.state;
-                // log(formData)
-                var mandatoryField = ['place_contacted', 'call_result', 'notepad', 'gambar'];
-                if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
-                for (var item in formData) {
-                    if (mandatoryField.includes(item)) {
-                        if (typeof (formData[item]) == 'string') {
-                            if (formData[item].toString() == "") {
-                                alert(item)
-                                // f7.dialog.alert("Harap Isi Semua Input.");
-                                return false;
-                            }
-                        } else {
-                            var gambar = formData[item].filter(item => item != '');
-                            if (gambar.length == 0) {
-                                f7.dialog.alert("Harap Isi Semua Input. 1");
-                                return false;
-                            }
-                        }
+        // async () => {
+        //     let tmpGambar = Object.assign({}, this.state.formData);
+        //     Promise.all([
+        //         await this.cameraRef.current._getBase64(tmpGambar.uri[0]),
+        //         await this.cameraRef.current._getBase64(tmpGambar.uri[1]),
+        //         await this.cameraRef.current._getBase64(tmpGambar.uri[2]),
+        //         await this.cameraRef.current._getBase64(tmpGambar.uri[3]),
+        //     ]).then(data => {
+        //         log('=======================HASIL=======================');
+        //         tmpGambar.gambar = data;
+        //         this.setState({ formData: tmpGambar });
+        //         log('=======================HASIL=======================');
+        this.setState(prevState => ({
+            formData: {
+                ...prevState.formData,
+                id: uuid(),
+            }
+        }))
+        var { formData, ptp } = this.state;
+
+        var mandatoryField = ['place_contacted', 'call_result', 'notepad', 'gambar'];
+        if (formData.call_result == ptp) mandatoryField = [...mandatoryField, 'ptp_date', 'ptp_amount'];
+        for (var item in formData) {
+            if (mandatoryField.includes(item)) {
+                if (typeof (formData[item]) == 'string') {
+                    if (formData[item].toString() == "") {
+                        alert(item)
+                        // f7.dialog.alert("Harap Isi Semua Input.");
+                        return false;
+                    }
+                } else {
+                    var gambar = formData[item].filter(item => item != '');
+                    if (gambar.length == 0) {
+                        f7.dialog.alert("Harap Isi Semua Input. 1");
+                        return false;
                     }
                 }
-                if (Connection() != "OFFLINE") {
-                    this.setState({ sendState: true });
-                    POST('save_visit_history', formData)
-                        .then(res => {
-                            // log('save_visit_history ', res)
-                            res.status != 'success' ? this._saveRekapTertunda() : this._saveRekapTerkirim()
-                            this.setState({ sendState: false });
-                        })
-                        .catch(err => {
-                            log(err);
-                            this.setState({ sendState: false });
-                        });
-                } else {
-                    this._saveRekapTertunda();
-                }
             }
-        );
+        }
+
+        if (Connection() != "OFFLINE") {
+            this.setState({ sendState: true });
+            POST('save_visit_history', formData)
+                .then(res => {
+                    // log('save_visit_history ', res)
+                    //set Gambar = ['','','','']
+                    if (res.status != 'success') {
+                        this._saveRekapTertunda()
+                    } else {
+                        this._clearBase64();
+                        this._saveRekapTerkirim()
+                    }
+                    this.setState({ sendState: false });
+                })
+                .catch(err => {
+                    log(err);
+                    this.setState({ sendState: false });
+                });
+        } else {
+            //     //set Gambar = ['','','','']
+            this._saveRekapTertunda();
+        }
+        // });
+        // }
+        // );
     }
     _saveRekapTerkirim() {
         SQLite.query('SELECT value from Collection where key=?', [REKAP_TERKIRIM])
@@ -147,11 +170,31 @@ class AddKunjungan extends React.Component {
         SQLite.query('SELECT value from Collection where key=?', [REKAP_TERTUNDA])
             .then(select => {
                 var data = select.length != 0 ? select[0] : [];
-                data.push(this.state.formData);
+                var { formData } = this.state;
+
+                let formDataTmp = Object.assign({}, formData);
+                let img_tmp = [];
+                for (let i = 0; i < formDataTmp.gambar.length; i++) {
+                    if (formDataTmp.gambar[i] != '') {
+                        img_tmp.push(
+                            {
+                                parentId: formDataTmp.id,
+                                value: formDataTmp.gambar[i],
+                            }
+                        )
+                    }
+                }
+                formDataTmp.gambar = ['', '', '', ''];
+                data.push(formDataTmp);
                 SQLite.query('INSERT OR REPLACE INTO Collection (key, value) VALUES(?,?)', [REKAP_TERTUNDA, data])
                     .then(insert => {
-                        this._saveDaftarDikunjungi();
-                        this.setState({ sendState: false });
+                        Promise.all(img_tmp.map(img => SQLite._setImage(img)))
+                            .then(data => {
+                                this._clearBase64()
+                                this._saveDaftarDikunjungi();
+                                this.setState({ sendState: false });
+                            })
+                            .catch(err => log('REKAP_TERTUNDA ERROR', JSON.stringify(err)));
                     }).catch(err => log(err));
             }).catch(err => log(err));
     }
@@ -166,10 +209,11 @@ class AddKunjungan extends React.Component {
     }
     _foto = (index) => this.cameraRef.current.start(index)
     _fotoResult = (data) => {
+        log(`_fotoResult : ${JSON.stringify(data)}`);
         this.setState(prevState => ({
             formData: {
                 ...prevState.formData,
-                gambar: prevState.formData.gambar.map((item, key) => data.index == key ? data.uri : item)
+                gambar: prevState.formData.gambar.map((item, key) => data.index == key ? data.base64 : item)
             }
         }))
     }
@@ -177,7 +221,15 @@ class AddKunjungan extends React.Component {
         this.setState(prevState => ({
             formData: {
                 ...prevState.formData,
-                gambar: prevState.formData.gambar.map((item, key) => index == key ? "" : item)
+                gambar: prevState.formData.gambar.map((item, key) => index == key ? '' : item),
+            }
+        }))
+    }
+    _clearBase64 = () => {
+        this.setState(prevState => ({
+            formData: {
+                ...prevState.formData,
+                gambar: ['', '', '', ''],
             }
         }))
     }
@@ -198,7 +250,8 @@ class AddKunjungan extends React.Component {
     _formatCurrency = (number) => { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseFloat(number)) }
     render() {
         var { detailCust, contactMode, contactPerson, placeContacted, callResult } = this.state;
-        var [year, month, day] = this.state.detailCust.due_date.split("-")
+        var [year, month, day] = this.state.detailCust.due_date.split('-');
+        // var [year, month, day] = '12-10-2020'.split('-');
         var minDate = new Date();
         var maxDate = new Date();
         var dueDate = new Date(year, month - 1, day);

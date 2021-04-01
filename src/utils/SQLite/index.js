@@ -45,6 +45,7 @@ class SQLModules extends Component {
             // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()})`);
             // tx.executeSql(`CREATE TABLE IF NOT EXISTS ${TABLES.dcoll_user.name} (${TABLES.dcoll_user.column.join()}, PRIMARY KEY (${TABLES.dcoll_user.column[0]}))`);
             tx.executeSql('CREATE TABLE IF NOT EXISTS collection(key text primary key, value text)');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS img_tmp(selfId text primary key, parentId key, value text)');
             // tx.executeSql(`DROP TABLE ${TABLES.dcoll_user.name}`);
             //....
         }, err => {
@@ -128,7 +129,60 @@ class SQLModules extends Component {
                 )
                 .catch(err => reject(err))
         )
-    }
+    };
+    _setImage = (data) => {
+        return new Promise((resolve, reject) => {
+            this.initDB(false)
+                .then(db => {
+                    db.transaction(tx => {
+                        tx.executeSql('INSERT OR REPLACE INTO img_tmp (selfId, parentId, value) VALUES(?,?,?)', [uuid(), data.parentId, data.value], (tx, rs) => {
+                            var ress_arr = [];
+                            if (!this.isset(() => rs.insertId)) {
+                                for (var i = 0; i < rs.rows.length; i++) {
+                                    ress_arr.push(selfDecrypt(rs.rows.item(i).value))
+                                }
+                            } else {
+                                ress_arr = { 'insertId': rs.insertId, 'rowsAffected': rs.rowsAffected };
+                            }
+                            resolve(ress_arr);
+                        }, (tx, error) => {
+                            f7.dialog.alert(`SQL statement ERROR: ${error.message}`);
+                            reject(`SQL statement ERROR: ${error.message}`);
+                        });
+                    });
+                })
+                .catch(err => reject(err))
+        })
+    };
+    _getImage = (id) => {
+        return new Promise((resolve, reject) =>
+            this.initDB(false)
+                .then(db =>
+                    db.transaction(tx =>
+                        tx.executeSql('SELECT parentId, value from img_tmp WHERE parentId=(?)', [id],
+                            (tx, rs) => {
+                                if (!this.isset(() => rs.insertId)) {
+                                    var data = [];
+                                    for (var i = 0; i < rs.rows.length; i++) {
+                                        data.push(rs.rows.item(i).value)
+                                    }
+                                    let img = {
+                                        id : id,
+                                        data : data,
+                                    }
+                                    let res = [];
+                                    res.push(img)
+                                    resolve(res);
+                                }
+                            }, (tx, error) => {
+                                f7.dialog.alert(`SQL statement ERROR: ${error.message}`);
+                                reject(`SQL statement ERROR: ${error.message}`)
+                            })
+                    )
+                )
+                .catch(err => reject(err))
+        )
+    };
 }
 let SQLite = new SQLModules();
 export {

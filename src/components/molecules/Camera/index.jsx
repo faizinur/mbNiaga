@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef, useRef, useImperativeHandle } from 'react';
-import { log } from '../../../utils/';
+import { log, uuid } from '../../../utils/';
 import {
     Page,
     Navbar,
@@ -45,7 +45,7 @@ const Camera = forwardRef((props, ref) => {
                 tapPhoto: false,
                 tapFocus: true,
                 previewDrag: false,
-                storeToFile: true,
+                storeToFile: false,
                 disableExifHeaderStripping: false
             };
             CameraPreview
@@ -64,21 +64,30 @@ const Camera = forwardRef((props, ref) => {
             setIndex(null);
             // CameraPreview.stopCamera();
         },
-        async _getBase64(data) {
-            return new Promise(function (resolve, reject) {
-                data.map((item, index) => {
-                    if (item.includes('file')) {
-                        CameraPreview.getBlob(item, (blob) => {
+        _getBase64(uri, onDone) {
+            f7.preloader.show();
+        },
+        async _getBase64(uri) {
+            return new Promise((resolve, reject) => {
+                if (uri.includes('file:')) {
+                    CameraPreview.getBlob(
+                        uri,
+                        function (blob) {
                             let reader = new FileReader();
                             reader.readAsDataURL(blob);
-                            reader.onloadend = () => data[index] = reader.result;
+                            reader.onloadend = function () {
+                                f7.preloader.hide();
+                                resolve(reader.result);
+                            };
                         });
-                    }
-                });
-                resolve(data);
-            })
+                } else {
+                    f7.preloader.hide();
+                    resolve(uri)
+                }
+            });
         }
     }));
+
     const _takePicture = () => {
         CameraPreview.getSupportedPictureSizes(
             function (dimensions) {
@@ -121,10 +130,11 @@ const Camera = forwardRef((props, ref) => {
                     log('stop');
                     setActive(false);
                     setIndex(null);
-                    onResult({
+                    let result = {
                         index: index,
-                        uri: 'file://' + data[0],
-                    })
+                        base64: `data:image/jpeg;base64${data[0]}`,
+                    };
+                    onResult(result)
                 },
                 function () {
                     onError(err)

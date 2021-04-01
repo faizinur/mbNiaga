@@ -30,7 +30,6 @@ import {
     setMaxBedaJam,
     setBahasa,
 } from '../../../config/redux/actions/';
-import { Toast } from '../../atoms/';
 const {
     PIN,
     DEVICE_INFO,
@@ -45,7 +44,7 @@ const {
     BAHASA,
     REGION,
 } = SQLiteTypes;
-// import { Camera } from '../../molecules/';
+
 const SplashScreen = (props) => {
     useEffect(() => {
         // f7.preloader.show();
@@ -112,8 +111,18 @@ const SplashScreen = (props) => {
         setRefState('OK!')
     }
     const _getRegion = async () => {
+        let prov = region.filter(item => { return item.level == 0 });
+        let kokab = region.filter(item => { return item.level == 1 });
+        let kec = region.filter(item => { return item.level == 2 });
+        let kel = region.filter(item => { return item.level == 3 });
+        dispatch(setProvince(prov));
+        dispatch(setRegency(kokab));
+        dispatch(setDistrict(kec));
+        dispatch(setSubDistrict(kel));
+        /*
         //cek DB kalo ada region post lastUpdated time dari region DB
         let regionDB = await SQLite.query('SELECT value FROM COLLECTION WHERE KEY=?', [REGION]);
+        log('regionDB', regionDB)
         // kalo gak ada ambil dari file JSON.
         let lastUpdate = regionDB.length == 0 || regionDB[0].length == 0 ?
             new Date(Math.max(...region.map(item => new Date(item.updated_time)))) :
@@ -135,11 +144,13 @@ const SplashScreen = (props) => {
             let kel = region.filter(item => { return item.level == 3 });
             if (getRegionRes.status == "success") {
                 if (getRegionRes.data.length > 0) {
+                    log('ada data baru')
                     // merge datanya sama file JSON yang ada.
                     let updatedProv = getRegionRes.data.filter(item => { return item.level == 0 });
                     let updatedKokab = getRegionRes.data.filter(item => { return item.level == 1 });
                     let updatedKec = getRegionRes.data.filter(item => { return item.level == 2 });
                     let updatedKel = getRegionRes.data.filter(item => { return item.level == 3 });
+                    //cocokin data
                     prov = _compareRegion(updatedProv, prov);
                     kokab = _compareRegion(updatedKokab, kokab);
                     kec = _compareRegion(updatedKec, kec);
@@ -148,9 +159,6 @@ const SplashScreen = (props) => {
                     updatedKokab = [];
                     updatedKec = [];
                     updatedKel = [];
-                }
-                //cocokin data
-                if (JSON.stringify(getRegionRes.data) !== '[]') {
                     //bandingkan data region (getRegionRes dari API) dengan (regionDB local DB)
                     regionDB = _compareRegion(getRegionRes.data, regionDB);
                     //simpan ke lokal Data
@@ -166,8 +174,9 @@ const SplashScreen = (props) => {
             kec = [];
             kel = [];
         } catch (errReg) {
-            log(getRegionRes)
+            log(errReg)
         }
+        */
     }
     const _getLocalData = async () => {
         log('Collecting....')
@@ -276,75 +285,24 @@ const SplashScreen = (props) => {
             let indexFound = oldData.findIndex(oldItem => {
                 return oldItem.code === item.code;
             });
-            if (indexFound === -1) {
+            if (indexFound === -1) { // gak ketemu!
+                log('data gak ketemu, append array');
                 oldData = [...oldData, item];
             } else {
-                oldData[indexFound] = { ...oldData[indexFound], ...item };
+                log('data ketemu, replace ayya array di index ' + indexFound);
+                // oldData[indexFound] = { ...oldData[indexFound], ...item };
+                oldData[indexFound] = item;
             }
         });
         return oldData;
-        /*
-                     updatedProv.map(item => {
-                         let indexFound = prov.findIndex(provItem => {
-                             return provItem.code === item.code;
-                         });
-                         if (indexFound === -1) {
-                             prov = [...prov, item];
-                         } else {
-                             prov[indexFound] = { ...prov[indexFound], ...item };
-                         }
-                     });
-                     updatedKokab.map(item => {
-                         let indexFound = kokab.findIndex(kokabItem => {
-                             return kokabItem.code === item.code;
-                         });
-                         if (indexFound === -1) {
-                             kokab = [...kokab, item];
-                         } else {
-                             kokab[indexFound] = { ...kokab[indexFound], ...item };
-                         }
-                     });
-                     updatedKec.map(item => {
-                         let indexFound = kec.findIndex(kecItem => {
-                             return kecItem.code === item.code;
-                         });
-                         if (indexFound === -1) {
-                             kec = [...kec, item];
-                         } else {
-                             kec[indexFound] = { ...kec[indexFound], ...item };
-                         }
-                     });
-                     updatedKel.map(item => {
-                         let indexFound = kel.findIndex(kelItem => {
-                             return kelItem.code === item.code;
-                         });
-                         if (indexFound === -1) {
-                             kel = [...kel, item];
-                         } else {
-                             kel[indexFound] = { ...kel[indexFound], ...item };
-                         }
-                     });
-                     getRegionRes.map(item => {
-                         let indexFound = regionDB.findIndex(regionDBItem => {
-                             return regionDBItem.code === item.code;
-                         });
-                         if (indexFound === -1) {
-                             regionDB = [...regionDB, item];
-                         } else {
-                             regionDB[indexFound] = { ...regionDB[indexFound], ...item };
-                         }
-                     */
     }
     const _fotoResult = (data) => {
         alert(JSON.stringify(data));
     }
-    // const cameraRef = useRef(null)
     return (
         <Page noToolbar noNavbar noSwipeback name="SplashScreen">
             <div style={styles.container}>
                 <p style={styles.text}>Mobile Collection Niaga</p><br /><br />
-                {/* <p onClick={()=> cameraRef.current.start(0)}>START</p><br /><br />
-                <p onClick={()=> cameraRef.current.stop()}>STOP</p><br /><br /> */}
             </div>
             <div
                 style={{
@@ -374,11 +332,6 @@ const SplashScreen = (props) => {
                     <p style={{ margin: 0 }}>{localDBState}</p>
                 </div>
             </div>
-            {/* <Camera
-                ref={cameraRef}
-                onResult={data => _fotoResult(data)}
-                onError={err => alert(err)}
-            /> */}
         </Page >
     )
 }
